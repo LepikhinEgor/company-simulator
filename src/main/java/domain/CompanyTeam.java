@@ -1,0 +1,15 @@
+package domain;
+
+import java.util.ArrayList;
+
+public class CompanyTeam {
+	private ArrayList<Employee> employees;
+	
+	public CompanyTeam() {
+		employees = new ArrayList<Employee>();
+	}
+	
+	public ArrayList<Employee> getEmployees() {
+		return employees;
+	}
+}
