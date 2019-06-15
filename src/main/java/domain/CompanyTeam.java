@@ -12,4 +12,8 @@ public class CompanyTeam {
 	public ArrayList<Employee> getEmployees() {
 		return employees;
 	}
+	
+	public void addEmployee(Employee employee) {
+		employees.add(employee);
+	}
 }

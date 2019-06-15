@@ -1,6 +1,9 @@
 package company_simulator;
 
+import java.sql.SQLException;
+
 import dao.CompanyDao;
+import dao.UserDao;
 import domain.User;
 import domain.UserCompany;
 

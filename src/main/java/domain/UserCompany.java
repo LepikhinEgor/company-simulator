@@ -14,12 +14,10 @@ public class UserCompany {
 	
 	public UserCompany(String name) {
 		this.name = name;
-		//this.userOwner = owner;
 		this.team = new CompanyTeam();
 		this.cash = DEFAULT_CASH;
 		this.contracts = new ArrayList<Contract>();
 	}
-	
 
 	public void setName(String name) {
 		this.name = name;
@@ -31,5 +29,9 @@ public class UserCompany {
 	
 	public long getCash() {
 		return this.cash;
+	}
+	
+	public void hireEmployee(Employee employee) {
+		team.addEmployee(employee);
 	}
 }
