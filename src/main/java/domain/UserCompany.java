@@ -31,6 +31,10 @@ public class UserCompany {
 		return this.cash;
 	}
 	
+	public long getDefaultCash() {
+		return DEFAULT_CASH;
+	}
+	
 	public void hireEmployee(Employee employee) {
 		team.addEmployee(employee);
 	}
