@@ -1,33 +1,31 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import domain.User;
+import domain.Employee;
 import domain.UserCompany;
 
-public class CompanyDao {
-	
-	public long createCompany(long userId, String name) throws SQLException {
+public class EmployeeDao {
+	public long createEmployee(Employee employee) throws SQLException {
 		Connection connection = DBConnectionHelper.getConnection();
 		
-		String addUserQuerry = "INSERT INTO companies (company_id, name, cash, owner_id) VALUES ("
-				+ "NULL, ?, ?, ?);";
+		String addUserQuerry = "INSERT INTO employees (employee_id, name, age, salary, perfomance, company_id) VALUES ("
+				+ "NULL, ?, ?, ?, ?, ?);";
 		
 		long result = 0;
 		PreparedStatement createCompanyStatement = null;
 		try {
 			createCompanyStatement =  connection.prepareStatement(addUserQuerry, Statement.RETURN_GENERATED_KEYS);
-			
-			UserCompany newUserCompany = new UserCompany(name);
-			
-			createCompanyStatement.setString(1, newUserCompany.getName());
-			createCompanyStatement.setLong(2, newUserCompany.getCash());
-			createCompanyStatement.setLong(3, userId);
+						
+			createCompanyStatement.setString(1, employee.getName());
+			createCompanyStatement.setInt(2, employee.getAge());
+			createCompanyStatement.setInt(3, employee.getSalary());
+			createCompanyStatement.setInt(4, employee.getPerfomance());
+			createCompanyStatement.setString(5, employee.getDescription());
 			
 			int companiesInsert = createCompanyStatement.executeUpdate();
 			
@@ -53,6 +51,5 @@ public class CompanyDao {
             }
         }
 	}
-	
 	
 }

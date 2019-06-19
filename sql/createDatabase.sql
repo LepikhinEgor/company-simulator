@@ -12,3 +12,12 @@ cash INT NOT NULL,
 owner_id INT NOT NULL,
 FOREIGN KEY(owner_id) REFERENCES users(user_id) ON DELETE CASCADE);
 
+CREATE TABLE employees (
+employee_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(30) NOT NULL,
+age INT NOT NULL,
+salary INT NOT NULL,
+performance INT NOT NULL,
+description CHAR(255),
+company_id INT NOT NULL,
+FOREIGN KEY(company_id) REFERENCES companies(company_id) ON DELETE CASCADE);

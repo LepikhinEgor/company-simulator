@@ -10,9 +10,20 @@ import domain.UserCompany;
 public class Main {
 	public static void main(String[] args) {
 		User user = new User("EgorL", "root");
+		UserDao userDao = new UserDao();
+		long newUserId = 0;
+		try {
+			newUserId = userDao.createNewUser("EgorL", "root");
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 		CompanyDao companyDao = new CompanyDao();
-		UserCompany newUserCompany = companyDao.createCompany(user.getId());
-		
-		System.out.println(newUserCompany.getName());
+		long newUserCompanyId = 0;
+		try {
+			newUserCompanyId = companyDao.createCompany(newUserId, "apple");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println(newUserCompanyId);
 	}
 }
