@@ -21,3 +21,16 @@ performance INT NOT NULL,
 description CHAR(255),
 company_id INT NOT NULL,
 FOREIGN KEY(company_id) REFERENCES companies(company_id) ON DELETE CASCADE);
+
+ALTER TABLE employees ADD COLUMN sex CHAR(6) AFTER age;
+
+CREATE TABLE contracts (
+contract_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(30) NOT NULL,
+performance_units INT NOT NULL,
+fee INT NOT NULL,
+deadline INT NOT NULL,
+description CHAR(255),
+company_id INT NOT NULL,
+FOREIGN KEY(company_id) REFERENCES companies(company_id) ON DELETE CASCADE);
+
