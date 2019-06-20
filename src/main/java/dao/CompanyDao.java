@@ -12,16 +12,15 @@ import domain.UserCompany;
 
 public class CompanyDao {
 	
-	public long createCompany(long userId, String name) throws SQLException {
+	public long recordCompany(long userId, String name) throws SQLException {
 		Connection connection = DBConnectionHelper.getConnection();
 		
-		String addUserQuerry = "INSERT INTO companies (company_id, name, cash, owner_id) VALUES ("
+		String recordCompanyQuerry = "INSERT INTO companies (company_id, name, cash, owner_id) VALUES ("
 				+ "NULL, ?, ?, ?);";
 		
-		long result = 0;
 		PreparedStatement createCompanyStatement = null;
 		try {
-			createCompanyStatement =  connection.prepareStatement(addUserQuerry, Statement.RETURN_GENERATED_KEYS);
+			createCompanyStatement =  connection.prepareStatement(recordCompanyQuerry, Statement.RETURN_GENERATED_KEYS);
 			
 			UserCompany newUserCompany = new UserCompany(name);
 			

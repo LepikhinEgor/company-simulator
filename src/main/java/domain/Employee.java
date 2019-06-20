@@ -1,18 +1,32 @@
 package domain;
 
 public class Employee {
+	
+	public static final String MALE = "male";
+	public static final String FEMALE = "female";
+
 	private String name;
 	private int age;
+	private String sex;
 	private int perfomance;
 	private int salary;
 	private String description;
 	
-	public Employee(String name, int age, int perfomanse, int salary, String description) {
+	public Employee(String name, int age, String sex, int perfomanse, int salary, String description) {
 		this.name = name;
 		this.age = age;
+		this.sex = sex;
 		this.perfomance = perfomanse;
 		this.salary = salary;
 		this.description = description;
+	}
+	
+	public String getSex() {
+		return sex;
+	}
+	
+	public void setSex(String sex) {
+		this.sex = sex;
 	}
 
 	public String getName() {

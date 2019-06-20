@@ -10,33 +10,33 @@ import domain.Employee;
 import domain.UserCompany;
 
 public class EmployeeDao {
-	public long createEmployee(Employee employee, long userId) throws SQLException {
+	public long createEmployee(Employee employee, long companyId) throws SQLException {
 		Connection connection = DBConnectionHelper.getConnection();
 		
-		String addUserQuerry = "INSERT INTO employees (employee_id, name, age, salary, performance, description, company_id) VALUES ("
-				+ "NULL, ?, ?, ?, ?, ?, ?);";
+		String recordEmployeeQuerry = "INSERT INTO employees (employee_id, name, age, sex, salary, performance, description, company_id) VALUES ("
+				+ "NULL, ?, ?, ?, ?, ?, ?, ?);";
 		
-		long result = 0;
-		PreparedStatement createCompanyStatement = null;
+		PreparedStatement recordEmployeeStatement = null;
 		try {
-			createCompanyStatement =  connection.prepareStatement(addUserQuerry, Statement.RETURN_GENERATED_KEYS);
+			recordEmployeeStatement = connection.prepareStatement(recordEmployeeQuerry, Statement.RETURN_GENERATED_KEYS);
 						
-			createCompanyStatement.setString(1, employee.getName());
-			createCompanyStatement.setInt(2, employee.getAge());
-			createCompanyStatement.setInt(3, employee.getSalary());
-			createCompanyStatement.setInt(4, employee.getPerfomance());
-			createCompanyStatement.setString(5, employee.getDescription());
-			createCompanyStatement.setLong(6, userId);
+			recordEmployeeStatement.setString(1, employee.getName());
+			recordEmployeeStatement.setInt(2, employee.getAge());
+			recordEmployeeStatement.setString(3, employee.getSex());
+			recordEmployeeStatement.setInt(4, employee.getSalary());
+			recordEmployeeStatement.setInt(5, employee.getPerfomance());
+			recordEmployeeStatement.setString(6, employee.getDescription());
+			recordEmployeeStatement.setLong(7, companyId);
 			
-			int companiesInsert = createCompanyStatement.executeUpdate();
+			int employeesInsert = recordEmployeeStatement.executeUpdate();
 			
-			if (companiesInsert == 1)
-				return getGeneratedId(createCompanyStatement);
+			if (employeesInsert == 1)
+				return getGeneratedId(recordEmployeeStatement);
 			else
 				throw new SQLException("Incorrect number of created companies. Required 1");
 		} finally {
-			if (createCompanyStatement != null)
-				createCompanyStatement.close();
+			if (recordEmployeeStatement != null)
+				recordEmployeeStatement.close();
 			if (connection != null)
 				connection.close();
 		}

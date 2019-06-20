@@ -19,7 +19,7 @@ public class UserDao {
 	private final String username = "egor";
 	private final String password = "1111";
 	
-	public long createNewUser(String nickname, String password) throws SQLException {
+	public long recordUser(String nickname, String password) throws SQLException {
 		Connection connection = DriverManager.getConnection(URL, "egor", "1111");
 		
 		String addUserQuerry = "INSERT INTO users (user_id, name, password) VALUES ("
