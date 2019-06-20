@@ -10,11 +10,11 @@ import domain.Employee;
 import domain.UserCompany;
 
 public class EmployeeDao {
-	public long createEmployee(Employee employee) throws SQLException {
+	public long createEmployee(Employee employee, long userId) throws SQLException {
 		Connection connection = DBConnectionHelper.getConnection();
 		
-		String addUserQuerry = "INSERT INTO employees (employee_id, name, age, salary, perfomance, company_id) VALUES ("
-				+ "NULL, ?, ?, ?, ?, ?);";
+		String addUserQuerry = "INSERT INTO employees (employee_id, name, age, salary, performance, description, company_id) VALUES ("
+				+ "NULL, ?, ?, ?, ?, ?, ?);";
 		
 		long result = 0;
 		PreparedStatement createCompanyStatement = null;
@@ -26,6 +26,7 @@ public class EmployeeDao {
 			createCompanyStatement.setInt(3, employee.getSalary());
 			createCompanyStatement.setInt(4, employee.getPerfomance());
 			createCompanyStatement.setString(5, employee.getDescription());
+			createCompanyStatement.setLong(6, userId);
 			
 			int companiesInsert = createCompanyStatement.executeUpdate();
 			
