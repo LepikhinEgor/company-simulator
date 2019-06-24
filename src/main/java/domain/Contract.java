@@ -10,6 +10,7 @@ public class Contract {
 	 * deadline - the count of minutes since taking the contract to its deadline
 	 */
 	private int deadline;
+	private int progress;
 	private String description;
 	private ArrayList<Employee> performers;
 	
@@ -18,6 +19,7 @@ public class Contract {
 		this.fee = fee;
 		this.perfomanceUnits = performanceUnits;
 		this.deadline = deadline;
+		this.progress = 0;
 		this.description = description;
 	}
 	
@@ -63,5 +65,14 @@ public class Contract {
 	public void setPerformers(ArrayList<Employee> performers) {
 		this.performers = performers;
 	}
+
+	public int getProgress() {
+		return progress;
+	}
+
+	public void setProgress(int progress) {
+		this.progress = progress;
+	}
+	
 	
 }

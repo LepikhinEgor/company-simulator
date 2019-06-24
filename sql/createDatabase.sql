@@ -41,3 +41,5 @@ contract_id INT NOT NULL,
 FOREIGN KEY(employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE,
 FOREIGN KEY(contract_id) REFERENCES contracts(contract_id) ON DELETE CASCADE);
 
+ALTER TABLE contracts ADD COLUMN progress INT AFTER deadline;
+

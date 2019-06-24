@@ -12,8 +12,8 @@ public class ContractDao {
 	public long recordContract(Contract contract, long companyId) throws SQLException {
 		Connection connection = DBConnectionHelper.getConnection();
 		
-		String recordContractQuerry = "INSERT INTO contracts (contract_id, name, performance_units, fee, deadline, description, company_id) VALUES ("
-				+ "NULL, ?, ?, ?, ?, ?, ?);";
+		String recordContractQuerry = "INSERT INTO contracts (contract_id, name, performance_units, fee, deadline, progress, description, company_id) VALUES ("
+				+ "NULL, ?, ?, ?, ?, ?, ?, ?);";
 		
 		PreparedStatement recordContractStatement = null;
 		try {
@@ -23,8 +23,9 @@ public class ContractDao {
 			recordContractStatement.setInt(2, contract.getPerfomanceUnits());
 			recordContractStatement.setInt(3, contract.getFee());
 			recordContractStatement.setInt(4, contract.getDeadline());
-			recordContractStatement.setString(5, contract.getDescription());
-			recordContractStatement.setLong(6, companyId);
+			recordContractStatement.setInt(5, contract.getProgress());
+			recordContractStatement.setString(6, contract.getDescription());
+			recordContractStatement.setLong(7, companyId);
 			
 			int contractsInsert = recordContractStatement.executeUpdate();
 			
