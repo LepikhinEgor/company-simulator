@@ -26,7 +26,7 @@ public class HomeController {
 	public String home(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
-		return "index";
+		return "pages/login.html";
 	}
 	
 //	@RequestMapping(value = "/get-posts", method = RequestMethod.POST, consumes = "application/json")
