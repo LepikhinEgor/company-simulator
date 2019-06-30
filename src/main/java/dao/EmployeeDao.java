@@ -6,8 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import domain.Employee;
-import domain.UserCompany;
+import entities.Employee;
+import entities.UserCompany;
 
 public class EmployeeDao {
 	public long createEmployee(Employee employee, long companyId) throws SQLException {

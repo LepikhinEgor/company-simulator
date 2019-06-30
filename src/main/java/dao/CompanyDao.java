@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import domain.User;
-import domain.UserCompany;
+import entities.User;
+import entities.UserCompany;
 
 public class CompanyDao {
 	

@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import domain.Contract;
+import entities.Contract;
 
 public class ContractDao {
 	public long recordContract(Contract contract, long companyId) throws SQLException {

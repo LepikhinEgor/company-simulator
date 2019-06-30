@@ -1,4 +1,4 @@
-package domain;
+package entities;
 
 public class User {
 	

@@ -7,10 +7,10 @@ import dao.ContractDao;
 import dao.EmployeeDao;
 import dao.UserDao;
 import dao.WorkPositionDao;
-import domain.Contract;
-import domain.Employee;
-import domain.User;
-import domain.UserCompany;
+import entities.Contract;
+import entities.Employee;
+import entities.User;
+import entities.UserCompany;
 
 public class Main {
 	public static void main(String[] args) {
