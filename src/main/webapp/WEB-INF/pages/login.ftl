@@ -3,9 +3,8 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>22 лучших формы входа и регистрации | Vladmaxi.net</title>
-	<link rel="stylesheet" href="../styles/loginStyle.css">
 	<link rel="icon" href="http://vladmaxi.net/favicon.ico" type="image/x-icon">
-	<link rel="shortcut icon" href="http://vladmaxi.net/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" href="./resources/css/loginStyle.css"/>
 </head>
 
 <body>

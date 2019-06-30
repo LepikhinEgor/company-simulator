@@ -5,6 +5,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
@@ -28,6 +31,16 @@ public class WebConfig {
 		configurer.setTemplateLoaderPath("/WEB-INF/pages");
 		
 		return configurer;
+	}
+	
+	@Bean
+	WebMvcConfigurer webConfigurer() {
+		return new WebMvcConfigurerAdapter() {
+			@Override
+			public void addResourceHandlers(ResourceHandlerRegistry registry) {
+				registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+			}
+		};
 	}
 	
 }
