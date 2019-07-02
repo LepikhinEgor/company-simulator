@@ -22,9 +22,9 @@ body
     background-image: -ms-linear-gradient(top, #fff, #eee);
     background-image: -o-linear-gradient(top, #fff, #eee);
     background-image: linear-gradient(top, #fff, #eee);  
-    height: 240px;
+    height: 350px;
     width: 400px;
-    margin: -150px 0 0 -230px;
+    margin: -200px 0 0 -230px;
     padding: 30px;
     position: absolute;
     top: 50%;
@@ -216,7 +216,7 @@ fieldset
     color: #999;
 }
 
-/* Стили бара vladmaxi, можно удалить */
+/* пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ vladmaxi, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ */
 .vladmaxi-top{
 	line-height: 24px;
 	font-size: 11px;
