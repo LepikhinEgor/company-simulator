@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import controller.messages.NewUserData;
 /**
  * Handles requests for the application home page.
  */
@@ -34,8 +36,10 @@ public class HomeController {
 		return "registration";
 	}
 	
-	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public String receiveNewUser() {
+	@RequestMapping(value = "/receiveNewUser", method = RequestMethod.POST, consumes = "application/json")
+	public String receiveNewUser(@RequestBody NewUserData newUserData) {
+		logger.info(newUserData.toString());
+		System.out.println(newUserData);
 		return "login";
 	}
 	

@@ -8,14 +8,15 @@ $(function() {
 
       
       var newUser = {
-          email: userEmail || "",
           login: userLogin || "",
-          password: userPassword || ""
+          password: userPassword || "",
+          email: userEmail || ""
         }
         console.log(newUser);
       $.ajax({
-        type: $form.attr('method'),
-        url: $form.attr('action'),
+        type: "POST",
+        url: "/company-simulator/receiveNewUser",
+        contentType: 'application/json',
         data: JSON.stringify(newUser)
       }).done(function() {
         console.log('success');
