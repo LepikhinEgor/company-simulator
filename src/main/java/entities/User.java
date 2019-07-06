@@ -2,9 +2,6 @@ package entities;
 
 public class User {
 	
-	//temporary 
-	private static int lastId = 0;
-	
 	private long id;
 	private String nickname;
 	private String password;
