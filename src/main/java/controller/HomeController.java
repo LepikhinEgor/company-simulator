@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import controller.messages.NewUserData;
+import controller.messages.RegistrationMessage;
+import exceptions.EmailAlreadyExistException;
+import exceptions.IncorrectRegistrationDataException;
+import exceptions.LoginAlreadyExistException;
+import exceptions.NotRecordToDBException;
+import services.UserService;
 /**
  * Handles requests for the application home page.
  */
@@ -20,6 +27,9 @@ import controller.messages.NewUserData;
 public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	
+	@Autowired
+	private UserService userService;
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -37,10 +47,26 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/receiveNewUser", method = RequestMethod.POST, consumes = "application/json")
-	public String receiveNewUser(@RequestBody NewUserData newUserData) {
+	@ResponseBody
+	public RegistrationMessage receiveNewUser(@RequestBody NewUserData newUserData) {
 		logger.info(newUserData.toString());
-		System.out.println(newUserData);
-		return "login";
+		
+		try {
+			userService.createNewUser(newUserData);
+			return new RegistrationMessage("Success record new user", RegistrationMessage.SUCCES_REGISTRATION);
+		} catch (IncorrectRegistrationDataException e) {
+			String mistakes = "";
+			for(String mistake: e.getMistakesDescription())
+				mistakes += mistake + "\n";
+			return new RegistrationMessage(mistakes, RegistrationMessage.INCORRECT_EMAIL);
+		} catch (LoginAlreadyExistException e) {
+			return new RegistrationMessage("Error, login already exist", RegistrationMessage.LOGIN_ALREADY_EXIST);
+		} catch (EmailAlreadyExistException e) {
+			return new RegistrationMessage("Error, email already exist", RegistrationMessage.EMAIL_ALREADY_EXIST);
+		} catch (NotRecordToDBException e) {
+			return new RegistrationMessage("Error, when recording to db", RegistrationMessage.LOGIN_ALREADY_EXIST);
+		}
+		
 	}
 	
 //	@RequestMapping(value = "/get-posts", method = RequestMethod.POST, consumes = "application/json")

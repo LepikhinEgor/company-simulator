@@ -17,11 +17,10 @@ $(function() {
         type: "POST",
         url: "/company-simulator/receiveNewUser",
         contentType: 'application/json',
-        data: JSON.stringify(newUser)
-      }).done(function() {
-        console.log('success');
-      }).fail(function() {
-        console.log('fail');
+        data: JSON.stringify(newUser),
+        success: function(data) {
+			console.log(data);
+		}
       });
       //отмена действия по умолчанию для кнопки submit
       e.preventDefault(); 
