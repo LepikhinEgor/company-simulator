@@ -7,30 +7,55 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class UserDao {
 	
-	private final String URL = "jdbc:mysql://localhost:3306/company_simulator"+
-            "?verifyServerCertificate=false"+
-            "&useSSL=false"+
-            "&requireSSL=false"+
-            "&useLegacyDatetimeCode=false"+
-            "&amp"+
-            "&serverTimezone=UTC";
-	private final String username = "egor";
-	private final String password = "1111";
+	private final static Logger logger = LoggerFactory.getLogger(UserDao.class);
 	
-	public long recordUser(String nickname, String password) throws SQLException {
-		Connection connection = DriverManager.getConnection(URL, "egor", "1111");
+	private Connection connection;
+	
+	public UserDao() throws SQLException {
+		connection = DBConnectionHelper.getConnection();
+	}
+	
+	public boolean checkLoginAlreadyExist(String userLogin) throws SQLException {
+		String findUserQuerry = "SELECT * FROM users WHERE login = ?;";
 		
-		String addUserQuerry = "INSERT INTO users (user_id, name, password) VALUES ("
-				+ "NULL, ?, ?);";
+		PreparedStatement findUserStatement = connection.prepareStatement(findUserQuerry);
+		findUserStatement.setString(1, userLogin);
+		
+		logger.info(findUserStatement.toString());
+		
+		ResultSet findedUsers = findUserStatement.executeQuery();
+		
+		return findedUsers.next()? true : false;
+	}
+	
+	public boolean checkEmailAlreadyExist(String userEmail) throws SQLException {
+		String findUserQuerry = "SELECT * FROM users WHERE email = ?;";
+		
+		PreparedStatement findUserStatement = connection.prepareStatement(findUserQuerry);
+		findUserStatement.setString(1, userEmail);
+		ResultSet findedUsers = findUserStatement.executeQuery();
+		
+		return findedUsers.next()? true : false;
+	}
+	
+	public long recordUser(String login, String email, String password) throws SQLException {
+		
+		String addUserQuerry = "INSERT INTO users (user_id, login, password, email) VALUES ("
+				+ "NULL, ?, ?, ?);";
 		
 		PreparedStatement statement =  connection.prepareStatement(addUserQuerry, Statement.RETURN_GENERATED_KEYS);
 		
-		statement.setString(1, "egorl");
-		statement.setString(2, "1111");
+		statement.setString(1, login);
+		statement.setString(2, password);
+		statement.setString(3, email);
 		
 		try {
+			logger.info(statement.toString());
 			int result = statement.executeUpdate();
 			
 			if (result != 1)

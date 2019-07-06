@@ -17,6 +17,11 @@ public class DBConnectionHelper {
 	private final static String password = "1111";
 	
 	public static Connection getConnection() throws SQLException {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 		Connection connection = DriverManager.getConnection(URL, "egor", "1111");
 		
 		if (connection == null) {
