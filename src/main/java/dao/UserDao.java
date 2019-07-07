@@ -14,13 +14,13 @@ public class UserDao {
 	
 	private final static Logger logger = LoggerFactory.getLogger(UserDao.class);
 	
-	private Connection connection;
 	
-	public UserDao() throws SQLException {
-		connection = DBConnectionHelper.getConnection();
+	public UserDao() {
 	}
 	
 	public boolean checkLoginAlreadyExist(String userLogin) throws SQLException {
+		Connection connection = DBConnectionHelper.getConnection();
+		
 		String findUserQuerry = "SELECT * FROM users WHERE login = ?;";
 		
 		PreparedStatement findUserStatement = connection.prepareStatement(findUserQuerry);
@@ -34,6 +34,8 @@ public class UserDao {
 	}
 	
 	public boolean checkEmailAlreadyExist(String userEmail) throws SQLException {
+		Connection connection = DBConnectionHelper.getConnection();
+		
 		String findUserQuerry = "SELECT * FROM users WHERE email = ?;";
 		
 		PreparedStatement findUserStatement = connection.prepareStatement(findUserQuerry);
@@ -44,6 +46,7 @@ public class UserDao {
 	}
 	
 	public long recordUser(String login, String email, String password) throws SQLException {
+		Connection connection = DBConnectionHelper.getConnection();
 		
 		String addUserQuerry = "INSERT INTO users (user_id, login, password, email) VALUES ("
 				+ "NULL, ?, ?, ?);";

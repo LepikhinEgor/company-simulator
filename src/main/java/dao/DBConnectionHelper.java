@@ -22,7 +22,8 @@ public class DBConnectionHelper {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		Connection connection = DriverManager.getConnection(URL, "egor", "1111");
+		//Connection connection = DriverManager.getConnection(URL, "egor", "1111");
+		Connection connection = ConnectionPool.getInstance().getConnection().getConnection();
 		
 		if (connection == null) {
 			throw new SQLException("Connection has not been created");
