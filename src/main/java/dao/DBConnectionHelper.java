@@ -23,7 +23,7 @@ public class DBConnectionHelper {
 			e.printStackTrace();
 		}
 		//Connection connection = DriverManager.getConnection(URL, "egor", "1111");
-		Connection connection = ConnectionPool.getInstance().getConnection().getConnection();
+		Connection connection = ConnectionPool.getInstance().getConnection();
 		
 		if (connection == null) {
 			throw new SQLException("Connection has not been created");

@@ -9,6 +9,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 import javax.sql.PooledConnection;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +19,16 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 public class ConnectionPool {
 	private final static Logger logger = LoggerFactory.getLogger(ConnectionPool.class);
 	
+	private final static String URL = "jdbc:mysql://localhost:3306/company_simulator"+
+            "?verifyServerCertificate=false"+
+            "&useSSL=false"+
+            "&requireSSL=false"+
+            "&useLegacyDatetimeCode=false"+
+            "&amp"+
+            "&serverTimezone=UTC";
+	
 	private static ConnectionPool instance;
-	private static MysqlConnectionPoolDataSource dataSource;
+	private static BasicDataSource dataSource;
 	
 	public static ConnectionPool getInstance() {
 		if (instance == null)
@@ -28,27 +37,28 @@ public class ConnectionPool {
 	}
 	
 	private ConnectionPool() {
-		try {
-			Context ctx = new InitialContext();
-			//dataSource = (DataSource)ctx.lookup("java:comp/env/jdbc/testPool");
-			dataSource = new MysqlConnectionPoolDataSource();
-			dataSource.setUser("egor");
+		//try {
+			dataSource = new BasicDataSource();
+			dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+			dataSource.setUrl(URL);
+			dataSource.setUsername("egor");
 			dataSource.setPassword("1111");
-			dataSource.setDatabaseName("company_simulator");
-			dataSource.setServerName("localhost");
-			dataSource.setPortNumber(3306);
-			dataSource.setServerTimezone("UTC");
-		} catch (NamingException e) {
-			logger.error("Error, when creating connection pool", e);
-			throw new RuntimeException("Error, when creating connection pool", e);
-		} catch (SQLException e) {
-			logger.error("Error, when setting timezone", e);
-			throw new RuntimeException("Error, when setting timezone", e);
-		}
+			dataSource.setMinIdle(5);
+			dataSource.setMaxIdle(10);
+			dataSource.setMaxOpenPreparedStatements(100);
+//		} catch (NamingException e) {
+//			logger.error("Error, when creating connection pool", e);
+//			throw new RuntimeException("Error, when creating connection pool", e);
+//		} catch (SQLException e) {
+//			logger.error("Error, when setting timezone", e);
+//			throw new RuntimeException("Error, when setting timezone", e);
+//		}
 	}
 	
-	public PooledConnection getConnection() throws SQLException {
-		return dataSource.getPooledConnection();
+	public Connection getConnection() throws SQLException {
+		logger.info(dataSource.getNumActive() + " - active");
+		logger.info(dataSource.getNumIdle() + " - idle");
+		return dataSource.getConnection();
 	}
 	
 }

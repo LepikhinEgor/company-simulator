@@ -19,7 +19,7 @@ public class UserDao {
 	}
 	
 	public boolean checkLoginAlreadyExist(String userLogin) throws SQLException {
-		Connection connection = DBConnectionHelper.getConnection();
+		Connection connection = ConnectionPool.getInstance().getConnection();
 		
 		String findUserQuerry = "SELECT * FROM users WHERE login = ?;";
 		
@@ -28,25 +28,38 @@ public class UserDao {
 		
 		logger.info(findUserStatement.toString());
 		
-		ResultSet findedUsers = findUserStatement.executeQuery();
+		boolean loginExist = true;
+		try {
+			ResultSet findedUsers = findUserStatement.executeQuery();
+			loginExist = findedUsers.next();
+		} finally {
+			connection.close();
+		}
 		
-		return findedUsers.next()? true : false;
+		return loginExist;
 	}
 	
 	public boolean checkEmailAlreadyExist(String userEmail) throws SQLException {
-		Connection connection = DBConnectionHelper.getConnection();
+		Connection connection = ConnectionPool.getInstance().getConnection();
 		
 		String findUserQuerry = "SELECT * FROM users WHERE email = ?;";
 		
 		PreparedStatement findUserStatement = connection.prepareStatement(findUserQuerry);
 		findUserStatement.setString(1, userEmail);
-		ResultSet findedUsers = findUserStatement.executeQuery();
 		
-		return findedUsers.next()? true : false;
+		boolean emailExist = true;
+		try {
+			ResultSet findedUsers = findUserStatement.executeQuery();
+			emailExist = findedUsers.next();
+		} finally {
+			connection.close();
+		}
+		
+		return emailExist;
 	}
 	
 	public long recordUser(String login, String email, String password) throws SQLException {
-		Connection connection = DBConnectionHelper.getConnection();
+		Connection connection = ConnectionPool.getInstance().getConnection();
 		
 		String addUserQuerry = "INSERT INTO users (user_id, login, password, email) VALUES ("
 				+ "NULL, ?, ?, ?);";
