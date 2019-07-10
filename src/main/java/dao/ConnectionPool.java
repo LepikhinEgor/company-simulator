@@ -42,6 +42,7 @@ public class ConnectionPool {
 			dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
 			dataSource.setUrl(URL);
 			dataSource.setUsername("egor");
+			dataSource.setInitialSize(4);
 			dataSource.setPassword("1111");
 			dataSource.setMinIdle(5);
 			dataSource.setMaxIdle(10);
