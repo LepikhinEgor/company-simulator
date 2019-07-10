@@ -47,7 +47,7 @@ public class UserService {
 		}
 	}
 	
-	private boolean checkUserLoginAlreadyExist(String userLogin) {
+	public boolean checkUserLoginAlreadyExist(String userLogin) {
 		boolean loginExist = false;
 		
 		try {

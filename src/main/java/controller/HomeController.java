@@ -69,6 +69,19 @@ public class HomeController {
 		
 	}
 	
+	public RegistrationMessage checkLoginExist(@RequestParam String login) {
+		logger.info("Check login exist!!!!!");
+		
+		boolean loginExist = userService.checkUserLoginAlreadyExist(login);
+		
+		if (loginExist) {
+			return new RegistrationMessage("Error, login already exist", RegistrationMessage.LOGIN_ALREADY_EXIST);
+		} 
+		
+		return new RegistrationMessage("Login is free", RegistrationMessage.LOGIN_IS_FREE);
+		
+	}
+	
 //	@RequestMapping(value = "/get-posts", method = RequestMethod.POST, consumes = "application/json")
 //	public @ResponseBody
 //	ArrayList<BlogPost> getPosts(@RequestBody PostsQuerryInfo postsShowedInfo) {

@@ -9,7 +9,9 @@ public class RegistrationMessage {
 	public final static int INCORRECT_EMAIL = 3;
 	public final static int INCORRECT_LOGIN_AND_EMAIL = 4;
 	public final static int LOGIN_ALREADY_EXIST = 5;
-	public final static int EMAIL_ALREADY_EXIST = 6;
+	public final static int LOGIN_IS_FREE = 6;
+	public final static int EMAIL_ALREADY_EXIST = 7;
+	public final static int EMAIL_IS_FREE = 8;
 
 	public RegistrationMessage(String message) {
 		this.text = message;
