@@ -18,6 +18,18 @@ public class UserDao {
 	public UserDao() {
 	}
 	
+	public boolean signUpByEmail(String email, String password) {
+		
+		//!!need to complite
+		return false;
+	}
+	
+	public boolean signUpByLogin(String login, String password) {
+		
+		//!!need to complite
+		return false;
+	}
+	
 	public boolean checkLoginAlreadyExist(String userLogin) throws SQLException {
 		Connection connection = ConnectionPool.getInstance().getConnection();
 		

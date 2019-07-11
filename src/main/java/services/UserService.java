@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import controller.messages.NewUserData;
+import controller.messages.SignUpData;
 import dao.UserDao;
 import exceptions.EmailAlreadyExistException;
 import exceptions.IncorrectRegistrationDataException;
+import exceptions.IncorrectSignUpLoginEmail;
+import exceptions.IncorrectSignUpPasswordException;
 import exceptions.LoginAlreadyExistException;
 import exceptions.NotRecordToDBException;
 
@@ -22,6 +25,24 @@ public class UserService {
 	
 	@Autowired
 	private UserDao userDao;
+	
+	public void userSignUp(SignUpData signUpData) {
+		
+		boolean isEmail = isCorrectEmail(signUpData.getLoginEmail());
+		boolean isLogin = isCorrectEmail(signUpData.getLoginEmail());
+		boolean correctPassword = isCorrectPassword(signUpData.getPassword());
+		
+		if (!isEmail && !isLogin)
+			throw new IncorrectSignUpLoginEmail();
+		
+		if (!correctPassword)
+			throw new IncorrectSignUpPasswordException();
+		
+		if (isEmail)
+			userDao.signUpByEmail(signUpData.getLoginEmail(), signUpData.getPassword());
+		else 
+			userDao.signUpByLogin(signUpData.getLoginEmail(), signUpData.getPassword());
+		
 	
 	public void createNewUser(NewUserData userData)throws IncorrectRegistrationDataException, LoginAlreadyExistException, EmailAlreadyExistException, NotRecordToDBException {
 		String[] userDataMistakes = getUserDataMistakes(userData);

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import controller.messages.NewUserData;
 import controller.messages.RegistrationMessage;
+import controller.messages.SignUpData;
+import controller.messages.SignUpMessage;
 import exceptions.EmailAlreadyExistException;
 import exceptions.IncorrectRegistrationDataException;
 import exceptions.LoginAlreadyExistException;
@@ -31,14 +33,18 @@ public class HomeController {
 	@Autowired
 	private UserService userService;
 	
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 */
+
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
-		
 		return "login";
+	}
+	
+	@RequestMapping(value = "/sign-up", method = RequestMethod.GET)
+	@ResponseBody
+	public SignUpMessage userSignUp(@RequestBody SignUpData signUpData) {
+		userService.userSignUp(signUpData);
+		//!Need to complite!
+		return new SignUpMessage();
 	}
 	
 	@RequestMapping(value = "/registration", method = RequestMethod.GET)
