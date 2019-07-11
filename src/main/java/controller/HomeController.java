@@ -69,8 +69,9 @@ public class HomeController {
 		
 	}
 	
+	@RequestMapping(value="/checkLoginExist", method = RequestMethod.GET)
+	@ResponseBody
 	public RegistrationMessage checkLoginExist(@RequestParam String login) {
-		logger.info("Check login exist!!!!!");
 		
 		boolean loginExist = userService.checkUserLoginAlreadyExist(login);
 		

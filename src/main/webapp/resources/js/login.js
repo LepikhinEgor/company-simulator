@@ -1,15 +1,11 @@
 $(function() {
-	$("#login").focus(function() {
-		console.log("on focus");
+	var loginUpdateTimer;
+	$("#user_login").focus(function() {
 		checkLoginUpdate();
 		});
-	$("#login").blur(function() {
-		console.log("on blur");
+	$("#user_login").blur(function() {
 		clearInterval(loginUpdateTimer);
 		});
-	loginUpdateTimer
-	
-	var loginUpdateTimer;
 	
     $('#login').submit(function(e) {
       var $form = $(this);
@@ -32,6 +28,8 @@ $(function() {
         data: JSON.stringify(newUser),
         success: function(data) {
 			console.log(data);
+			if (data.status == 1)
+				document.location.href = "login";
 		}
       });
       //отмена действия по умолчанию для кнопки submit
@@ -39,26 +37,26 @@ $(function() {
     });
     
     function checkLoginUpdate() {
-    	var newUserLogin = $form.find($('#user_login')).val();
+    	var $form = $(this);
+    	var newUserLogin = $('#user_login').val();
     	var oldUserLogin = newUserLogin;
     	loginUpdateTimer = setInterval(function() {
-    		console.log("update");
-    		newUserLogin = $form.find($('#user_login')).val();
+    		newUserLogin = $('#user_login').val();
     		if (newUserLogin != oldUserLogin) {
     			checkLoginExist(newUserLogin);
+    			oldUserLogin = newUserLogin;
     		}
     		}, 1000);
     }
     
     function checkLoginExist(loginVal) {
-    	var requestStr = "/company-simulator/checkLoginExist/login=" + loginVal;
+    	var requestStr = "/company-simulator/checkLoginExist?login=" + loginVal;
     	$.ajax({
-            type: "POST",
+            type: "GET",
             url: requestStr,
-            contentType: 'application/json',
-            data: JSON.stringify(newUser),
             success: function(data) {
     			console.log(data);
+
     		}
           });
     }
