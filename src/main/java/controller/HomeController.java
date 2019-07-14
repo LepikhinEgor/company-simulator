@@ -1,5 +1,6 @@
 package controller;
 
+import java.sql.SQLException;
 import java.util.Locale;
 
 import org.slf4j.Logger;
@@ -15,10 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import controller.messages.NewUserData;
 import controller.messages.RegistrationMessage;
-import controller.messages.SignUpData;
-import controller.messages.SignUpMessage;
+import controller.messages.SignInData;
+import controller.messages.SignInMessage;
 import exceptions.EmailAlreadyExistException;
 import exceptions.IncorrectRegistrationDataException;
+import exceptions.InvalidSignInLoginEmail;
+import exceptions.InvalidSignInPasswordException;
 import exceptions.LoginAlreadyExistException;
 import exceptions.NotRecordToDBException;
 import services.UserService;
@@ -39,12 +42,32 @@ public class HomeController {
 		return "login";
 	}
 	
-	@RequestMapping(value = "/sign-up", method = RequestMethod.GET)
+	@RequestMapping(value = "/sign-in", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
-	public SignUpMessage userSignUp(@RequestBody SignUpData signUpData) {
-		userService.userSignUp(signUpData);
-		//!Need to complite!
-		return new SignUpMessage();
+	public SignInMessage userSignIn(@RequestBody SignInData signInData) {
+		logger.info("11111111111111");
+		boolean signInSuccess = false;
+	
+		try {
+			signInSuccess = userService.userSignIn(signInData);
+		} catch (InvalidSignInPasswordException e) {
+			logger.error("Invalid password", e);
+			return new SignInMessage(SignInMessage.INVALID_PASSWORD);
+		} catch (InvalidSignInLoginEmail e) {
+			logger.error("Invalid login or email", e);
+			return new SignInMessage(SignInMessage.INVALID_LOGIN);
+		} catch (SQLException e) {
+			logger.error("Sign in error", e);
+			return new SignInMessage(SignInMessage.OTHER_MISTAKE);
+		}
+		
+		if (signInSuccess) {
+			logger.info("User sign in successful");
+			return new SignInMessage(SignInMessage.SUCCESS_SIGN_IN);
+		} else {
+			logger.info("Invalid password");
+			return new SignInMessage(SignInMessage.INCORRECT_LOGIN_OR_PASSWORD);
+		}
 	}
 	
 	@RequestMapping(value = "/registration", method = RequestMethod.GET)

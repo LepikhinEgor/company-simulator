@@ -6,7 +6,7 @@
 	<link rel="icon" href="http://vladmaxi.net/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="./resources/css/loginStyle.css"/>
     <script src="./resources/js/jquery-3.3.1.js" type="text/javascript"></script>
-    <script src="./resources/js/login.js" type="text/javascript"></script>
+    <script src="./resources/js/registration.js" type="text/javascript"></script>
 </head>
 <body>
 
