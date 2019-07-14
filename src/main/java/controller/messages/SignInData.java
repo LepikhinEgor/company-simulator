@@ -1,6 +1,6 @@
 package controller.messages;
 
-public class SignUpData {
+public class SignInData {
 	private String loginEmail;
 	private String password;
 	
