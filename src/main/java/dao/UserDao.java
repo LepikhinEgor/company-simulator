@@ -18,10 +18,25 @@ public class UserDao {
 	public UserDao() {
 	}
 	
-	public boolean signUpByEmail(String email, String password) {
+	public boolean signIn(String loginEmail, String password) throws SQLException {
+		Connection connection = ConnectionPool.getInstance().getConnection();
 		
-		//!!need to complite
-		return false;
+		String findUserQuerry = "SELECT * FROM users WHERE (email = ? OR login = ?) AND password = ?;";
+		
+		PreparedStatement findUserStatement = connection.prepareStatement(findUserQuerry);
+		findUserStatement.setString(1, loginEmail);
+		findUserStatement.setString(2, loginEmail);
+		findUserStatement.setString(3, password);
+		
+		boolean loginExist = true;
+		try {
+			ResultSet findedUsers = findUserStatement.executeQuery();
+			loginExist = findedUsers.next();
+		} finally {
+			connection.close();
+		}
+		
+		return loginExist;
 	}
 	
 	public boolean signUpByLogin(String login, String password) {

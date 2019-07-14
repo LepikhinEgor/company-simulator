@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import controller.messages.NewUserData;
-import controller.messages.SignUpData;
+import controller.messages.SignInData;
 import dao.UserDao;
 import exceptions.EmailAlreadyExistException;
 import exceptions.IncorrectRegistrationDataException;
-import exceptions.IncorrectSignUpLoginEmail;
-import exceptions.IncorrectSignUpPasswordException;
+import exceptions.InvalidSignInLoginEmail;
+import exceptions.InvalidSignInPasswordException;
 import exceptions.LoginAlreadyExistException;
 import exceptions.NotRecordToDBException;
 
@@ -26,22 +26,23 @@ public class UserService {
 	@Autowired
 	private UserDao userDao;
 	
-	public void userSignUp(SignUpData signUpData) {
+	public boolean userSignIn(SignInData signUpData) throws InvalidSignInPasswordException, InvalidSignInLoginEmail, SQLException {
 		
 		boolean isEmail = isCorrectEmail(signUpData.getLoginEmail());
-		boolean isLogin = isCorrectEmail(signUpData.getLoginEmail());
+		boolean isLogin = isCorrectLogin(signUpData.getLoginEmail());
 		boolean correctPassword = isCorrectPassword(signUpData.getPassword());
 		
 		if (!isEmail && !isLogin)
-			throw new IncorrectSignUpLoginEmail();
+			throw new InvalidSignInLoginEmail();
 		
 		if (!correctPassword)
-			throw new IncorrectSignUpPasswordException();
+			throw new InvalidSignInPasswordException();
 		
-		if (isEmail)
-			userDao.signUpByEmail(signUpData.getLoginEmail(), signUpData.getPassword());
-		else 
-			userDao.signUpByLogin(signUpData.getLoginEmail(), signUpData.getPassword());
+		boolean userExist = userDao.signIn(signUpData.getLoginEmail(), signUpData.getPassword());
+		
+		return userExist;
+		}
+	
 		
 	
 	public void createNewUser(NewUserData userData)throws IncorrectRegistrationDataException, LoginAlreadyExistException, EmailAlreadyExistException, NotRecordToDBException {
