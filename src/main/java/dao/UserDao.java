@@ -39,12 +39,6 @@ public class UserDao {
 		return loginExist;
 	}
 	
-	public boolean signUpByLogin(String login, String password) {
-		
-		//!!need to complite
-		return false;
-	}
-	
 	public boolean checkLoginAlreadyExist(String userLogin) throws SQLException {
 		Connection connection = ConnectionPool.getInstance().getConnection();
 		
