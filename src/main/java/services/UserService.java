@@ -12,7 +12,9 @@ import controller.messages.NewUserData;
 import controller.messages.SignInData;
 import dao.UserDao;
 import exceptions.EmailAlreadyExistException;
-import exceptions.IncorrectRegistrationDataException;
+import exceptions.InvalidEmailRegistrationException;
+import exceptions.InvalidLoginRegistrationException;
+import exceptions.InvalidPasswordRegistrationException;
 import exceptions.InvalidSignInLoginEmail;
 import exceptions.InvalidSignInPasswordException;
 import exceptions.LoginAlreadyExistException;
@@ -23,8 +25,12 @@ public class UserService {
 	
 	private final static Logger logger = LoggerFactory.getLogger(UserService.class);
 	
-	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
+	}
 	
 	public boolean userSignIn(SignInData signUpData) throws InvalidSignInPasswordException, InvalidSignInLoginEmail, SQLException {
 		
@@ -41,15 +47,19 @@ public class UserService {
 		boolean userExist = userDao.signIn(signUpData.getLoginEmail(), signUpData.getPassword());
 		
 		return userExist;
+	}
+	
+	public void createNewUser(NewUserData userData)throws InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, NotRecordToDBException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException {
+		
+		if (!isCorrectEmail(userData.getEmail())) {
+			throw new InvalidEmailRegistrationException();
 		}
-	
-		
-	
-	public void createNewUser(NewUserData userData)throws IncorrectRegistrationDataException, LoginAlreadyExistException, EmailAlreadyExistException, NotRecordToDBException {
-		String[] userDataMistakes = getUserDataMistakes(userData);
-		
-		if (userDataMistakes.length != 0)
-			throw new IncorrectRegistrationDataException(userDataMistakes);
+		if (!isCorrectLogin(userData.getLogin())) {
+			throw new InvalidLoginRegistrationException();
+		}
+		if (!isCorrectPassword(userData.getPassword())) {
+			throw new InvalidPasswordRegistrationException();
+		}
 		
 		if (checkUserLoginAlreadyExist(userData.getLogin()))
 			throw new LoginAlreadyExistException();
@@ -93,24 +103,6 @@ public class UserService {
 		return loginExist;
 	}
 	
-	private String[] getUserDataMistakes(NewUserData userData) {
-		ArrayList<String> mistakesDescription = new ArrayList<String>();
-		
-		if (!isCorrectLogin(userData.getLogin())) {
-			mistakesDescription.add("Incorrect login");
-		}
-		
-		if (!isCorrectPassword(userData.getPassword())) {
-			mistakesDescription.add("Incorrect password");
-		}
-		
-		if (!isCorrectEmail(userData.getEmail())) {
-			mistakesDescription.add("Incorrect email");
-		}
-		
-		return mistakesDescription.toArray(new String[mistakesDescription.size()]);
-	}
-	
 	private boolean isCorrectLogin(String login) {
 		return login.matches("^(?!.*\\.\\.)(?!\\.)(?!.*\\.$)(?!\\d+$)[a-zA-Z0-9.]{5,50}$");
 	}
@@ -120,6 +112,6 @@ public class UserService {
 	}
 	
 	private boolean isCorrectEmail(String email) {
-		return email.matches(".+@.+");
+		return email.matches(".+@.+\\..+");
 	}
 }

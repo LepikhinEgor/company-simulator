@@ -19,7 +19,9 @@ import controller.messages.RegistrationMessage;
 import controller.messages.SignInData;
 import controller.messages.SignInMessage;
 import exceptions.EmailAlreadyExistException;
-import exceptions.IncorrectRegistrationDataException;
+import exceptions.InvalidEmailRegistrationException;
+import exceptions.InvalidLoginRegistrationException;
+import exceptions.InvalidPasswordRegistrationException;
 import exceptions.InvalidSignInLoginEmail;
 import exceptions.InvalidSignInPasswordException;
 import exceptions.LoginAlreadyExistException;
@@ -45,7 +47,6 @@ public class HomeController {
 	@RequestMapping(value = "/sign-in", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
 	public SignInMessage userSignIn(@RequestBody SignInData signInData) {
-		logger.info("11111111111111");
 		boolean signInSuccess = false;
 	
 		try {
@@ -83,17 +84,18 @@ public class HomeController {
 		try {
 			userService.createNewUser(newUserData);
 			return new RegistrationMessage("Success record new user", RegistrationMessage.SUCCES_REGISTRATION);
-		} catch (IncorrectRegistrationDataException e) {
-			String mistakes = "";
-			for(String mistake: e.getMistakesDescription())
-				mistakes += mistake + "\n";
-			return new RegistrationMessage(mistakes, RegistrationMessage.INCORRECT_EMAIL);
+		} catch (InvalidLoginRegistrationException e) {
+			return new RegistrationMessage(RegistrationMessage.INCORRECT_LOGIN);
 		} catch (LoginAlreadyExistException e) {
 			return new RegistrationMessage("Error, login already exist", RegistrationMessage.LOGIN_ALREADY_EXIST);
 		} catch (EmailAlreadyExistException e) {
 			return new RegistrationMessage("Error, email already exist", RegistrationMessage.EMAIL_ALREADY_EXIST);
 		} catch (NotRecordToDBException e) {
 			return new RegistrationMessage("Error, when recording to db", RegistrationMessage.LOGIN_ALREADY_EXIST);
+		} catch (InvalidEmailRegistrationException e) {
+			return new RegistrationMessage(RegistrationMessage.INCORRECT_EMAIL);
+		} catch (InvalidPasswordRegistrationException e) {
+			return new RegistrationMessage(RegistrationMessage.INCORRECT_PASSWORD);
 		}
 		
 	}

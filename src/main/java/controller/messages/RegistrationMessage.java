@@ -7,7 +7,7 @@ public class RegistrationMessage {
 	public final static int SUCCES_REGISTRATION = 1;
 	public final static int INCORRECT_LOGIN = 2;
 	public final static int INCORRECT_EMAIL = 3;
-	public final static int INCORRECT_LOGIN_AND_EMAIL = 4;
+	public final static int INCORRECT_PASSWORD = 4;
 	public final static int LOGIN_ALREADY_EXIST = 5;
 	public final static int LOGIN_IS_FREE = 6;
 	public final static int EMAIL_ALREADY_EXIST = 7;
@@ -19,6 +19,10 @@ public class RegistrationMessage {
 	
 	public RegistrationMessage(String message, int status) {
 		this.text = message;
+		this.status = status;
+	}
+	
+	public RegistrationMessage(int status) {
 		this.status = status;
 	}
 
