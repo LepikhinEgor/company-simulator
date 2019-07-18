@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import aspects.annotations.Loggable;
 import controller.messages.NewUserData;
 import controller.messages.SignInData;
 import dao.UserDao;
@@ -32,6 +33,7 @@ public class UserService {
 		this.userDao = userDao;
 	}
 	
+	@Loggable
 	public boolean userSignIn(SignInData signUpData) throws InvalidSignInPasswordException, InvalidSignInLoginEmail, SQLException {
 		
 		boolean isEmail = isCorrectEmail(signUpData.getLoginEmail());
@@ -49,6 +51,7 @@ public class UserService {
 		return userExist;
 	}
 	
+	@Loggable
 	public long createNewUser(NewUserData userData)throws InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, NotRecordToDBException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException {
 		
 		if (!isCorrectEmail(userData.getEmail())) {
@@ -82,6 +85,7 @@ public class UserService {
 		}
 	}
 	
+	@Loggable
 	public boolean checkUserLoginAlreadyExist(String userLogin) {
 		boolean loginExist = false;
 		

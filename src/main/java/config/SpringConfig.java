@@ -5,11 +5,13 @@ import java.sql.SQLException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 import dao.UserDao;
 
 @Configuration
-@ComponentScan(basePackages = {"controller", "dao", "services"})
+@EnableAspectJAutoProxy
+@ComponentScan(basePackages = {"controller", "dao", "services", "aspects"})
 public class SpringConfig {
 	
 	@Bean

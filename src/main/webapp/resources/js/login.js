@@ -16,8 +16,8 @@ $(function() {
         data: JSON.stringify(userData),
         success: function(data) {
 			console.log(data);
-//			if (data.status == 1)
-//				document.location.href = "login";
+			if (data.status == 0)
+				document.location.href = "company";
 		}
       });
       //отмена действия по умолчанию для кнопки submit
