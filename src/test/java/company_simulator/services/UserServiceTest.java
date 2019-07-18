@@ -174,9 +174,13 @@ public class UserServiceTest {
 		newUserData.setLogin(login);
 		newUserData.setPassword(password);
 		
+		when(userDaoMock.recordUser(login, email, password)).thenReturn(12L);
+		
 		userService.setUserDao(userDaoMock);
 		
-		userService.createNewUser(newUserData);
+		long id = userService.createNewUser(newUserData);
+		
+		assertNotEquals(0, id);
 	}
 	
 }

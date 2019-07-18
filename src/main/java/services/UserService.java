@@ -49,7 +49,7 @@ public class UserService {
 		return userExist;
 	}
 	
-	public void createNewUser(NewUserData userData)throws InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, NotRecordToDBException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException {
+	public long createNewUser(NewUserData userData)throws InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, NotRecordToDBException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException {
 		
 		if (!isCorrectEmail(userData.getEmail())) {
 			throw new InvalidEmailRegistrationException();
@@ -67,12 +67,15 @@ public class UserService {
 		if (checkUserEmailAlreadyExist(userData.getEmail())) 
 			throw new EmailAlreadyExistException();
 		
-		recordNewUser(userData);
+		long newUserId = recordNewUser(userData);
+		
+		return newUserId;
 	}
 	
-	private void recordNewUser(NewUserData userData) throws NotRecordToDBException {
+	private long recordNewUser(NewUserData userData) throws NotRecordToDBException {
 		try {
-			userDao.recordUser(userData.getLogin(), userData.getEmail(), userData.getPassword());
+			long id = userDao.recordUser(userData.getLogin(), userData.getEmail(), userData.getPassword());
+			return id;
 		} catch (SQLException e) {
 			logger.error("User not recorded", e);
 			throw new NotRecordToDBException();

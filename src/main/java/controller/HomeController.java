@@ -83,15 +83,15 @@ public class HomeController {
 		
 		try {
 			userService.createNewUser(newUserData);
-			return new RegistrationMessage("Success record new user", RegistrationMessage.SUCCES_REGISTRATION);
+			return new RegistrationMessage(RegistrationMessage.SUCCES_REGISTRATION);
 		} catch (InvalidLoginRegistrationException e) {
 			return new RegistrationMessage(RegistrationMessage.INCORRECT_LOGIN);
 		} catch (LoginAlreadyExistException e) {
-			return new RegistrationMessage("Error, login already exist", RegistrationMessage.LOGIN_ALREADY_EXIST);
+			return new RegistrationMessage(RegistrationMessage.LOGIN_ALREADY_EXIST);
 		} catch (EmailAlreadyExistException e) {
-			return new RegistrationMessage("Error, email already exist", RegistrationMessage.EMAIL_ALREADY_EXIST);
+			return new RegistrationMessage(RegistrationMessage.EMAIL_ALREADY_EXIST);
 		} catch (NotRecordToDBException e) {
-			return new RegistrationMessage("Error, when recording to db", RegistrationMessage.LOGIN_ALREADY_EXIST);
+			return new RegistrationMessage(RegistrationMessage.LOGIN_ALREADY_EXIST);
 		} catch (InvalidEmailRegistrationException e) {
 			return new RegistrationMessage(RegistrationMessage.INCORRECT_EMAIL);
 		} catch (InvalidPasswordRegistrationException e) {
@@ -107,10 +107,10 @@ public class HomeController {
 		boolean loginExist = userService.checkUserLoginAlreadyExist(login);
 		
 		if (loginExist) {
-			return new RegistrationMessage("Error, login already exist", RegistrationMessage.LOGIN_ALREADY_EXIST);
+			return new RegistrationMessage(RegistrationMessage.LOGIN_ALREADY_EXIST);
 		} 
 		
-		return new RegistrationMessage("Login is free", RegistrationMessage.LOGIN_IS_FREE);
+		return new RegistrationMessage(RegistrationMessage.LOGIN_IS_FREE);
 		
 	}
 	

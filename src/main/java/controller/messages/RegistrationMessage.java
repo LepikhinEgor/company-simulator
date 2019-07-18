@@ -17,13 +17,18 @@ public class RegistrationMessage {
 		this.text = message;
 	}
 	
-	public RegistrationMessage(String message, int status) {
-		this.text = message;
-		this.status = status;
-	}
-	
 	public RegistrationMessage(int status) {
 		this.status = status;
+		switch(status) {
+		case SUCCES_REGISTRATION: this.text = "Success registration";break;
+		case INCORRECT_LOGIN: this.text = "Invalid login";break;
+		case INCORRECT_EMAIL: this.text = "Invalid email";break;
+		case INCORRECT_PASSWORD: this.text = "Invalid password";break;
+		case LOGIN_ALREADY_EXIST: this.text = "Login already exist";break;
+		case LOGIN_IS_FREE: this.text = "Login is free";break;
+		case EMAIL_ALREADY_EXIST: this.text = "Email already exist";break;
+		case EMAIL_IS_FREE: this.text = "Email is free";break;
+		}
 	}
 
 	public int getStatus() {
