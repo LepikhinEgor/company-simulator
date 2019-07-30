@@ -1,0 +1,56 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="style.css"/>
+	
+       <title>Горизонтальное выпадающее меню</title>
+</head>
+<body>
+		<div id="container">
+		    <div id="header">
+          <div id="company_name">
+            <h1>Company</h1>
+          </div>
+          <div id="user_indicator">
+            <div id="user_icon_holder"></div>
+            <div id="user_nickname_holder>"></div>
+          </div>
+		    </div>
+		    <br>
+		    <br>
+		    <div class="sorting-block">
+		    	<span>Имя игрока:</span><input type="text" id="input-player-name">
+		    	<span>Карта:</span><input type="text" id="input-map-name">
+		    	<span>Уровень танка:</span><input type="number" id="input-tank-tier">
+		    	<span>Сортировать по:</span>
+		    	<select>
+		    		<option>урону</option>
+		    		<option>подсвету</option>
+		    		<option>каткам</option>
+		    		<option>уровню</option>
+		    		<option>дате</option>
+		    	</select>
+		    	<button id="start-sorting-replays">Сортировать</button>
+		    </div>
+		    <br>
+		    <br>
+		    <div>
+		    	<table class="table_tanks">
+		    	<thead>
+				  <tr>
+				    <th>Танк</th>
+				    <th>Уровень</th>
+				    <th>Карта</th>
+				    <th>Урон</th>
+				    <th>Урон по разведданным</th>
+				    <th>Урон по каткам</th>
+				    <th>Дата</th>
+				    </tr>
+				</thead>
+				<tbody class="table_tanks_body">
+				</tbody>
+				</table>
+		    </div>
+		</div>         
+	</body>
+</html>
