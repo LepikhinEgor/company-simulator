@@ -2,8 +2,9 @@
 <head>
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="style.css"/>
-	
-       <title>Горизонтальное выпадающее меню</title>
+	<script src="jquery-3.3.1.js" type="text/javascript"></script>
+	<script src="employees.js" type="text/javascript"></script>
+    <title>Горизонтальное выпадающее меню</title>
 </head>
 <body>
 	<div id="container">
@@ -82,15 +83,15 @@
 						        		</p>
 						        		<p>
 						        			<span>Sex:</span>
-						        			<input type="radio" name="choose_employee_sex" value="male">
-						        			<input type="radio" name="choose_employee_sex" value="female"> 
+						        			<input type="radio" name="choose_employee_sex" value="male"><label>male</label>
+						        			<input type="radio" name="choose_employee_sex" value="female"><label>female</label>
 										</p>
 										<p>
-						        			<input type="button" name="apply_employee_data" value="Apply">
+						        			<input type="button" id="apply_employee_data" value="Apply">
 						        		</p>
 						        	</form>
 						        </div>
-						        <a href="#kkk" class="close_modal_employee">Закрыть окно</a>
+						        <a href="#" class="close_modal_employee">Закрыть окно</a>
 						      </div>
 						    </div>
 						    <a href="#employee_modal_window">Вызвать всплывающее окно</a>
