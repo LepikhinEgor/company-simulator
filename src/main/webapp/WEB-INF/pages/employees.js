@@ -1,13 +1,30 @@
 $(document).ready(function() {
 	// requestReplaysAjax();
 
-    $('#create_new_employee').on('click', openEmployeeModalWindow);
+    $('#create_new_employee').on('click', newEmployeeOpenModal);
     $('#apply_employee_data').on('click', applyEmployeeData);
+    $('.employee_name').on('click', changeEmployeeOpenModal);
 });
 
 var changedEmployeeID = 0;
 
-function openEmployeeModalWindow() {;
+function changeEmployeeOpenModal(e) {
+    changedEmployeeID = $(this).attr("id");
+    openEmployeeModalWindow();
+}
+
+function newEmployeeOpenModal(e) {
+    changedEmployeeID = "newUser";
+    openEmployeeModalWindow();
+}
+
+function openEmployeeModalWindow() {
+    var sexVal = $("input[name=choose_employee_sex]").filter(":checked").val();
+    $('.input_employee_name').val(""),
+    $('.input_employee_age').val(""),
+    $('.input_employee_perf').val(""),
+    $('.input_employee_salary').val(""),
+
     document.location.href = "#employee_modal_window";
 }
 
@@ -21,10 +38,10 @@ function applyEmployeeData() {
         sex : sexVal || "undef"
     }
 
-    if (changedEmployeeID === 0)
+    if (changedEmployeeID === "newUser")
         addNewEmployee(newEmployee);
     else
-        changeEnployeeData();
+        changeEnployeeData(newEmployee);
     
     document.location.href = "#";
 }
@@ -43,5 +60,5 @@ function addNewEmployee(employeeData) {
 }
 
 function changeEnployeeData() {
-
+    console.log("changeExistEmployee");
 }
