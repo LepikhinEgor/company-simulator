@@ -7,23 +7,53 @@ $(document).ready(function() {
 });
 
 var changedEmployeeID = 0;
+var tempId = 4;
 
-function changeEmployeeOpenModal(e) {
-    changedEmployeeID = $(this).attr("id");
-    openEmployeeModalWindow();
+function refreshEventHandlers() {
+    $('#create_new_employee').off('click');
+    $('#apply_employee_data').off('click');
+    $('.employee_name').off('click');
+
+    $('#create_new_employee').on('click', newEmployeeOpenModal);
+    $('#apply_employee_data').on('click', applyEmployeeData);
+    $('.employee_name').on('click', changeEmployeeOpenModal);
 }
 
-function newEmployeeOpenModal(e) {
+function changeEmployeeOpenModal() {
+    var parent = $(this).closest("tr");
+    changedEmployeeID = parent.attr("id");
+
+    var newEmployee = {
+        name: parent.find(".employee_name").text() || "",
+        age : parent.find(".employee_age").text() || "",
+        perfomance : parent.find(".employee_perf").text() || "0",
+        salary : parent.find(".employee_salary").text() || "0",
+        sex : parent.find(".employee_sex").text()
+    }
+    openEmployeeModalWindow(newEmployee);
+}
+
+function newEmployeeOpenModal() {
     changedEmployeeID = "newUser";
-    openEmployeeModalWindow();
+
+    var newEmployee = {
+        name: "",
+        age : "",
+        perfomance : "",
+        salary :  "",
+        sex : ""
+    }
+
+    openEmployeeModalWindow(newEmployee);
 }
 
-function openEmployeeModalWindow() {
+function openEmployeeModalWindow(employeeData) {
     var sexVal = $("input[name=choose_employee_sex]").filter(":checked").val();
-    $('.input_employee_name').val(""),
-    $('.input_employee_age').val(""),
-    $('.input_employee_perf').val(""),
-    $('.input_employee_salary').val(""),
+
+    $('.input_employee_name').val(employeeData.name || "");
+    $('.input_employee_age').val(employeeData.age || "");
+    $('.input_employee_perf').val(employeeData.perfomance || "");
+    $('.input_employee_salary').val(employeeData.salary || "");
 
     document.location.href = "#employee_modal_window";
 }
@@ -47,16 +77,18 @@ function applyEmployeeData() {
 }
 
 function addNewEmployee(employeeData) {
-    console.log("employeeData");
-    var str = "<tr>";
-		str += "<td>" + employeeData.name + "</td>";
-		str += "<td>" + employeeData.age + "</td>";
-		str += "<td>" + employeeData.perfomance + "</td>";
-		str += "<td>" + employeeData.salary + "</td>";
-		str += "<td>" + employeeData.sex + "</td>";
-	str += "</tr>";
+    var str = "<tr id='emp_" + tempId + "'>";
+		str += "<td><a class=\"employee_name\">" + employeeData.name + "</a></td>";
+		str += "<td class=\"employee_age\">" + employeeData.age + "</td>";
+		str += "<td class=\"employee_perf\">" + employeeData.perfomance + "</td>";
+		str += "<td class=\"employee_salary\">" + employeeData.salary + "</td>";
+		str += "<td class=\"employee_sex\">" + employeeData.sex + "</td>";
+    str += "</tr>";
 
-	$('#employees_table').append(str);
+    $('#employees_table').append(str);
+    tempId++;
+
+    refreshEventHandlers();
 }
 
 function changeEnployeeData() {
