@@ -12,6 +12,8 @@ import aspects.annotations.Loggable;
 import controller.messages.NewUserData;
 import controller.messages.SignInData;
 import dao.UserDao;
+import entities.User;
+import exceptions.DatabaseAccessException;
 import exceptions.EmailAlreadyExistException;
 import exceptions.InvalidEmailRegistrationException;
 import exceptions.InvalidLoginRegistrationException;
@@ -96,6 +98,18 @@ public class UserService {
 		}
 		
 		return loginExist;
+	}
+	
+	@Loggable
+	public User getUserDataByLoginEmail(String loginEmail) throws DatabaseAccessException {
+		User user = null;
+		try {
+			user = userDao.getUserDataByLoginEmail(loginEmail);
+		} catch (SQLException e) {
+			throw new DatabaseAccessException("Error, when try get user data by login/email");
+		}
+		
+		return user;
 	}
 	
 	private boolean checkUserEmailAlreadyExist(String userEmail) {

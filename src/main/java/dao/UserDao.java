@@ -10,12 +10,36 @@ import java.sql.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import entities.User;
+
 public class UserDao {
 	
 	private final static Logger logger = LoggerFactory.getLogger(UserDao.class);
 	
 	
 	public UserDao() {
+	}
+	
+	public User getUserDataByLoginEmail(String loginEmail) throws SQLException {
+		Connection connection = ConnectionPool.getInstance().getConnection();
+		
+		String findUserQuerry = "SELECT * FROM users WHERE (email = ? OR login = ?);";
+		PreparedStatement findUserStatement = connection.prepareStatement(findUserQuerry);
+		findUserStatement.setString(1, loginEmail);
+		findUserStatement.setString(2, loginEmail);
+		
+		User foundUser = new User();
+		try {
+			ResultSet findedUsers = findUserStatement.executeQuery();
+			findedUsers.next();
+			foundUser.setId(findedUsers.getLong(1));
+			foundUser.setLogin(findedUsers.getString(2));
+			foundUser.setPassword(findedUsers.getString(3));
+			foundUser.setEmail(findedUsers.getString(4));
+		} finally {
+			connection.close();
+		}
+		return foundUser;
 	}
 	
 	public boolean signIn(String loginEmail, String password) throws SQLException {

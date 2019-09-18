@@ -17,7 +17,7 @@ $(function() {
         success: function(data) {
 			console.log(data);
 			if (data.status == 0)
-				document.location.href = "company";
+				document.location.href = "company?loginEmail="+userLogin;
 		}
       });
       //отмена действия по умолчанию для кнопки submit
