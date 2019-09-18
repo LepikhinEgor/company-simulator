@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import entities.Employee;
-import entities.UserCompany;
+import entities.Company;
 
 public class EmployeeDao {
 	public long createEmployee(Employee employee, long companyId) throws SQLException {

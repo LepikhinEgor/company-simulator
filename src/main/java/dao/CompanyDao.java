@@ -8,11 +8,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import entities.User;
-import entities.UserCompany;
+import entities.Company;
 
 public class CompanyDao {
 	
-	public long recordCompany(long userId, String name) throws SQLException {
+	public Company recordCompany(long userId, String name) throws SQLException {
 		Connection connection = DBConnectionHelper.getConnection();
 		
 		String recordCompanyQuerry = "INSERT INTO companies (company_id, name, cash, owner_id) VALUES ("
@@ -22,7 +22,7 @@ public class CompanyDao {
 		try {
 			createCompanyStatement =  connection.prepareStatement(recordCompanyQuerry, Statement.RETURN_GENERATED_KEYS);
 			
-			UserCompany newUserCompany = new UserCompany(name);
+			Company newUserCompany = new Company(name);
 			
 			createCompanyStatement.setString(1, newUserCompany.getName());
 			createCompanyStatement.setLong(2, newUserCompany.getCash());
@@ -30,8 +30,10 @@ public class CompanyDao {
 			
 			int companiesInsert = createCompanyStatement.executeUpdate();
 			
-			if (companiesInsert == 1)
-				return getGeneratedId(createCompanyStatement);
+			if (companiesInsert == 1) {
+				newUserCompany.setId(getGeneratedId(createCompanyStatement));
+				return newUserCompany;
+			}
 			else
 				throw new SQLException("Incorrect number of created companies. Required 1");
 		} finally {
