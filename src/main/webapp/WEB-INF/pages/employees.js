@@ -91,6 +91,11 @@ function addNewEmployee(employeeData) {
     refreshEventHandlers();
 }
 
-function changeEnployeeData() {
-    console.log("changeExistEmployee");
+function changeEnployeeData(employeeData) {
+    var empSelector = "#" + changedEmployeeID;
+    $(empSelector).find(".employee_name").text(employeeData.name);
+    $(empSelector).find(".employee_age").text(employeeData.age);
+    $(empSelector).find(".employee_perf").text(employeeData.perfomance);
+    $(empSelector).find(".employee_salary").text(employeeData.salary);
+    $(empSelector).find(".employee_sex").text(employeeData.sex);
 }
