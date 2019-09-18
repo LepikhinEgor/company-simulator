@@ -63,7 +63,7 @@ public class UserServiceTest {
 	
 	@Test
 	public void correctUserSignIn() throws SQLException, InvalidSignInPasswordException, InvalidSignInLoginEmail {
-		String login = "user123";
+		String login = "admin";
 		String password = "password";
 		
 		SignInData signInData = new SignInData();
