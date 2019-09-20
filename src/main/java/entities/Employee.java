@@ -5,12 +5,16 @@ public class Employee {
 	public static final String MALE = "male";
 	public static final String FEMALE = "female";
 
+	private long id;
 	private String name;
 	private int age;
 	private String sex;
 	private int perfomance;
 	private int salary;
 	private String description;
+	
+	public Employee() {
+	}
 	
 	public Employee(String name, int age, String sex, int perfomanse, int salary, String description) {
 		this.name = name;
@@ -68,6 +72,18 @@ public class Employee {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "Employee [id=" + id + ", name=" + name + ", age=" + age + ", sex=" + sex + ", perfomance=" + perfomance
+				+ ", salary=" + salary + ", description=" + description + "]";
+	}
 }

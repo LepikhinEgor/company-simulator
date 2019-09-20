@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 import dao.CompanyDao;
+import dao.EmployeeDao;
 import dao.UserDao;
 
 @Configuration
@@ -16,12 +17,17 @@ import dao.UserDao;
 public class SpringConfig {
 	
 	@Bean
-	public UserDao userDao() throws SQLException {
+	public UserDao userDao(){
 		return new UserDao();
 	}
 	
 	@Bean
-	public CompanyDao companyDao() throws SQLException {
+	public CompanyDao companyDao(){
 		return new CompanyDao();
+	}
+	
+	@Bean
+	public EmployeeDao employeeDao() {
+		return new EmployeeDao();
 	}
 }
