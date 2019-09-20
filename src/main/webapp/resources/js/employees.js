@@ -1,9 +1,7 @@
 $(document).ready(function() {
-	// requestReplaysAjax();
 
-    $('#create_new_employee').on('click', newEmployeeOpenModal);
-    $('#apply_employee_data').on('click', applyEmployeeData);
-    $('.employee_name').on('click', changeEmployeeOpenModal);
+	refreshEventHandlers();
+	requestEmployeesList();
 });
 
 var changedEmployeeID = 0;
@@ -17,6 +15,24 @@ function refreshEventHandlers() {
     $('#create_new_employee').on('click', newEmployeeOpenModal);
     $('#apply_employee_data').on('click', applyEmployeeData);
     $('.employee_name').on('click', changeEmployeeOpenModal);
+}
+
+function requestEmployeesList() {
+	var requestData = {
+		loginEmail: "admin",
+		orderNum: 0,
+		pageNum: 0
+    }
+	
+	$.ajax({
+        type: "POST",
+        url: "/company-simulator/company/hr/get-employees",
+        contentType: 'application/json',
+        data: JSON.stringify(requestData),
+        success: function(data) {
+			console.log(data);
+		}
+      });
 }
 
 function changeEmployeeOpenModal() {

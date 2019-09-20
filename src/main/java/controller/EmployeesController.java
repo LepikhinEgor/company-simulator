@@ -60,7 +60,7 @@ public class EmployeesController {
 		return "company";
 	}
 	
-	@RequestMapping(value = "/company/hr/get-employees", method = RequestMethod.GET)
+	@RequestMapping(value = "/company/hr/get-employees", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
 	public EmployeesListMessage getEmployees(@RequestBody EmployeesListQuerryData requestData) {
 		

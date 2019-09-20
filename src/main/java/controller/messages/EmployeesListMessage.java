@@ -38,5 +38,29 @@ public class EmployeesListMessage {
 		
 		this.employees = employees;
 	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Employee[] getEmployees() {
+		return employees;
+	}
+
+	public void setEmployees(Employee[] employees) {
+		this.employees = employees;
+	}
 	
 }
