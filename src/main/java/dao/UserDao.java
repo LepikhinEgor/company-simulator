@@ -10,6 +10,7 @@ import java.sql.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import aspects.annotations.Loggable;
 import entities.User;
 
 public class UserDao {
@@ -20,6 +21,7 @@ public class UserDao {
 	public UserDao() {
 	}
 	
+	@Loggable
 	public User getUserDataByLoginEmail(String loginEmail) throws SQLException {
 		Connection connection = ConnectionPool.getInstance().getConnection();
 		
@@ -42,6 +44,7 @@ public class UserDao {
 		return foundUser;
 	}
 	
+	@Loggable
 	public boolean signIn(String loginEmail, String password) throws SQLException {
 		Connection connection = ConnectionPool.getInstance().getConnection();
 		
@@ -63,6 +66,7 @@ public class UserDao {
 		return loginExist;
 	}
 	
+	@Loggable
 	public boolean checkLoginAlreadyExist(String userLogin) throws SQLException {
 		Connection connection = ConnectionPool.getInstance().getConnection();
 		
@@ -84,6 +88,7 @@ public class UserDao {
 		return loginExist;
 	}
 	
+	@Loggable
 	public boolean checkEmailAlreadyExist(String userEmail) throws SQLException {
 		Connection connection = ConnectionPool.getInstance().getConnection();
 		
@@ -103,6 +108,7 @@ public class UserDao {
 		return emailExist;
 	}
 	
+	@Loggable
 	public long recordUser(String login, String email, String password) throws SQLException {
 		Connection connection = ConnectionPool.getInstance().getConnection();
 		

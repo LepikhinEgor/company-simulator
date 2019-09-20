@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoggingAspect {
 	@Around("execution(* *(..)) && @annotation(aspects.annotations.Loggable)")
-	public Object logMethod(ProceedingJoinPoint joinPoint) {
+	public Object logMethod(ProceedingJoinPoint joinPoint) throws Throwable{
 		Logger logger = LoggerFactory.getLogger(joinPoint.getTarget().getClass());
 		
 		Object methodReturn = null;
@@ -31,6 +31,7 @@ public class LoggingAspect {
 			methodReturn = joinPoint.proceed();
 		} catch (Throwable e) {
 			logger.error("Method " + methodName + "throws exception", e);
+			throw e;
 		}
 		
 		return methodReturn;

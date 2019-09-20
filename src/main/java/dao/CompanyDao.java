@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import aspects.annotations.Loggable;
 import entities.User;
 import entities.Company;
 
@@ -17,6 +18,7 @@ public class CompanyDao {
 	 * @return Return user company if it exist, else return null
 	 * @throws SQLException
 	 */
+	@Loggable
 	public Company getUserCompany(long userId) throws SQLException {
 		Connection connection = DBConnectionHelper.getConnection();
 		String getCompanyQuerry = "SELECT * FROM companies WHERE owner_id = ?";
@@ -41,6 +43,7 @@ public class CompanyDao {
 		
 	}
 	
+	@Loggable
 	public long recordCompany(Company newCompany) throws SQLException {
 		Connection connection = DBConnectionHelper.getConnection();
 		
