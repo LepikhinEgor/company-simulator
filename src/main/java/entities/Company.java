@@ -5,20 +5,24 @@ import java.util.ArrayList;
 public class Company {
 	
 	private final long DEFAULT_CASH = 1000000; 
+	private final String DEFAULT_NAME = "My company";
 	
 	private long id;
 
 	private String name;
-	private User userOwner;
+	private long ownerId;
 	private CompanyTeam team;
 	private long cash;
 	private ArrayList<Contract> contracts;
 	
-	public Company(String name) {
-		this.name = name;
-		this.team = new CompanyTeam();
+	public Company() {
+		this.name = DEFAULT_NAME;
 		this.cash = DEFAULT_CASH;
+		this.team = new CompanyTeam();
 		this.contracts = new ArrayList<Contract>();
+	}
+	
+	public Company(long userId) {
 	}
 
 	public long getId() {
@@ -29,14 +33,14 @@ public class Company {
 		this.id = id;
 	}
 	
-	public User getUserOwner() {
-		return userOwner;
+	public long getOwnerId() {
+		return ownerId;
 	}
-	
-	public void setUserOwner(User userOwner) {
-		this.userOwner = userOwner;
+
+	public void setOwnerId(long userOwnerId) {
+		this.ownerId = userOwnerId;
 	}
-	
+
 	public CompanyTeam getTeam() {
 		return team;
 	}
@@ -79,4 +83,10 @@ public class Company {
 	public void hireEmployee(Employee employee) {
 		team.addEmployee(employee);
 	}
+
+	@Override
+	public String toString() {
+		return "Company [id=" + id + ", name=" + name + ", ownerId=" + ownerId + ", cash=" + cash + "]";
+	}
+	
 }

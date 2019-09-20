@@ -12,7 +12,36 @@ import entities.Company;
 
 public class CompanyDao {
 	
-	public Company recordCompany(long userId, String name) throws SQLException {
+	/**
+	 * @param userId Company owner ID
+	 * @return Return user company if it exist, else return null
+	 * @throws SQLException
+	 */
+	public Company getUserCompany(long userId) throws SQLException {
+		Connection connection = DBConnectionHelper.getConnection();
+		String getCompanyQuerry = "SELECT * FROM companies WHERE owner_id = ?";
+		
+		PreparedStatement getCompanyStatement = connection.prepareStatement(getCompanyQuerry);
+		getCompanyStatement.setLong(1, userId);
+		
+		ResultSet foundCompaniesSet = getCompanyStatement.executeQuery();
+		
+		if (!foundCompaniesSet.next())
+			return null;
+		
+		Company foundCompany = new Company();
+		foundCompany.setId(foundCompaniesSet.getLong(1));
+		foundCompany.setName(foundCompaniesSet.getString(2));
+		foundCompany.setCash(foundCompaniesSet.getLong(3));
+		foundCompany.setOwnerId(foundCompaniesSet.getLong(4));
+		
+		foundCompaniesSet.next();
+		
+		return foundCompany;
+		
+	}
+	
+	public long recordCompany(Company newCompany) throws SQLException {
 		Connection connection = DBConnectionHelper.getConnection();
 		
 		String recordCompanyQuerry = "INSERT INTO companies (company_id, name, cash, owner_id) VALUES ("
@@ -22,17 +51,14 @@ public class CompanyDao {
 		try {
 			createCompanyStatement =  connection.prepareStatement(recordCompanyQuerry, Statement.RETURN_GENERATED_KEYS);
 			
-			Company newUserCompany = new Company(name);
-			
-			createCompanyStatement.setString(1, newUserCompany.getName());
-			createCompanyStatement.setLong(2, newUserCompany.getCash());
-			createCompanyStatement.setLong(3, userId);
+			createCompanyStatement.setString(1, newCompany.getName());
+			createCompanyStatement.setLong(2, newCompany.getCash());
+			createCompanyStatement.setLong(3, newCompany.getOwnerId());
 			
 			int companiesInsert = createCompanyStatement.executeUpdate();
 			
 			if (companiesInsert == 1) {
-				newUserCompany.setId(getGeneratedId(createCompanyStatement));
-				return newUserCompany;
+				return getGeneratedId(createCompanyStatement);
 			}
 			else
 				throw new SQLException("Incorrect number of created companies. Required 1");

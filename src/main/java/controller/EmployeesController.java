@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import entities.Company;
 import entities.User;
 import exceptions.DatabaseAccessException;
+import services.CompanyService;
 import services.UserService;
 
 @Controller
@@ -22,6 +24,9 @@ public class EmployeesController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	CompanyService companyService;
 	
 	@RequestMapping(value = "/company", method = RequestMethod.GET)
 	public String home(@RequestParam String loginEmail) {
@@ -35,6 +40,13 @@ public class EmployeesController {
 		
 		if (userData != null)
 			logger.info(userData.toString());
+		
+		try {
+			Company userCompany = companyService.getUserCompany(userData.getId());
+			logger.info(userCompany.toString());
+		} catch (DatabaseAccessException e) {
+			logger.error(e.getMessage(), e);
+		}
 		
 		return "company";
 	}
