@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import aspects.annotations.Loggable;
 import controller.messages.EmployeeCreateData;
+import controller.messages.EmployeeUpdateData;
 import dao.EmployeeDao;
 import entities.Company;
 import entities.Employee;
@@ -34,6 +35,24 @@ public class EmployeeService {
 			return employeeDao.getEmployeesList(companyId, orderNum, pageNum, EMPLOYEES_PAGE_LIMIT);
 		} catch (SQLException e) {
 			throw new DatabaseAccessException("Error trying to get employees list");
+		}
+	}
+	
+	public Employee updateEmployee(EmployeeUpdateData employeeData) throws DatabaseAccessException {
+		Employee newEmployee = new Employee(employeeData);
+		
+		try {
+			User user = userService.getUserDataByLoginEmail(employeeData.getUserLoginEmail());
+			Company company = companyService.getUserCompany(user.getId());
+		
+			long createdEmployeeId = employeeDao.updateEmployee(newEmployee, company.getId());
+			newEmployee.setId(createdEmployeeId);
+			
+			return newEmployee;
+		} catch(SQLException e) {
+			throw new DatabaseAccessException("Error trying record new employee to database");
+		} catch(DatabaseAccessException e) {
+			throw new DatabaseAccessException("Error trying record new employee to database");
 		}
 	}
 	

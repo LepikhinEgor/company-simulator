@@ -85,6 +85,33 @@ public class EmployeeDao {
 		}
 	}
 	
+	@Loggable
+	public long updateEmployee(Employee employee, long companyId) throws SQLException {
+	
+		String recordEmployeeQuerry = "UPDATE employees SET name = ?, age = ?, sex = ?, "
+				+ "salary = ?, performance = ?, description = ? WHERE employee_id = ?";
+		
+		PreparedStatement recordEmployeeStatement = null;
+		try(Connection connection = DBConnectionHelper.getConnection();) {
+			recordEmployeeStatement = connection.prepareStatement(recordEmployeeQuerry, Statement.RETURN_GENERATED_KEYS);
+						
+			recordEmployeeStatement.setString(1, employee.getName());
+			recordEmployeeStatement.setInt(2, employee.getAge());
+			recordEmployeeStatement.setString(3, employee.getSex());
+			recordEmployeeStatement.setInt(4, employee.getSalary());
+			recordEmployeeStatement.setInt(5, employee.getPerfomance());
+			recordEmployeeStatement.setString(6, employee.getDescription());
+			recordEmployeeStatement.setLong(7, employee.getId());
+			
+			int employeesInsert = recordEmployeeStatement.executeUpdate();
+			
+			if (employeesInsert == 1)
+				return getGeneratedId(recordEmployeeStatement);
+			else
+				throw new SQLException("Incorrect number of created companies. Required 1");
+		}
+	}
+	
 	private long getGeneratedId(PreparedStatement statement) throws SQLException {
 		try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
             if (generatedKeys.next()) {
