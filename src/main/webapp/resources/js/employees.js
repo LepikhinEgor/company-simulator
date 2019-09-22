@@ -31,6 +31,16 @@ function requestEmployeesList() {
         data: JSON.stringify(requestData),
         success: function(data) {
 			console.log(data);
+			
+			for (var key in data) {
+				if (key === "employees") {
+					var employees = data[key];
+					for(var employee in employees) {
+						console.log(employees[employee]);
+						addEmployeeToTable(employees[employee]);
+					}
+				}
+			}
 		}
       });
 }
@@ -110,18 +120,22 @@ function applyEmployeeData() {
 function addNewEmployee(employeeData) {
 	var status = requestCreateEmployee(employeeData);
 	
-    var str = "<tr id='emp_" + tempId + "'>";
-		str += "<td><a class=\"employee_name\">" + employeeData.name + "</a></td>";
-		str += "<td class=\"employee_age\">" + employeeData.age + "</td>";
-		str += "<td class=\"employee_perf\">" + employeeData.perfomance + "</td>";
-		str += "<td class=\"employee_salary\">" + employeeData.salary + "</td>";
-		str += "<td class=\"employee_sex\">" + employeeData.sex + "</td>";
-    str += "</tr>";
-
-    $('#employees_table').append(str);
-    tempId++;
+	addEmployeeToTable(employeeData);
     
     refreshEventHandlers();
+}
+
+function addEmployeeToTable(employeeData) {
+	var str = "<tr id='emp_" + employeeData.id + "'>";
+	str += "<td><a class=\"employee_name\">" + employeeData.name + "</a></td>";
+	str += "<td class=\"employee_age\">" + employeeData.age + "</td>";
+	str += "<td class=\"employee_perf\">" + employeeData.perfomance + "</td>";
+	str += "<td class=\"employee_salary\">" + employeeData.salary + "</td>";
+	str += "<td class=\"employee_sex\">" + employeeData.sex + "</td>";
+	str += "</tr>";
+	
+	$('#employees_table').append(str);
+	tempId++;
 }
 
 function changeEnployeeData(employeeData) {

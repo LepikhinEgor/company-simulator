@@ -36,27 +36,6 @@
 								  <th>Salary</th>
 								  <th>Sex</th>
 								</tr>
-								<tr id="emp_1">
-								  <td><a class="employee_name">Vasya</a></td>
-								  <td class="employee_age">35</td>
-								  <td class="employee_perf">55%</td>
-								  <td class="employee_salary">25000</td>
-								  <td class="employee_sex">male</td>
-								</tr>
-								<tr id="emp_2">
-								  <td><a class="employee_name">Vasya</a></td>
-								  <td class="employee_age">35</td>
-								  <td class="employee_perf">55%</td>
-								  <td class="employee_salary">25000</td>
-								  <td class="employee_sex">male</td>
-								</tr>
-								<tr id="emp_3">
-								  <td><a class="employee_name">Vasya</a></td>
-								  <td class="employee_age">35</td>
-								  <td class="employee_perf">55%</td>
-								  <td class="employee_salary">25000</td>
-								  <td class="employee_sex">male</td>
-								</tr>
 							</table>
 							<form id="employees_control">
 								<input type="button" id="hire_employee" value="Hire employee">
