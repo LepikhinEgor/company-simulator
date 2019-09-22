@@ -1,5 +1,7 @@
 package entities;
 
+import controller.messages.EmployeeCreateData;
+
 public class Employee {
 	
 	public static final String MALE = "male";
@@ -14,6 +16,16 @@ public class Employee {
 	private String description;
 	
 	public Employee() {
+	}
+	
+	public Employee(EmployeeCreateData employeeData) {
+		this.name = employeeData.getName();
+		this.age = employeeData.getAge();
+		this.salary = employeeData.getSalary();
+		this.sex = employeeData.getSex();
+		this.perfomance = employeeData.getPerfomance();
+		
+		this.description = "No description";
 	}
 	
 	public Employee(String name, int age, String sex, int perfomanse, int salary, String description) {
