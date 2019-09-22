@@ -60,6 +60,22 @@ function requestCreateEmployee(employeeData) {
 	return status;
 }
 
+function requestUpdateEmployee(employeeData) {
+	var status = 0;
+	employeeData.userLoginEmail = "admin";
+	employeeData.id = changedEmployeeID.substring(4);
+	$.ajax({
+        type: "POST",
+        url: "/company-simulator/company/hr/update-employee",
+        contentType: 'application/json',
+        data: JSON.stringify(employeeData),
+        success: function(data) {
+			console.log(data);
+		}
+      });
+	return status;
+}
+
 function changeEmployeeOpenModal() {
     var parent = $(this).closest("tr");
     changedEmployeeID = parent.attr("id");
@@ -139,10 +155,13 @@ function addEmployeeToTable(employeeData) {
 }
 
 function changeEnployeeData(employeeData) {
+	requestUpdateEmployee(employeeData);
+	
     var empSelector = "#" + changedEmployeeID;
     $(empSelector).find(".employee_name").text(employeeData.name);
     $(empSelector).find(".employee_age").text(employeeData.age);
     $(empSelector).find(".employee_perf").text(employeeData.perfomance);
     $(empSelector).find(".employee_salary").text(employeeData.salary);
     $(empSelector).find(".employee_sex").text(employeeData.sex);
+    
 }

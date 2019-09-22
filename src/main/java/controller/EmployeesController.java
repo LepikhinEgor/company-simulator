@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import controller.messages.EmployeeCreateData;
 import controller.messages.EmployeeCreateMessage;
+import controller.messages.EmployeeUpdateData;
 import controller.messages.EmployeesListMessage;
 import controller.messages.EmployeesListQuerryData;
 import entities.Company;
@@ -89,21 +90,27 @@ public class EmployeesController {
 	@ResponseBody
 	public EmployeeCreateMessage createEmployee(@RequestBody EmployeeCreateData employeeData) {
 		
-		User userData = null;
 		try {
-			userData = userService.getUserDataByLoginEmail(employeeData.getUserLoginEmail());
-			if (userData != null)
-				logger.info(userData.toString());
-			
-			Company userCompany = null;
-			userCompany = companyService.getUserCompany(userData.getId());
-			logger.info(userCompany.toString());
-			
 			Employee createdEmployee = employeeService.createEmployee(employeeData);
 			
 		} catch (DatabaseAccessException e) {
-			logger.error("user not received");
+			logger.error("employee not created", e);
 		}
+		
+		return new EmployeeCreateMessage(0);
+	}
+	
+	@RequestMapping(value = "/company/hr/update-employee", method = RequestMethod.POST, consumes = "application/json")
+	@ResponseBody
+	public EmployeeCreateMessage updateEmployee(@RequestBody EmployeeUpdateData employeeData) {
+		
+		try {
+			Employee updatedEmployee = employeeService.updateEmployee(employeeData);
+			
+		} catch (DatabaseAccessException e) {
+			logger.error("employee not update", e);
+		}
+		
 		return new EmployeeCreateMessage(0);
 	}
 	
