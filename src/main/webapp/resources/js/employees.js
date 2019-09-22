@@ -121,8 +121,6 @@ function addNewEmployee(employeeData) {
 	var status = requestCreateEmployee(employeeData);
 	
 	addEmployeeToTable(employeeData);
-    
-    refreshEventHandlers();
 }
 
 function addEmployeeToTable(employeeData) {
@@ -136,6 +134,8 @@ function addEmployeeToTable(employeeData) {
 	
 	$('#employees_table').append(str);
 	tempId++;
+	
+	refreshEventHandlers();
 }
 
 function changeEnployeeData(employeeData) {
