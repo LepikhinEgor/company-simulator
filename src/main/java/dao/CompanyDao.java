@@ -20,26 +20,27 @@ public class CompanyDao {
 	 */
 	@Loggable
 	public Company getUserCompany(long userId) throws SQLException {
-		Connection connection = DBConnectionHelper.getConnection();
 		String getCompanyQuerry = "SELECT * FROM companies WHERE owner_id = ?";
 		
-		PreparedStatement getCompanyStatement = connection.prepareStatement(getCompanyQuerry);
-		getCompanyStatement.setLong(1, userId);
-		
-		ResultSet foundCompaniesSet = getCompanyStatement.executeQuery();
-		
-		if (!foundCompaniesSet.next())
-			return null;
-		
-		Company foundCompany = new Company();
-		foundCompany.setId(foundCompaniesSet.getLong(1));
-		foundCompany.setName(foundCompaniesSet.getString(2));
-		foundCompany.setCash(foundCompaniesSet.getLong(3));
-		foundCompany.setOwnerId(foundCompaniesSet.getLong(4));
-		
-		foundCompaniesSet.next();
-		
-		return foundCompany;
+		try(Connection connection = DBConnectionHelper.getConnection()) {
+			PreparedStatement getCompanyStatement = connection.prepareStatement(getCompanyQuerry);
+			getCompanyStatement.setLong(1, userId);
+			
+			ResultSet foundCompaniesSet = getCompanyStatement.executeQuery();
+			
+			if (!foundCompaniesSet.next())
+				return null;
+			
+			Company foundCompany = new Company();
+			foundCompany.setId(foundCompaniesSet.getLong(1));
+			foundCompany.setName(foundCompaniesSet.getString(2));
+			foundCompany.setCash(foundCompaniesSet.getLong(3));
+			foundCompany.setOwnerId(foundCompaniesSet.getLong(4));
+			
+			foundCompaniesSet.next();
+			
+			return foundCompany;
+		}
 		
 	}
 	

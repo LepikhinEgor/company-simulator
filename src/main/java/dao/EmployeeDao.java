@@ -17,39 +17,39 @@ public class EmployeeDao {
 	
 	@Loggable
 	public Employee[] getEmployeesList(long companyId, int orderNum, int pageNum, int pageLimit) throws SQLException {
-		Connection connection = DBConnectionHelper.getConnection();
 		
 		String orderBy = "";
 		switch(orderNum) {
 		case ORDER_BY_NAME: orderBy = "name";break;
 		}
 		
-		String getEmployeesQuerry = "SELECT * FROM employees WHERE company_id = ? "
-				+ "ORDER BY " + orderBy + " LIMIT " + pageNum*pageLimit + ", " + pageLimit;
-		
-		PreparedStatement getEmployeesStatement = connection.prepareStatement(getEmployeesQuerry);
-		getEmployeesStatement.setLong(1, companyId);
-		
-		ResultSet foundEmployees = getEmployeesStatement.executeQuery();
-		
-		ArrayList<Employee> employees = new ArrayList<Employee>(); 
-		
-		while(foundEmployees.next()) {
-			Employee employee = new Employee();
+		try(Connection connection = DBConnectionHelper.getConnection();) {
+			String getEmployeesQuerry = "SELECT * FROM employees WHERE company_id = ? "
+					+ "ORDER BY " + orderBy + " LIMIT " + pageNum*pageLimit + ", " + pageLimit;
 			
-			employee.setId(foundEmployees.getLong(1));
-			employee.setName(foundEmployees.getString(2));
-			employee.setAge(foundEmployees.getInt(3));
-			employee.setSex(foundEmployees.getString(4));
-			employee.setSalary(foundEmployees.getInt(5));
-			employee.setPerfomance(foundEmployees.getInt(6));
-			employee.setDescription(foundEmployees.getString(7));
+			PreparedStatement getEmployeesStatement = connection.prepareStatement(getEmployeesQuerry);
+			getEmployeesStatement.setLong(1, companyId);
 			
-			employees.add(employee);
+			ResultSet foundEmployees = getEmployeesStatement.executeQuery();
+			
+			ArrayList<Employee> employees = new ArrayList<Employee>(); 
+			
+			while(foundEmployees.next()) {
+				Employee employee = new Employee();
+				
+				employee.setId(foundEmployees.getLong(1));
+				employee.setName(foundEmployees.getString(2));
+				employee.setAge(foundEmployees.getInt(3));
+				employee.setSex(foundEmployees.getString(4));
+				employee.setSalary(foundEmployees.getInt(5));
+				employee.setPerfomance(foundEmployees.getInt(6));
+				employee.setDescription(foundEmployees.getString(7));
+				
+				employees.add(employee);
+			}
+			
+			return employees.toArray(new Employee[employees.size()]);
 		}
-		
-		return employees.toArray(new Employee[employees.size()]);
-		
 	}
 	
 	@Loggable
