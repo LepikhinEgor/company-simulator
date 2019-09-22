@@ -35,6 +35,21 @@ function requestEmployeesList() {
       });
 }
 
+function requestCreateEmployee(employeeData) {
+	var status = 0;
+	employeeData.userLoginEmail = "admin";
+	$.ajax({
+        type: "POST",
+        url: "/company-simulator/company/hr/create-employee",
+        contentType: 'application/json',
+        data: JSON.stringify(employeeData),
+        success: function(data) {
+			console.log(data);
+		}
+      });
+	return status;
+}
+
 function changeEmployeeOpenModal() {
     var parent = $(this).closest("tr");
     changedEmployeeID = parent.attr("id");
@@ -93,6 +108,8 @@ function applyEmployeeData() {
 }
 
 function addNewEmployee(employeeData) {
+	var status = requestCreateEmployee(employeeData);
+	
     var str = "<tr id='emp_" + tempId + "'>";
 		str += "<td><a class=\"employee_name\">" + employeeData.name + "</a></td>";
 		str += "<td class=\"employee_age\">" + employeeData.age + "</td>";
@@ -103,7 +120,7 @@ function addNewEmployee(employeeData) {
 
     $('#employees_table').append(str);
     tempId++;
-
+    
     refreshEventHandlers();
 }
 

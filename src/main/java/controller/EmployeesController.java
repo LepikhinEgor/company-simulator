@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import controller.messages.EmployeeCreateData;
+import controller.messages.EmployeeCreateMessage;
 import controller.messages.EmployeesListMessage;
 import controller.messages.EmployeesListQuerryData;
 import entities.Company;
@@ -81,6 +83,28 @@ public class EmployeesController {
 			logger.error("user not received");
 		}
 		return new EmployeesListMessage(0, employees);
+	}
+	
+	@RequestMapping(value = "/company/hr/create-employee", method = RequestMethod.POST, consumes = "application/json")
+	@ResponseBody
+	public EmployeeCreateMessage createEmployee(@RequestBody EmployeeCreateData employeeData) {
+		
+		User userData = null;
+		try {
+			userData = userService.getUserDataByLoginEmail(employeeData.getUserLoginEmail());
+			if (userData != null)
+				logger.info(userData.toString());
+			
+			Company userCompany = null;
+			userCompany = companyService.getUserCompany(userData.getId());
+			logger.info(userCompany.toString());
+			
+			Employee createdEmployee = employeeService.createEmployee(employeeData);
+			
+		} catch (DatabaseAccessException e) {
+			logger.error("user not received");
+		}
+		return new EmployeeCreateMessage(0);
 	}
 	
 }
