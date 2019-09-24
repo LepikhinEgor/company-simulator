@@ -38,6 +38,7 @@ public class EmployeeService {
 		}
 	}
 	
+	@Loggable
 	public Employee updateEmployee(EmployeeUpdateData employeeData, String userLoginEmail) throws DatabaseAccessException {
 		Employee newEmployee = new Employee(employeeData);
 		
@@ -56,6 +57,7 @@ public class EmployeeService {
 		}
 	}
 	
+	@Loggable
 	public Employee createEmployee(EmployeeCreateData employeeData, String userLoginEmail) throws DatabaseAccessException {
 		Employee newEmployee = new Employee(employeeData);
 		
