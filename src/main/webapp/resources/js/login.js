@@ -16,11 +16,33 @@ $(function() {
         data: JSON.stringify(userData),
         success: function(data) {
 			console.log(data);
-			if (data.status == 0)
-				document.location.href = "company?loginEmail="+userLogin;
+			if (data.status == 0) {
+				setCookie('signedUser', userLogin, {'max-age': 3600, path: '/'});
+				document.location.href = "company";
+			}
 		}
       });
       //отмена действия по умолчанию для кнопки submit
       e.preventDefault(); 
     });
+    
+    function setCookie(name, value, options = {}) {
+//    	  if (options.expires.toUTCString) {
+//    	    options.expires = options.expires.toUTCString();
+//    	  }
+
+    	  let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+    	  for (let optionKey in options) {
+    	    updatedCookie += "; " + optionKey;
+    	    let optionValue = options[optionKey];
+    	    if (optionValue !== true) {
+    	      updatedCookie += "=" + optionValue;
+    	    }
+    	  }
+    	  
+    	  console.log(updatedCookie);
+
+    	  document.cookie = updatedCookie;
+    	}
  });
