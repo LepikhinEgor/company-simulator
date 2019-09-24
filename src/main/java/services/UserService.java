@@ -35,8 +35,16 @@ public class UserService {
 		this.userDao = userDao;
 	}
 	
+	/**
+	 * 
+	 * @param signUpData
+	 * @return true if user with specified login and password exist
+	 * @throws InvalidSignInPasswordException password must match a-z A-Z 0-9 !-*
+	 * @throws InvalidSignInLoginEmail
+	 * @throws DatabaseAccessException 
+	 */
 	@Loggable
-	public boolean userSignIn(SignInData signUpData) throws InvalidSignInPasswordException, InvalidSignInLoginEmail, SQLException {
+	public boolean userSignIn(SignInData signUpData) throws InvalidSignInPasswordException, InvalidSignInLoginEmail, DatabaseAccessException {
 		
 		boolean isEmail = isCorrectEmail(signUpData.getLoginEmail());
 		boolean isLogin = isCorrectLogin(signUpData.getLoginEmail());
@@ -48,7 +56,12 @@ public class UserService {
 		if (!correctPassword)
 			throw new InvalidSignInPasswordException();
 		
-		boolean userExist = userDao.signIn(signUpData.getLoginEmail(), signUpData.getPassword());
+		boolean userExist;
+		try {
+			userExist = userDao.signIn(signUpData.getLoginEmail(), signUpData.getPassword());
+		} catch (SQLException e) {
+			throw new DatabaseAccessException(e.getMessage());
+		}
 		
 		return userExist;
 	}

@@ -18,6 +18,7 @@ import controller.messages.NewUserData;
 import controller.messages.RegistrationMessage;
 import controller.messages.SignInData;
 import controller.messages.SignInMessage;
+import exceptions.DatabaseAccessException;
 import exceptions.EmailAlreadyExistException;
 import exceptions.InvalidEmailRegistrationException;
 import exceptions.InvalidLoginRegistrationException;
@@ -57,7 +58,7 @@ public class HomeController {
 		} catch (InvalidSignInLoginEmail e) {
 			logger.error("Invalid login or email", e);
 			return new SignInMessage(SignInMessage.INVALID_LOGIN);
-		} catch (SQLException e) {
+		} catch (DatabaseAccessException e) {
 			logger.error("Sign in error", e);
 			return new SignInMessage(SignInMessage.OTHER_MISTAKE);
 		}
