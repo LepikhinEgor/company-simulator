@@ -21,6 +21,11 @@ public class UserDao {
 	public UserDao() {
 	}
 	
+	/**
+	 * @param loginEmail user login or email
+	 * @return found user data from database. If it's not exist then return null
+	 * @throws SQLException
+	 */
 	@Loggable
 	public User getUserDataByLoginEmail(String loginEmail) throws SQLException {
 		Connection connection = ConnectionPool.getInstance().getConnection();
@@ -30,14 +35,17 @@ public class UserDao {
 		findUserStatement.setString(1, loginEmail);
 		findUserStatement.setString(2, loginEmail);
 		
-		User foundUser = new User();
+		User foundUser = null;
 		try {
 			ResultSet findedUsers = findUserStatement.executeQuery();
-			findedUsers.next();
-			foundUser.setId(findedUsers.getLong(1));
-			foundUser.setLogin(findedUsers.getString(2));
-			foundUser.setPassword(findedUsers.getString(3));
-			foundUser.setEmail(findedUsers.getString(4));
+			
+			if (findedUsers.next()) {
+				foundUser = new User();
+				foundUser.setId(findedUsers.getLong(1));
+				foundUser.setLogin(findedUsers.getString(2));
+				foundUser.setPassword(findedUsers.getString(3));
+				foundUser.setEmail(findedUsers.getString(4));
+			}
 		} finally {
 			connection.close();
 		}

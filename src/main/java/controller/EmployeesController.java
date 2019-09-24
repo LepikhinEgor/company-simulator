@@ -25,6 +25,7 @@ import entities.Company;
 import entities.Employee;
 import entities.User;
 import exceptions.DatabaseAccessException;
+import exceptions.employees.EmployeesListException;
 import services.CompanyService;
 import services.EmployeeService;
 import services.UserService;
@@ -46,9 +47,13 @@ public class EmployeesController {
 	@RequestMapping(value = "/company", method = RequestMethod.GET)
 	public String home(@CookieValue(value = "signedUser", required = false) Cookie cookie) {
 		
-		String loginEmail = cookie.getValue();
+		if (cookie == null) {
+			return "login";
+		} else {
+			String loginEmail = cookie.getValue();
+			return "company";			
+		}
 		
-		return "company";
 	}
 	
 	@RequestMapping(value = "/company/hr/get-employees", method = RequestMethod.POST, consumes = "application/json")
@@ -57,22 +62,17 @@ public class EmployeesController {
 			@CookieValue(value = "signedUser", required = false) Cookie cookie, 
 			@RequestBody EmployeesListQuerryData requestData) {
 		
-		User userData = null;
 		Employee[] employees = null;
+		
 		try {
-			userData = userService.getUserDataByLoginEmail(cookie.getValue());
-			if (userData != null)
-				logger.info(userData.toString());
-			
-			Company userCompany = null;
-			userCompany = companyService.getUserCompany(userData.getId());
-			logger.info(userCompany.toString());
-			
-			employees = employeeService.getEmployeesList(userCompany.getId(), requestData.getOrderNum(), requestData.getPageNum());
+			employees = employeeService.getEmployeesList(requestData, cookie.getValue());
 			
 		} catch (DatabaseAccessException e) {
-			logger.error("user not received");
+			logger.error("employees list not received", e);
+		} catch (EmployeesListException e) {
+			logger.error("employees list not received", e);
 		}
+		
 		return new EmployeesListMessage(0, employees);
 	}
 	
