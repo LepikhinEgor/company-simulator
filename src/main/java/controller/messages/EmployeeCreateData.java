@@ -6,7 +6,6 @@ public class EmployeeCreateData {
 	private int perfomance;
 	private int salary;
 	private String sex;
-	private String userLoginEmail;
 	public String getName() {
 		return name;
 	}
@@ -36,12 +35,6 @@ public class EmployeeCreateData {
 	}
 	public void setSex(String sex) {
 		this.sex = sex;
-	}
-	public String getUserLoginEmail() {
-		return userLoginEmail;
-	}
-	public void setUserLoginEmail(String userLoginEmail) {
-		this.userLoginEmail = userLoginEmail;
 	}
 	
 }

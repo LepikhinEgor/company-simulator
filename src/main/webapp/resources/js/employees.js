@@ -19,7 +19,6 @@ function refreshEventHandlers() {
 
 function requestEmployeesList() {
 	var requestData = {
-		loginEmail: "admin",
 		orderNum: 0,
 		pageNum: 0
     }
@@ -47,7 +46,6 @@ function requestEmployeesList() {
 
 function requestCreateEmployee(employeeData) {
 	var status = 0;
-	employeeData.userLoginEmail = "admin";
 	$.ajax({
         type: "POST",
         url: "/company-simulator/company/hr/create-employee",
@@ -163,5 +161,11 @@ function changeEnployeeData(employeeData) {
     $(empSelector).find(".employee_perf").text(employeeData.perfomance);
     $(empSelector).find(".employee_salary").text(employeeData.salary);
     $(empSelector).find(".employee_sex").text(employeeData.sex);
-    
+}
+
+function getCookie(name) {
+	  let matches = document.cookie.match(new RegExp(
+	    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+	  ));
+	  return matches ? decodeURIComponent(matches[1]) : undefined;
 }

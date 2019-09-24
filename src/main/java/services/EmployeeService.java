@@ -56,11 +56,12 @@ public class EmployeeService {
 		}
 	}
 	
-	public Employee createEmployee(EmployeeCreateData employeeData) throws DatabaseAccessException {
+
+	public Employee createEmployee(EmployeeCreateData employeeData, String userLoginEmail) throws DatabaseAccessException {
 		Employee newEmployee = new Employee(employeeData);
 		
 		try {
-			User user = userService.getUserDataByLoginEmail(employeeData.getUserLoginEmail());
+			User user = userService.getUserDataByLoginEmail(userLoginEmail);
 			Company company = companyService.getUserCompany(user.getId());
 		
 			long createdEmployeeId = employeeDao.createEmployee(newEmployee, company.getId());
