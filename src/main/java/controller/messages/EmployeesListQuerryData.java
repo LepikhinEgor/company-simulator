@@ -1,16 +1,9 @@
 package controller.messages;
 
 public class EmployeesListQuerryData {
-	private String loginEmail;
 	private int orderNum;
 	private int pageNum;
 	
-	public String getLoginEmail() {
-		return loginEmail;
-	}
-	public void setLoginEmail(String loginEmail) {
-		this.loginEmail = loginEmail;
-	}
 	public int getOrderNum() {
 		return orderNum;
 	}
@@ -25,7 +18,7 @@ public class EmployeesListQuerryData {
 	}
 	@Override
 	public String toString() {
-		return "EmployeesListQuerryData [loginEmail=" + loginEmail + ", orderNum=" + orderNum + ", pageNum=" + pageNum
+		return "EmployeesListQuerryData [" + "orderNum=" + orderNum + ", pageNum=" + pageNum
 				+ "]";
 	}
 	

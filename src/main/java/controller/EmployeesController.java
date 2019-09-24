@@ -53,12 +53,14 @@ public class EmployeesController {
 	
 	@RequestMapping(value = "/company/hr/get-employees", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
-	public EmployeesListMessage getEmployees(@RequestBody EmployeesListQuerryData requestData) {
+	public EmployeesListMessage getEmployees(
+			@CookieValue(value = "signedUser", required = false) Cookie cookie, 
+			@RequestBody EmployeesListQuerryData requestData) {
 		
 		User userData = null;
 		Employee[] employees = null;
 		try {
-			userData = userService.getUserDataByLoginEmail(requestData.getLoginEmail());
+			userData = userService.getUserDataByLoginEmail(cookie.getValue());
 			if (userData != null)
 				logger.info(userData.toString());
 			
@@ -76,10 +78,14 @@ public class EmployeesController {
 	
 	@RequestMapping(value = "/company/hr/create-employee", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
-	public EmployeeCreateMessage createEmployee(@RequestBody EmployeeCreateData employeeData) {
+	public EmployeeCreateMessage createEmployee(
+			@CookieValue(value = "signedUser", required = false) Cookie cookie,
+			@RequestBody EmployeeCreateData employeeData) {
+		
+		String userLogin = cookie.getValue();
 		
 		try {
-			Employee createdEmployee = employeeService.createEmployee(employeeData);
+			Employee createdEmployee = employeeService.createEmployee(employeeData, userLogin);
 			
 		} catch (DatabaseAccessException e) {
 			logger.error("employee not created", e);
