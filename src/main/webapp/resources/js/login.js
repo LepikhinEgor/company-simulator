@@ -8,7 +8,7 @@ $(function() {
     	loginEmail: userLogin || "",
         password: userPassword || ""
         }
-        console.log(userData);
+      
       $.ajax({
         type: "POST",
         url: "/company-simulator/sign-in",
@@ -40,8 +40,6 @@ $(function() {
     	      updatedCookie += "=" + optionValue;
     	    }
     	  }
-    	  
-    	  console.log(updatedCookie);
 
     	  document.cookie = updatedCookie;
     	}
