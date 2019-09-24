@@ -6,7 +6,6 @@ public class EmployeeUpdateData {
 	private int perfomance;
 	private int salary;
 	private String sex;
-	private String userLoginEmail;
 	private int id;
 	public String getName() {
 		return name;
@@ -37,12 +36,6 @@ public class EmployeeUpdateData {
 	}
 	public void setSex(String sex) {
 		this.sex = sex;
-	}
-	public String getUserLoginEmail() {
-		return userLoginEmail;
-	}
-	public void setUserLoginEmail(String userLoginEmail) {
-		this.userLoginEmail = userLoginEmail;
 	}
 	public int getId() {
 		return id;

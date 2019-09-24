@@ -60,7 +60,6 @@ function requestCreateEmployee(employeeData) {
 
 function requestUpdateEmployee(employeeData) {
 	var status = 0;
-	employeeData.userLoginEmail = "admin";
 	employeeData.id = changedEmployeeID.substring(4);
 	$.ajax({
         type: "POST",

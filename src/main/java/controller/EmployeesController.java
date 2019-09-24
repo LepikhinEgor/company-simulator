@@ -96,10 +96,14 @@ public class EmployeesController {
 	
 	@RequestMapping(value = "/company/hr/update-employee", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
-	public EmployeeCreateMessage updateEmployee(@RequestBody EmployeeUpdateData employeeData) {
+	public EmployeeCreateMessage updateEmployee(
+			@CookieValue(value = "signedUser", required = false) Cookie cookie,
+			@RequestBody EmployeeUpdateData employeeData) {
+		
+		String loginEmail = cookie.getValue();
 		
 		try {
-			Employee updatedEmployee = employeeService.updateEmployee(employeeData);
+			Employee updatedEmployee = employeeService.updateEmployee(employeeData, loginEmail);
 			
 		} catch (DatabaseAccessException e) {
 			logger.error("employee not update", e);

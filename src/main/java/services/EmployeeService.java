@@ -38,11 +38,11 @@ public class EmployeeService {
 		}
 	}
 	
-	public Employee updateEmployee(EmployeeUpdateData employeeData) throws DatabaseAccessException {
+	public Employee updateEmployee(EmployeeUpdateData employeeData, String userLoginEmail) throws DatabaseAccessException {
 		Employee newEmployee = new Employee(employeeData);
 		
 		try {
-			User user = userService.getUserDataByLoginEmail(employeeData.getUserLoginEmail());
+			User user = userService.getUserDataByLoginEmail(userLoginEmail);
 			Company company = companyService.getUserCompany(user.getId());
 		
 			long createdEmployeeId = employeeDao.updateEmployee(newEmployee, company.getId());
@@ -56,7 +56,6 @@ public class EmployeeService {
 		}
 	}
 	
-
 	public Employee createEmployee(EmployeeCreateData employeeData, String userLoginEmail) throws DatabaseAccessException {
 		Employee newEmployee = new Employee(employeeData);
 		
