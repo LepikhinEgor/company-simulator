@@ -56,6 +56,18 @@ public class EmployeesController {
 		
 	}
 	
+	@RequestMapping(value = "/company/hr", method = RequestMethod.GET)
+	public String getHrPage(@CookieValue(value = "signedUser", required = false) Cookie cookie) {
+		
+		if (cookie == null) {
+			return "login";
+		} else {
+			String loginEmail = cookie.getValue();
+			return "hr";			
+		}
+		
+	}
+	
 	@RequestMapping(value = "/company/hr/get-employees", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
 	public EmployeesListMessage getEmployees(

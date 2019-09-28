@@ -1,13 +1,14 @@
-$(document).ready(function() {
+function employeesPageSetup() {
 
-	refreshEventHandlers();
+	refreshEmpEventHandlers();
 	requestEmployeesList();
-});
+}
+
 
 var changedEmployeeID = 0;
 var tempId = 4;
 
-function refreshEventHandlers() {
+function refreshEmpEventHandlers() {
     $('#create_new_employee').off('click');
     $('#apply_employee_data').off('click');
     $('.employee_name').off('click');
@@ -22,7 +23,7 @@ function requestEmployeesList() {
 		orderNum: 0,
 		pageNum: 0
     }
-	
+
 	$.ajax({
         type: "POST",
         url: "/company-simulator/company/hr/get-employees",
@@ -148,7 +149,7 @@ function addEmployeeToTable(employeeData) {
 	$('#employees_table').append(str);
 	tempId++;
 	
-	refreshEventHandlers();
+	refreshEmpEventHandlers();
 }
 
 function changeEnployeeData(employeeData) {
@@ -168,3 +169,4 @@ function getCookie(name) {
 	  ));
 	  return matches ? decodeURIComponent(matches[1]) : undefined;
 }
+
