@@ -37,7 +37,6 @@ public class ConnectionPool {
 	}
 	
 	private ConnectionPool() {
-		//try {
 			dataSource = new BasicDataSource();
 			dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
 			dataSource.setUrl(URL);
@@ -47,13 +46,6 @@ public class ConnectionPool {
 			dataSource.setMinIdle(5);
 			dataSource.setMaxIdle(10);
 			dataSource.setMaxOpenPreparedStatements(100);
-//		} catch (NamingException e) {
-//			logger.error("Error, when creating connection pool", e);
-//			throw new RuntimeException("Error, when creating connection pool", e);
-//		} catch (SQLException e) {
-//			logger.error("Error, when setting timezone", e);
-//			throw new RuntimeException("Error, when setting timezone", e);
-//		}
 	}
 	
 	public Connection getConnection() throws SQLException {
