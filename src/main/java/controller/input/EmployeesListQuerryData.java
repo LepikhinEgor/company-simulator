@@ -1,4 +1,4 @@
-package controller.messages;
+package controller.input;
 
 public class EmployeesListQuerryData {
 	private int orderNum;

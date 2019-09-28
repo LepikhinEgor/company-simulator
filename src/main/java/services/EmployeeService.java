@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import aspects.annotations.Loggable;
-import controller.messages.EmployeeCreateData;
-import controller.messages.EmployeeUpdateData;
-import controller.messages.EmployeesListQuerryData;
+import controller.input.EmployeeCreateData;
+import controller.input.EmployeeUpdateData;
+import controller.input.EmployeesListQuerryData;
 import dao.EmployeeDao;
 import entities.Company;
 import entities.Employee;

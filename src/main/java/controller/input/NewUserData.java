@@ -1,4 +1,4 @@
-package controller.messages;
+package controller.input;
 
 public class NewUserData {
 	private String login;

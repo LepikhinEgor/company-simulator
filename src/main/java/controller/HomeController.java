@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import controller.messages.NewUserData;
+import controller.input.NewUserData;
 import controller.messages.RegistrationMessage;
-import controller.messages.SignInData;
+import controller.input.SignInData;
 import controller.messages.SignInMessage;
 import exceptions.DatabaseAccessException;
 import exceptions.EmailAlreadyExistException;

@@ -1,7 +1,7 @@
 package entities;
 
-import controller.messages.EmployeeCreateData;
-import controller.messages.EmployeeUpdateData;
+import controller.input.EmployeeCreateData;
+import controller.input.EmployeeUpdateData;
 
 public class Employee {
 	

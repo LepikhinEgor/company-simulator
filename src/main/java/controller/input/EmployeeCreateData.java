@@ -1,12 +1,11 @@
-package controller.messages;
+package controller.input;
 
-public class EmployeeUpdateData {
+public class EmployeeCreateData {
 	private String name;
 	private int age;
 	private int perfomance;
 	private int salary;
 	private String sex;
-	private int id;
 	public String getName() {
 		return name;
 	}
@@ -36,12 +35,6 @@ public class EmployeeUpdateData {
 	}
 	public void setSex(String sex) {
 		this.sex = sex;
-	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
 	}
 	
 }

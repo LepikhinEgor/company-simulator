@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import controller.messages.EmployeeCreateData;
+import controller.input.EmployeeCreateData;
 import controller.messages.EmployeeCreateMessage;
-import controller.messages.EmployeeUpdateData;
+import controller.input.EmployeeUpdateData;
 import controller.messages.EmployeesListMessage;
-import controller.messages.EmployeesListQuerryData;
+import controller.input.EmployeesListQuerryData;
 import entities.Company;
 import entities.Employee;
 import entities.User;

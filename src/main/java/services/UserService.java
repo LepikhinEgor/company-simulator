@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import aspects.annotations.Loggable;
-import controller.messages.NewUserData;
-import controller.messages.SignInData;
+import controller.input.NewUserData;
+import controller.input.SignInData;
 import dao.UserDao;
 import entities.User;
 import exceptions.DatabaseAccessException;
