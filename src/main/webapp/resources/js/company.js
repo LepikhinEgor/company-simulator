@@ -1,6 +1,6 @@
 $(document).ready(function() {
-
 	setEventHandlers();
+	fillCompanyInfoPage();
 });
 
 function setEventHandlers() {
