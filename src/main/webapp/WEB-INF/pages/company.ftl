@@ -22,9 +22,9 @@
 				  <tr>
 				    <td id="company_menu">
 				    	<ol class="rectangle">
-						  <li><a id="get_company_info" href="company/info">Information</a></li>
+						  <li><a id="get_company_info">Information</a></li>
 						  <li><a id="get_hr">Employees</a></li>
-						  <li><a id="get_contracts" href="company/contracts">Contracts</a></li>
+						  <li><a id="get_contracts">Contracts</a></li>
 						</ol>
 				    </td>
 				    <td id="game_window">
