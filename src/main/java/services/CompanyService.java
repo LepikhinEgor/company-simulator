@@ -34,6 +34,7 @@ public class CompanyService {
 		this.companyDao = companyDao;
 	}
 	
+	@Loggable
 	public Company getCompany(String loginEmail) throws DatabaseAccessException {
 		Company company = null;
 		try {

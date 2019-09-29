@@ -7,11 +7,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import aspects.annotations.Loggable;
 import entities.User;
 import entities.Company;
 
 public class CompanyDao {
+	
+	private static final Logger logger = LoggerFactory.getLogger(CompanyDao.class);
 	
 	/**
 	 * @param userId Company owner ID
@@ -61,8 +66,11 @@ public class CompanyDao {
 			
 			ResultSet foundCompaniesSet = getCompanyStatement.executeQuery();
 			
-			if (!foundCompaniesSet.next())
+			if (!foundCompaniesSet.next()) {
+				logger.info("empty set");
+				logger.info(getCompanyStatement.toString());
 				return null;
+			}
 			
 			Company foundCompany = new Company();
 			foundCompany.setId(foundCompaniesSet.getLong(1));

@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import controller.messages.CompanyInfoMessage;
 import entities.Company;
+import entities.User;
 import exceptions.DatabaseAccessException;
 import services.CompanyService;
+import services.UserService;
 
 @Controller
 public class CompanyController {
@@ -23,6 +25,12 @@ public class CompanyController {
 	private static final Logger logger = LoggerFactory.getLogger(CompanyController.class);
 	
 	private CompanyService companyService;
+	private UserService userService;
+	
+	@Autowired
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
 	
 	@Autowired
 	public void setCompanyService(CompanyService companyService) {
@@ -40,17 +48,22 @@ public class CompanyController {
 		
 		if (cookie == null) 
 			return "login";
+		String loginEmail = cookie.getValue();
 		
-		String companyName = "username";
+		String companyName = "company";
+		String userLogin = "username";
 		try {
-			Company company = companyService.getCompany(cookie.getValue());
+			Company company = companyService.getCompany(loginEmail);
 			companyName = company.getName();
+			
+			User user = userService.getUserDataByLoginEmail(loginEmail);
+			userLogin = user.getLogin();
 		} catch (DatabaseAccessException e) {
 			logger.info("User company not founded", e);
 		}
 		
 		model.addAttribute("company", companyName);
-		model.addAttribute("login", cookie.getValue());
+		model.addAttribute("login", userLogin);
 		
 		return "company";			
 		
