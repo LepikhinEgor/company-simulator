@@ -1,8 +1,11 @@
 package controller;	
 
+import javax.servlet.http.Cookie;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,6 +16,23 @@ import controller.messages.CompanyInfoMessage;
 public class CompanyController {
 
 	private static final Logger logger = LoggerFactory.getLogger(CompanyController.class);
+	
+	@RequestMapping(value="/", method = RequestMethod.GET)
+	public String getCompanyPage(@CookieValue(value = "signedUser", required = false) Cookie cookie) {
+		return "redirect:company";
+	}
+	
+	@RequestMapping(value = "/company", method = RequestMethod.GET)
+	public String getHomePage(@CookieValue(value = "signedUser", required = false) Cookie cookie) {
+		
+		if (cookie == null) {
+			return "login";
+		} else {
+			String loginEmail = cookie.getValue();
+			return "company";			
+		}
+		
+	}
 	
 	@RequestMapping(value = "company/info", method = RequestMethod.GET)
 	public String getCompanyInfoPage() {
