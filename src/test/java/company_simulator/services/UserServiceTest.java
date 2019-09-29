@@ -9,9 +9,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import controller.messages.NewUserData;
-import controller.messages.SignInData;
+import controller.input.NewUserData;
+import controller.input.SignInData;
 import dao.UserDao;
+import exceptions.DatabaseAccessException;
 import exceptions.EmailAlreadyExistException;
 import exceptions.InvalidEmailRegistrationException;
 import exceptions.InvalidLoginRegistrationException;
@@ -35,7 +36,7 @@ public class UserServiceTest {
 	}
 	
 	@Test(expected = InvalidSignInLoginEmail.class)
-	public void invalidLoginSignIn() throws InvalidSignInPasswordException, InvalidSignInLoginEmail, SQLException {
+	public void invalidLoginSignIn() throws InvalidSignInPasswordException, InvalidSignInLoginEmail, DatabaseAccessException {
 		SignInData signInData = new SignInData();
 		signInData.setLoginEmail("user22!!&&");
 		signInData.setPassword("qwerty");
@@ -44,7 +45,7 @@ public class UserServiceTest {
 	}
 	
 	@Test(expected = InvalidSignInLoginEmail.class)
-	public void invalidEmailSignIn() throws InvalidSignInPasswordException, InvalidSignInLoginEmail, SQLException {
+	public void invalidEmailSignIn() throws InvalidSignInPasswordException, InvalidSignInLoginEmail, DatabaseAccessException {
 		SignInData signInData = new SignInData();
 		signInData.setLoginEmail("user@user");
 		signInData.setPassword("qwerty");
@@ -53,7 +54,7 @@ public class UserServiceTest {
 	}
 	
 	@Test(expected = InvalidSignInPasswordException.class)
-	public void invalidPasswordSignIn() throws InvalidSignInPasswordException, InvalidSignInLoginEmail, SQLException {
+	public void invalidPasswordSignIn() throws InvalidSignInPasswordException, InvalidSignInLoginEmail, DatabaseAccessException {
 		SignInData signInData = new SignInData();
 		signInData.setLoginEmail("user123");
 		signInData.setPassword("qwerty &&11!");
@@ -62,7 +63,7 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public void correctUserSignIn() throws SQLException, InvalidSignInPasswordException, InvalidSignInLoginEmail {
+	public void correctUserSignIn() throws InvalidSignInPasswordException, InvalidSignInLoginEmail, DatabaseAccessException, SQLException {
 		String login = "admin";
 		String password = "password";
 		
@@ -78,8 +79,8 @@ public class UserServiceTest {
 		assertTrue(userExist);
 	}
 	
-	@Test(expected = SQLException.class)
-	public void dbExceptionSignIn() throws SQLException, InvalidSignInPasswordException, InvalidSignInLoginEmail {
+	@Test(expected = DatabaseAccessException.class)
+	public void dbExceptionSignIn() throws InvalidSignInPasswordException, InvalidSignInLoginEmail, DatabaseAccessException, SQLException {
 		String login = "user123";
 		String password = "password";
 		
