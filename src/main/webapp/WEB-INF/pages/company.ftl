@@ -13,8 +13,8 @@
 	    <div id="header">
 	    	<table id="header_table">
 				  <tr>
-				    <td id="company_name"><h2>Company</h2></td>
-				    <td id="user_indicator"><h3>Nickname</h3></td>
+				    <td id="company_name"><h2>${company}</h2></td>
+				    <td id="user_indicator"><h3>${login}</h3></td>
 				  </tr>
 			</table>
 		</div>      

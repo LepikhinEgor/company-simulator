@@ -34,6 +34,18 @@ public class CompanyService {
 		this.companyDao = companyDao;
 	}
 	
+	public Company getCompany(String loginEmail) throws DatabaseAccessException {
+		Company company = null;
+		try {
+			company = companyDao.getUserCompany(loginEmail);
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+			throw new DatabaseAccessException("Error trying get company by loginEmail");
+		}
+		
+		return company;
+	}
+	
 	/**
 	 * @param loginEmail user login or email
 	 * @return company information

@@ -44,6 +44,38 @@ public class CompanyDao {
 		
 	}
 	
+	/**
+	 * 
+	 * @param loginEmail
+	 * @return user company, if it's not found return null
+	 * @throws SQLException
+	 */
+	@Loggable
+	public Company getUserCompany(String loginEmail) throws SQLException {
+		String getCompanyQuerry = "SELECT c.company_id, c.name, c.cash, c.owner_id FROM companies c INNER JOIN users u ON u.user_id = c.owner_id WHERE u.login = ? OR u.email = ?";
+		
+		try(Connection connection = DBConnectionHelper.getConnection()) {
+			PreparedStatement getCompanyStatement = connection.prepareStatement(getCompanyQuerry);
+			getCompanyStatement.setString(1, loginEmail);
+			getCompanyStatement.setString(2, loginEmail);
+			
+			ResultSet foundCompaniesSet = getCompanyStatement.executeQuery();
+			
+			if (!foundCompaniesSet.next())
+				return null;
+			
+			Company foundCompany = new Company();
+			foundCompany.setId(foundCompaniesSet.getLong(1));
+			foundCompany.setName(foundCompaniesSet.getString(2));
+			foundCompany.setCash(foundCompaniesSet.getLong(3));
+			foundCompany.setOwnerId(foundCompaniesSet.getLong(4));
+			
+			foundCompaniesSet.next();
+			
+			return foundCompany;
+		}
+	}
+	
 	@Loggable
 	public long recordCompany(Company newCompany) throws SQLException {
 		Connection connection = DBConnectionHelper.getConnection();

@@ -6,12 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import controller.messages.CompanyInfoMessage;
+import entities.Company;
 import exceptions.DatabaseAccessException;
 import services.CompanyService;
 
@@ -33,14 +35,24 @@ public class CompanyController {
 	}
 	
 	@RequestMapping(value = "/company", method = RequestMethod.GET)
-	public String getHomePage(@CookieValue(value = "signedUser", required = false) Cookie cookie) {
+	public String getHomePage(@CookieValue(value = "signedUser", required = false) Cookie cookie,
+			Model model) {
 		
-		if (cookie == null) {
+		if (cookie == null) 
 			return "login";
-		} else {
-			String loginEmail = cookie.getValue();
-			return "company";			
+		
+		String companyName = "username";
+		try {
+			Company company = companyService.getCompany(cookie.getValue());
+			companyName = company.getName();
+		} catch (DatabaseAccessException e) {
+			logger.info("User company not founded", e);
 		}
+		
+		model.addAttribute("company", companyName);
+		model.addAttribute("login", cookie.getValue());
+		
+		return "company";			
 		
 	}
 	
