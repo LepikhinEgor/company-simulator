@@ -57,10 +57,6 @@ public class Company {
 		this.contracts = contracts;
 	}
 	
-	public long getDEFAULT_CASH() {
-		return DEFAULT_CASH;
-	}
-	
 	public void setCash(long cash) {
 		this.cash = cash;
 	}

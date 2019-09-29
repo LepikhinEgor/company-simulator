@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import aspects.annotations.Loggable;
+import controller.messages.CompanyInfoMessage;
 import dao.CompanyDao;
 import entities.Company;
+import entities.User;
 import exceptions.DatabaseAccessException;
+import exceptions.employees.UserNotFoundException;
 
 @Service
 public class CompanyService {
@@ -19,10 +22,46 @@ public class CompanyService {
 	
 	private CompanyDao companyDao;
 	
+	private UserService userService;
+	
 	@Autowired
-	public void CompanyDao(CompanyDao companyDao) {
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+	
+	@Autowired
+	public void setCompanyDao(CompanyDao companyDao) {
 		this.companyDao = companyDao;
 	}
+	
+	/**
+	 * @param loginEmail user login or email
+	 * @return company information
+	 * @throws DatabaseAccessException, {@link UserNotFoundException}
+	 */
+	public CompanyInfoMessage getCompanyInfo(String loginEmail) throws DatabaseAccessException {
+		CompanyInfoMessage companyInfo = new CompanyInfoMessage();
+		
+		User user = userService.getUserDataByLoginEmail(loginEmail);
+		
+		if (user == null) {
+			throw new UserNotFoundException();
+		}
+		companyInfo.setOwnerName(user.getLogin());
+		
+		Company userCompany = getUserCompany(user.getId());
+		companyInfo.setCash(userCompany.getCash());
+		companyInfo.setId(userCompany.getId());
+		companyInfo.setName(userCompany.getName());
+		companyInfo.setDefaultCash(userCompany.getDefaultCash());
+		
+		companyInfo.setContractsCompleted(3);
+		companyInfo.setContractsExecuting(2);
+		companyInfo.setContractsFailed(5);
+		
+		return companyInfo;
+	}
+
 	
 	/**
 	 * @param userId Company owner ID

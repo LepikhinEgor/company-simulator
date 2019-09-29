@@ -2,20 +2,44 @@ package controller.messages;
 
 public class CompanyInfoMessage {
 	
-	private int id;
+	public static final int SUCCESS = 0;
+	public static final int FAIL = 1;
+	
+	private int status;
+	private String message;
+	
+	private long id;
 	private String name;
-	private int cash;
-	private int defaultCash;
+	private long cash;
+	private long defaultCash;
 	private String ownerName;
 	private int employeesCount;
 	private int contractsExecuting;
 	private int contractsCompleted;
 	private int contractsFailed;
 	
-	public int getId() {
+	public CompanyInfoMessage() {
+		
+	}
+	
+	public CompanyInfoMessage(int status) {
+		this.status = status;
+		
+		switch(status) {
+		case SUCCESS: message = "Success return company info";break;
+		case FAIL: message = "Fail getting company info";break;
+		}
+	}
+	
+	public CompanyInfoMessage(int status, String message) {
+		this.status = status;
+		this.message = message;
+	}
+	
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -24,16 +48,16 @@ public class CompanyInfoMessage {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getCash() {
+	public long getCash() {
 		return cash;
 	}
-	public void setCash(int cash) {
+	public void setCash(long cash) {
 		this.cash = cash;
 	}
-	public int getDefaultCash() {
+	public long getDefaultCash() {
 		return defaultCash;
 	}
-	public void setDefaultCash(int defaultCash) {
+	public void setDefaultCash(long defaultCash) {
 		this.defaultCash = defaultCash;
 	}
 	public String getOwnerName() {
@@ -66,6 +90,17 @@ public class CompanyInfoMessage {
 	public void setContractsExecuting(int contractsExecuting) {
 		this.contractsExecuting = contractsExecuting;
 	}
-	
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
 	
 }
