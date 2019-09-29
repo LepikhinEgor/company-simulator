@@ -4,23 +4,35 @@
     <th>Value</th>
   </tr>
   <tr>
-    <td>Ассорти из овощей, зелени и сыра</td>
-    <td>190</td>
+    <td>Company name</td>
+    <td id="company_name_info">190</td>
   </tr>
   <tr>
-    <td>Ассорти мясное</td>
-    <td>250</td>
+    <td>Owner name</td>
+    <td id="owner_name_info">250</td>
   </tr>
   <tr>
-    <td>Ассорти рыбное (семга с/с, форель с/с)</td>
-    <td>250</td>
+    <td>Cash</td>
+    <td id="company_cash_info">250</td>
   </tr>
   <tr>
-    <td>Ассорти грибное</td>
-    <td>120</td>
+    <td>Default cash</td>
+    <td id="company_def_cash_info">120</td>
   </tr>
   <tr>
-    <td>Соления из бочки (помидоры, огурцы, перец, чеснок, капуста)</td>
-    <td>250</td>
+    <td>Employees count</td>
+    <td id="employees_count_info">250</td>
+  </tr>
+  <tr>
+    <td>Contracts executing</td>
+    <td id="contracts_executing_info">250</td>
+  </tr>
+  <tr>
+    <td>Contracts completed</td>
+    <td id="contracts_completed_info">250</td>
+  </tr>
+  <tr>
+    <td>Contracts failed</td>
+    <td id="contracts_failed_info">250</td>
   </tr>
 </table>

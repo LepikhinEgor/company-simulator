@@ -18,7 +18,7 @@ function fillCompanyInfoPage() {
 			$('#tab_content').html(data);
 		}
       });
-	fillCompanyInfo();
+	requestCompanyInfo();
 }
 
 function fillEmployeesPage() {
