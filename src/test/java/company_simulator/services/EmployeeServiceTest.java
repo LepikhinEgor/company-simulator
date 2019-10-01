@@ -34,7 +34,7 @@ public class EmployeeServiceTest {
 	
 	@Before
 	public void testsInit() {
-		EmployeeService employeeService = new EmployeeService();
+		employeeService = new EmployeeService();
 		
 		userServiceMock = mock(UserService.class);
 		companyServiceMock = mock(CompanyService.class);
@@ -67,7 +67,9 @@ public class EmployeeServiceTest {
 		when(companyServiceMock.getUserCompany(goodUser.getId())).thenReturn(goodCompany);
 		when(employeeDaoMock.updateEmployee(expectedEmployee, goodCompany.getId())).thenReturn(expectedEmployee.getId());
 		
-		employeeService.set
+		employeeService.setUserService(userServiceMock);
+		employeeService.setEmployeeDao(employeeDaoMock);
+		employeeService.setCompanyService(companyServiceMock);
 		
 		Employee actualEmployee = employeeService.updateEmployee(employeeData, loginEmail);
 		

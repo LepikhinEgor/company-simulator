@@ -26,14 +26,26 @@ public class EmployeeService {
 	
 	private static final int EMPLOYEES_PAGE_LIMIT = 10;
 	
-	@Autowired
 	EmployeeDao employeeDao;
 	
-	@Autowired
 	CompanyService companyService;
 	
-	@Autowired
 	UserService userService;
+	
+	@Autowired
+	public void setEmployeeDao(EmployeeDao employeeDao) {
+		this.employeeDao = employeeDao;
+	}
+	
+	@Autowired
+	public void setCompanyService(CompanyService companyService) {
+		this.companyService = companyService;
+	}
+	
+	@Autowired
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
 	
 	@Loggable
 	public Employee[] getEmployeesList(EmployeesListQuerryData querryData, String loginEmail) throws DatabaseAccessException, EmployeesListException {
