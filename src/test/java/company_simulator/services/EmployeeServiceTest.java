@@ -76,4 +76,58 @@ public class EmployeeServiceTest {
 		assertTrue(expectedEmployee.equals(actualEmployee));	
 		
 	}
+	
+	@Test(expected = DatabaseAccessException.class)
+	public void updateEmployeeThrowDBExceptionFromCompanyService() throws DatabaseAccessException, SQLException {
+		EmployeeUpdateData employeeData = new EmployeeUpdateData();
+		employeeData.setAge(21);
+		employeeData.setId(1);
+		employeeData.setName("Ivan");
+		employeeData.setPerfomance(44);
+		employeeData.setSalary(23000);
+		employeeData.setSex("male");
+		String loginEmail = "admin";
+		
+		Employee expectedEmployee = new Employee(employeeData);
+		expectedEmployee.setId(1);
+		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenReturn(goodUser);
+		when(companyServiceMock.getUserCompany(goodUser.getId())).thenThrow(new DatabaseAccessException());
+		when(employeeDaoMock.updateEmployee(expectedEmployee, goodCompany.getId())).thenReturn(expectedEmployee.getId());
+		
+		employeeService.setUserService(userServiceMock);
+		employeeService.setEmployeeDao(employeeDaoMock);
+		employeeService.setCompanyService(companyServiceMock);
+		
+		Employee actualEmployee = employeeService.updateEmployee(employeeData, loginEmail);
+		
+		assertTrue(expectedEmployee.equals(actualEmployee));	
+		
+	}
+	
+	@Test(expected = DatabaseAccessException.class)
+	public void updateEmployeeThrowDBExceptionFromUserService() throws DatabaseAccessException, SQLException {
+		EmployeeUpdateData employeeData = new EmployeeUpdateData();
+		employeeData.setAge(21);
+		employeeData.setId(1);
+		employeeData.setName("Ivan");
+		employeeData.setPerfomance(44);
+		employeeData.setSalary(23000);
+		employeeData.setSex("male");
+		String loginEmail = "admin";
+		
+		Employee expectedEmployee = new Employee(employeeData);
+		expectedEmployee.setId(1);
+		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenThrow(new DatabaseAccessException());
+		when(companyServiceMock.getUserCompany(goodUser.getId())).thenReturn(goodCompany);
+		when(employeeDaoMock.updateEmployee(expectedEmployee, goodCompany.getId())).thenReturn(expectedEmployee.getId());
+		
+		employeeService.setUserService(userServiceMock);
+		employeeService.setEmployeeDao(employeeDaoMock);
+		employeeService.setCompanyService(companyServiceMock);
+		
+		Employee actualEmployee = employeeService.updateEmployee(employeeData, loginEmail);
+		
+		assertTrue(expectedEmployee.equals(actualEmployee));	
+		
+	}
 }
