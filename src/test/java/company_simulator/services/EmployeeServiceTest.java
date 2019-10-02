@@ -29,6 +29,12 @@ public class EmployeeServiceTest {
 	
 	private EmployeeDao employeeDaoMock;
 	
+	//methods arguments
+	//updateEmployee()
+	EmployeeUpdateData employeeData;
+	String loginEmail;
+	
+	//mockEntities
 	private User goodUser;
 	private Company goodCompany;
 	
@@ -39,6 +45,15 @@ public class EmployeeServiceTest {
 		userServiceMock = mock(UserService.class);
 		companyServiceMock = mock(CompanyService.class);
 		employeeDaoMock = mock(EmployeeDao.class);
+		
+		employeeData = new EmployeeUpdateData();
+		employeeData.setAge(21);
+		employeeData.setId(1);
+		employeeData.setName("Ivan");
+		employeeData.setPerfomance(44);
+		employeeData.setSalary(23000);
+		employeeData.setSex("male");
+		loginEmail = "admin";
 		
 		goodUser = new User();
 		goodUser.setId(1);
@@ -52,17 +67,10 @@ public class EmployeeServiceTest {
 	
 	@Test
 	public void successUpdateEmployee() throws DatabaseAccessException, SQLException {
-		EmployeeUpdateData employeeData = new EmployeeUpdateData();
-		employeeData.setAge(21);
-		employeeData.setId(1);
-		employeeData.setName("Ivan");
-		employeeData.setPerfomance(44);
-		employeeData.setSalary(23000);
-		employeeData.setSex("male");
-		String loginEmail = "admin";
 		
 		Employee expectedEmployee = new Employee(employeeData);
 		expectedEmployee.setId(1);
+		
 		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenReturn(goodUser);
 		when(companyServiceMock.getUserCompany(goodUser.getId())).thenReturn(goodCompany);
 		when(employeeDaoMock.updateEmployee(expectedEmployee, goodCompany.getId())).thenReturn(expectedEmployee.getId());
@@ -78,18 +86,11 @@ public class EmployeeServiceTest {
 	}
 	
 	@Test(expected = DatabaseAccessException.class)
-	public void updateEmployeeThrowDBExceptionFromCompanyService() throws DatabaseAccessException, SQLException {
-		EmployeeUpdateData employeeData = new EmployeeUpdateData();
-		employeeData.setAge(21);
-		employeeData.setId(1);
-		employeeData.setName("Ivan");
-		employeeData.setPerfomance(44);
-		employeeData.setSalary(23000);
-		employeeData.setSex("male");
-		String loginEmail = "admin";
+	public void updateEmployeeThrowDBExceptionFromCompanyService() throws DatabaseAccessException, SQLException {		
 		
 		Employee expectedEmployee = new Employee(employeeData);
 		expectedEmployee.setId(1);
+		
 		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenReturn(goodUser);
 		when(companyServiceMock.getUserCompany(goodUser.getId())).thenThrow(new DatabaseAccessException());
 		when(employeeDaoMock.updateEmployee(expectedEmployee, goodCompany.getId())).thenReturn(expectedEmployee.getId());
@@ -106,17 +107,10 @@ public class EmployeeServiceTest {
 	
 	@Test(expected = DatabaseAccessException.class)
 	public void updateEmployeeThrowDBExceptionFromUserService() throws DatabaseAccessException, SQLException {
-		EmployeeUpdateData employeeData = new EmployeeUpdateData();
-		employeeData.setAge(21);
-		employeeData.setId(1);
-		employeeData.setName("Ivan");
-		employeeData.setPerfomance(44);
-		employeeData.setSalary(23000);
-		employeeData.setSex("male");
-		String loginEmail = "admin";
 		
 		Employee expectedEmployee = new Employee(employeeData);
 		expectedEmployee.setId(1);
+		
 		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenThrow(new DatabaseAccessException());
 		when(companyServiceMock.getUserCompany(goodUser.getId())).thenReturn(goodCompany);
 		when(employeeDaoMock.updateEmployee(expectedEmployee, goodCompany.getId())).thenReturn(expectedEmployee.getId());
