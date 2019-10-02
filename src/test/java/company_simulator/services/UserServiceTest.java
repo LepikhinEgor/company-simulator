@@ -12,6 +12,7 @@ import static org.mockito.Mockito.*;
 import controller.input.NewUserData;
 import controller.input.SignInData;
 import dao.UserDao;
+import entities.User;
 import exceptions.DatabaseAccessException;
 import exceptions.EmailAlreadyExistException;
 import exceptions.InvalidEmailRegistrationException;
@@ -29,10 +30,14 @@ public class UserServiceTest {
 	private UserService userService;
 	private UserDao userDaoMock;
 	
+	private User validUser;
+	
 	@Before
 	public void initBefore() {
 		userService = new UserService();
 		userDaoMock = mock(UserDao.class);
+		
+		validUser = new User();
 	}
 	
 	@Test(expected = InvalidSignInLoginEmail.class)
@@ -71,11 +76,11 @@ public class UserServiceTest {
 		signInData.setLoginEmail(login);
 		signInData.setPassword(password);
 		
-		when(userDaoMock.signIn(login, password)).thenReturn(true);
+		when(userDaoMock.signIn(login, password)).thenReturn(validUser);
 		
 		userService.setUserDao(userDaoMock);
 		
-		boolean userExist = userService.userSignIn(signInData);
+		boolean userExist = userService.userSignIn(signInData) != null;
 		assertTrue(userExist);
 	}
 	
@@ -92,7 +97,7 @@ public class UserServiceTest {
 		
 		userService.setUserDao(userDaoMock);
 		
-		boolean userExist = userService.userSignIn(signInData);
+		boolean userExist = userService.userSignIn(signInData) != null;
 		assertTrue(userExist);
 	}
 	
