@@ -18,6 +18,7 @@ import controller.input.NewUserData;
 import controller.messages.RegistrationMessage;
 import controller.input.SignInData;
 import controller.messages.SignInMessage;
+import entities.User;
 import exceptions.DatabaseAccessException;
 import exceptions.EmailAlreadyExistException;
 import exceptions.InvalidEmailRegistrationException;
@@ -48,10 +49,16 @@ public class HomeController {
 	@RequestMapping(value = "/sign-in", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
 	public SignInMessage userSignIn(@RequestBody SignInData signInData) {
+		
+		User signedUser = null;
 		boolean signInSuccess = false;
 	
 		try {
-			signInSuccess = userService.userSignIn(signInData);
+			signedUser = userService.userSignIn(signInData);
+			
+			if (signedUser != null) {
+				signInSuccess = true;
+			}
 		} catch (InvalidSignInPasswordException e) {
 			logger.error("Invalid password", e);
 			return new SignInMessage(SignInMessage.INVALID_PASSWORD);
@@ -65,7 +72,7 @@ public class HomeController {
 		
 		if (signInSuccess) {
 			logger.info("User sign in successful");
-			return new SignInMessage(SignInMessage.SUCCESS_SIGN_IN);
+			return new SignInMessage(SignInMessage.SUCCESS_SIGN_IN, signedUser.getLogin());
 		} else {
 			logger.info("Invalid password");
 			return new SignInMessage(SignInMessage.INCORRECT_LOGIN_OR_PASSWORD);

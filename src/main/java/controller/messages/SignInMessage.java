@@ -11,6 +11,8 @@ public class SignInMessage {
 	private int status;
 	private String description;
 	
+	private String login;
+	
 	public SignInMessage(int status) {
 		this.status = status;
 		switch(status) {
@@ -20,6 +22,14 @@ public class SignInMessage {
 		case INCORRECT_LOGIN_OR_PASSWORD: description = "Incorrect login or password";break;
 		case OTHER_MISTAKE: description = "Sign In error"; break;
 		}
+		
+		this.login = "";
+	}
+	
+	public SignInMessage(int status, String login) {
+		this(status);
+		
+		this.login = login;
 	}
 	
 	public int getStatus() {

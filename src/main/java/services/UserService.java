@@ -44,7 +44,7 @@ public class UserService {
 	 * @throws DatabaseAccessException 
 	 */
 	@Loggable
-	public boolean userSignIn(SignInData signUpData) throws InvalidSignInPasswordException, InvalidSignInLoginEmail, DatabaseAccessException {
+	public User userSignIn(SignInData signUpData) throws InvalidSignInPasswordException, InvalidSignInLoginEmail, DatabaseAccessException {
 		
 		boolean isEmail = isCorrectEmail(signUpData.getLoginEmail());
 		boolean isLogin = isCorrectLogin(signUpData.getLoginEmail());
@@ -56,14 +56,14 @@ public class UserService {
 		if (!correctPassword)
 			throw new InvalidSignInPasswordException();
 		
-		boolean userExist;
+		User signedUser;
 		try {
-			userExist = userDao.signIn(signUpData.getLoginEmail(), signUpData.getPassword());
+			signedUser = userDao.signIn(signUpData.getLoginEmail(), signUpData.getPassword());
 		} catch (SQLException e) {
 			throw new DatabaseAccessException(e.getMessage());
 		}
 		
-		return userExist;
+		return signedUser;
 	}
 	
 	@Loggable

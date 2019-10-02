@@ -53,8 +53,10 @@ public class UserDao {
 	}
 	
 	@Loggable
-	public boolean signIn(String loginEmail, String password) throws SQLException {
+	public User signIn(String loginEmail, String password) throws SQLException {
 		Connection connection = ConnectionPool.getInstance().getConnection();
+		
+		User foundUser = null;
 		
 		String findUserQuerry = "SELECT * FROM users WHERE (email = ? OR login = ?) AND password = ?;";
 		
@@ -63,15 +65,20 @@ public class UserDao {
 		findUserStatement.setString(2, loginEmail);
 		findUserStatement.setString(3, password);
 		
-		boolean loginExist = true;
 		try {
 			ResultSet findedUsers = findUserStatement.executeQuery();
-			loginExist = findedUsers.next();
+			if (findedUsers.next()) {
+				foundUser = new User();
+				foundUser.setId(findedUsers.getLong(1));
+				foundUser.setLogin(findedUsers.getString(2));
+				foundUser.setPassword(findedUsers.getString(3));
+				foundUser.setEmail(findedUsers.getString(4));
+			}
 		} finally {
 			connection.close();
 		}
 		
-		return loginExist;
+		return foundUser;
 	}
 	
 	@Loggable
