@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import aspects.annotations.Loggable;
 import entities.Employee;
@@ -16,7 +17,7 @@ public class EmployeeDao {
 	private final int ORDER_BY_NAME = 0;
 	
 	@Loggable
-	public Employee[] getEmployeesList(long companyId, int orderNum, int pageNum, int pageLimit) throws SQLException {
+	public List<Employee> getEmployeesList(long companyId, int orderNum, int pageNum, int pageLimit) throws SQLException {
 		
 		String orderBy = "";
 		switch(orderNum) {
@@ -48,7 +49,7 @@ public class EmployeeDao {
 				employees.add(employee);
 			}
 			
-			return employees.toArray(new Employee[employees.size()]);
+			return employees;
 		}
 	}
 	

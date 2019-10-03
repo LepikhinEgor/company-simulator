@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.Cookie;
@@ -62,7 +63,7 @@ public class EmployeesController {
 			@CookieValue(value = "signedUser", required = false) Cookie cookie, 
 			@RequestBody EmployeesListQuerryData requestData) {
 		
-		Employee[] employees = null;
+		List<Employee> employees = null;
 		
 		try {
 			employees = employeeService.getEmployeesList(requestData, cookie.getValue());

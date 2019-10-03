@@ -1,5 +1,8 @@
 package controller.messages;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import entities.Employee;
 
 public class EmployeesListMessage {
@@ -9,7 +12,7 @@ public class EmployeesListMessage {
 	
 	private int status;
 	private String description;
-	private Employee[] employees;
+	private List<Employee> employees;
 	
 	public EmployeesListMessage(int status) {
 		this.status = status;
@@ -19,16 +22,16 @@ public class EmployeesListMessage {
 		case FAIL: this.description = "Fail when getting employees list"; break;
 		}
 		
-		employees = new Employee[0];
+		employees = new ArrayList<Employee>();
 	}
 	
 	public EmployeesListMessage(int status, String description) {
 		this.status = status;
 		this.description = description;
-		employees = new Employee[0];
+		employees = new ArrayList<Employee>();
 	}
 	
-	public EmployeesListMessage(int status, Employee[] employees) {
+	public EmployeesListMessage(int status, List<Employee> employees) {
 		this.status = status;
 		
 		switch(status) {
@@ -55,11 +58,11 @@ public class EmployeesListMessage {
 		this.description = description;
 	}
 
-	public Employee[] getEmployees() {
+	public List<Employee> getEmployees() {
 		return employees;
 	}
 
-	public void setEmployees(Employee[] employees) {
+	public void setEmployees(List<Employee> employees) {
 		this.employees = employees;
 	}
 	

@@ -1,5 +1,7 @@
 package entities;
 
+import org.springframework.beans.support.ArgumentConvertingMethodInvoker;
+
 import controller.input.EmployeeCreateData;
 import controller.input.EmployeeUpdateData;
 
@@ -30,6 +32,9 @@ public class Employee {
 	}
 	
 	public Employee(EmployeeUpdateData employeeData) {
+		if (employeeData == null)
+			throw new IllegalArgumentException("Employee data must be not null");
+		
 		this.id = employeeData.getId();
 		this.name = employeeData.getName();
 		this.age = employeeData.getAge();

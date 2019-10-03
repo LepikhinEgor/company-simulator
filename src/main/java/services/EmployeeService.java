@@ -2,6 +2,7 @@ package services;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ public class EmployeeService {
 	}
 	
 	@Loggable
-	public Employee[] getEmployeesList(EmployeesListQuerryData querryData, String loginEmail) throws DatabaseAccessException, EmployeesListException {
+	public List<Employee> getEmployeesList(EmployeesListQuerryData querryData, String loginEmail) throws DatabaseAccessException, EmployeesListException {
 		User userData = null;
 		Employee[] employees = null;
 		Company userCompany = null;
