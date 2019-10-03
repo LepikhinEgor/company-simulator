@@ -19,6 +19,8 @@ import entities.Employee;
 import entities.User;
 import exceptions.DatabaseAccessException;
 import exceptions.employees.EmployeesListException;
+import exceptions.employees.IncorrectOrderNumException;
+import exceptions.employees.IncorrectPageNumException;
 
 @Service
 public class EmployeeService {
@@ -49,22 +51,33 @@ public class EmployeeService {
 	}
 	
 	@Loggable
-	public List<Employee> getEmployeesList(EmployeesListQuerryData querryData, String loginEmail) throws DatabaseAccessException, EmployeesListException {
-		User userData = null;
-		Employee[] employees = null;
-		Company userCompany = null;
+	public List<Employee> getEmployeesList(EmployeesListQuerryData querryData, String loginEmail) throws DatabaseAccessException, EmployeesListException, IncorrectOrderNumException, IncorrectPageNumException {
 		
-		userData = userService.getUserDataByLoginEmail(loginEmail);
+		if (!isOrderNumCorrect(querryData.getOrderNum()))
+			throw new IncorrectOrderNumException("Number of sort order is over bounds");
+		
+		if (!isPageNumCorrect(querryData.getPageNum()))
+			throw new IncorrectPageNumException("Page num must be more then 0");
+		
+		User userData = userService.getUserDataByLoginEmail(loginEmail);
 		if (userData == null)
 			throw new EmployeesListException("User with login " + loginEmail + " has not been found");
 		
-		userCompany = companyService.getUserCompany(userData.getId());
+		Company userCompany = companyService.getUserCompany(userData.getId());
 		
 		try {
 			return employeeDao.getEmployeesList(userCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), EMPLOYEES_PAGE_LIMIT);
 		} catch (SQLException e) {
 			throw new DatabaseAccessException("Error trying to get employees list");
 		}
+	}
+	
+	private boolean isOrderNumCorrect(int orderNum) {
+		return orderNum >= 0 && orderNum < 10? true : false;
+	}
+	
+	private boolean isPageNumCorrect(int pageNum) {
+		return pageNum >= 0? true : false;
 	}
 	
 	@Loggable

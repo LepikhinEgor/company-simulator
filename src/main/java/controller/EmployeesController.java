@@ -27,6 +27,8 @@ import entities.Employee;
 import entities.User;
 import exceptions.DatabaseAccessException;
 import exceptions.employees.EmployeesListException;
+import exceptions.employees.IncorrectOrderNumException;
+import exceptions.employees.IncorrectPageNumException;
 import services.CompanyService;
 import services.EmployeeService;
 import services.UserService;
@@ -71,6 +73,10 @@ public class EmployeesController {
 		} catch (DatabaseAccessException e) {
 			logger.error("employees list not received", e);
 		} catch (EmployeesListException e) {
+			logger.error("employees list not received", e);
+		} catch (IncorrectOrderNumException e) {
+			logger.error("employees list not received", e);
+		} catch (IncorrectPageNumException e) {
 			logger.error("employees list not received", e);
 		}
 		
