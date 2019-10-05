@@ -69,18 +69,14 @@ public class EmployeesController {
 		
 		try {
 			employees = employeeService.getEmployeesList(requestData, cookie.getValue());
-			
-		} catch (DatabaseAccessException e) {
-			logger.error("employees list not received", e);
-		} catch (EmployeesListException e) {
-			logger.error("employees list not received", e);
-		} catch (IncorrectOrderNumException e) {
-			logger.error("employees list not received", e);
-		} catch (IncorrectPageNumException e) {
-			logger.error("employees list not received", e);
+		} catch (DatabaseAccessException | 
+				EmployeesListException | 
+				IncorrectOrderNumException |
+				IncorrectPageNumException e) {
+			return new EmployeesListMessage(EmployeesListMessage.FAIL, e.getMessage());
 		}
 		
-		return new EmployeesListMessage(0, employees);
+		return new EmployeesListMessage(EmployeesListMessage.SUCCESS, employees);
 	}
 	
 	@RequestMapping(value = "/company/hr/create-employee", method = RequestMethod.POST, consumes = "application/json")
