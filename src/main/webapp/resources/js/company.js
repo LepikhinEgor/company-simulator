@@ -6,7 +6,7 @@ $(document).ready(function() {
 function setEventHandlers() {
 	$('#get_company_info').on('click', fillCompanyInfoPage);
     $('#get_hr').on('click', fillEmployeesPage);
-//    $('#get_contracts').on('click', changeEmployeeOpenModal);
+    $('#get_contracts').on('click', requestContractsPage);
 }
 
 function fillCompanyInfoPage() {
@@ -29,6 +29,17 @@ function fillEmployeesPage() {
         success: function(data) {
 			$('#tab_content').html(data);
 			employeesPageSetup();
+		}
+      });
+}
+
+function requestContractsPage() {
+	$.ajax({
+        type: "GET",
+        url: "/company-simulator/company/contracts",
+        contentType: 'application/json',
+        success: function(data) {
+			$('#tab_content').html(data);
 		}
       });
 }

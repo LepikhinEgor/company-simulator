@@ -74,12 +74,12 @@ html, body {
     border: 1px solid #C1C1C1; /* размер и цвет границы блока */
 }
 
-#employees_table {
+#employees_table, #contracts_table {
     width: 100%;
     text-align: center;
 }
 
-#employees_control {
+#employees_control, #contracts_control {
     margin-top: 20px;
     margin-left: 30px;
 }
@@ -211,7 +211,7 @@ border-left-color: #9097A2;
 
 
 
-#employee_modal_window {
+#employee_modal_window, #contract_modal_window {
         background: rgba(102, 102, 102, 0.5);
         width: 100%;
         height: 100%;
@@ -220,7 +220,7 @@ border-left-color: #9097A2;
         left: 0;
         display: none;
       }
-      #employee_window {
+#employee_window, #contract_window {
         width: 400px;
         height: 220px;
         text-align: center;
@@ -236,7 +236,7 @@ border-left-color: #9097A2;
         margin: auto;
         background: #fff;
       }
-      #employee_modal_window:target {display: block;}
+ #employee_modal_window:target, #contract_modal_window:target {display: block;}
       .close_modal_employee {
         display: inline-block;
         border: 1px solid #0000cc;
@@ -249,7 +249,7 @@ border-left-color: #9097A2;
         cursor:pointer;
         vertical-align: bottom;
       }
-      .close_modal_employee:hover {background: #e6e6ff;}
-      #employee_window_content {
+.close_modal_employee:hover, .close_modal_contract:hover {background: #e6e6ff;}
+      #employee_window_content, #contract_window_content {
 
       }
