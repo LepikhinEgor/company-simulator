@@ -83,7 +83,7 @@ function changeEmployeeOpenModal() {
         age : parent.find(".employee_age").text() || "",
         perfomance : parent.find(".employee_perf").text() || "0",
         salary : parent.find(".employee_salary").text() || "0",
-        sex : parent.find(".employee_sex").text()
+        sex : parent.find(".employee_sex").text() ||""
     }
     openEmployeeModalWindow(newEmployee);
 }

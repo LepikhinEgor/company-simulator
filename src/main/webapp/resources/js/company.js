@@ -28,7 +28,7 @@ function fillEmployeesPage() {
         contentType: 'application/json',
         success: function(data) {
 			$('#tab_content').html(data);
+			employeesPageSetup();
 		}
       });
-	employeesPageSetup();
 }
