@@ -17,7 +17,7 @@ $(function() {
         success: function(data) {
 			console.log(data);
 			if (data.status == 0) {
-				setCookie('signedUser', userLogin, {'max-age': 3600, path: '/'});
+				setCookie('signedUser', data.login, {'max-age': 3600, path: '/'});
 				document.location.href = "company";
 			}
 		}

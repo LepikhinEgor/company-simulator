@@ -32,6 +32,12 @@ public class SignInMessage {
 		this.login = login;
 	}
 	
+	public SignInMessage(int status,String description, String login) {
+		this.status = status;
+		this.description = description;
+		this.login = login;
+	}
+	
 	public int getStatus() {
 		return status;
 	}
@@ -43,6 +49,14 @@ public class SignInMessage {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
 	}
 	
 	
