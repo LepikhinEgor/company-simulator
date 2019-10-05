@@ -9,6 +9,7 @@ import java.sql.Statement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import aspects.annotations.Loggable;
 import entities.User;
@@ -17,6 +18,8 @@ public class UserDao {
 	
 	private final static Logger logger = LoggerFactory.getLogger(UserDao.class);
 	
+	@Autowired
+	private ConnectionPool connectionPool;
 	
 	public UserDao() {
 	}
@@ -28,7 +31,7 @@ public class UserDao {
 	 */
 	@Loggable
 	public User getUserDataByLoginEmail(String loginEmail) throws SQLException {
-		Connection connection = ConnectionPool.getInstance().getConnection();
+		Connection connection = connectionPool.getConnection();
 		
 		String findUserQuerry = "SELECT * FROM users WHERE (email = ? OR login = ?);";
 		PreparedStatement findUserStatement = connection.prepareStatement(findUserQuerry);
@@ -54,7 +57,7 @@ public class UserDao {
 	
 	@Loggable
 	public User signIn(String loginEmail, String password) throws SQLException {
-		Connection connection = ConnectionPool.getInstance().getConnection();
+		Connection connection = connectionPool.getConnection();
 		
 		User foundUser = null;
 		
@@ -83,7 +86,7 @@ public class UserDao {
 	
 	@Loggable
 	public boolean checkLoginAlreadyExist(String userLogin) throws SQLException {
-		Connection connection = ConnectionPool.getInstance().getConnection();
+		Connection connection = connectionPool.getConnection();
 		
 		String findUserQuerry = "SELECT * FROM users WHERE login = ?;";
 		
@@ -105,7 +108,7 @@ public class UserDao {
 	
 	@Loggable
 	public boolean checkEmailAlreadyExist(String userEmail) throws SQLException {
-		Connection connection = ConnectionPool.getInstance().getConnection();
+		Connection connection = connectionPool.getConnection();
 		
 		String findUserQuerry = "SELECT * FROM users WHERE email = ?;";
 		
@@ -125,7 +128,7 @@ public class UserDao {
 	
 	@Loggable
 	public long recordUser(String login, String email, String password) throws SQLException {
-		Connection connection = ConnectionPool.getInstance().getConnection();
+		Connection connection = connectionPool.getConnection();
 		
 		String addUserQuerry = "INSERT INTO users (user_id, login, password, email) VALUES ("
 				+ "NULL, ?, ?, ?);";

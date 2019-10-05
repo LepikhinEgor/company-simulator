@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 import dao.CompanyDao;
+import dao.ConnectionPool;
 import dao.EmployeeDao;
 import dao.UserDao;
 
@@ -29,5 +30,10 @@ public class SpringConfig {
 	@Bean
 	public EmployeeDao employeeDao() {
 		return new EmployeeDao();
+	}
+	
+	@Bean
+	public ConnectionPool connectionPool() {
+		return new ConnectionPool();
 	}
 }

@@ -9,6 +9,7 @@ import java.sql.Statement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import aspects.annotations.Loggable;
 import entities.User;
@@ -17,6 +18,9 @@ import entities.Company;
 public class CompanyDao {
 	
 	private static final Logger logger = LoggerFactory.getLogger(CompanyDao.class);
+	
+	@Autowired
+	private ConnectionPool connectionPool;
 	
 	/**
 	 * @param userId Company owner ID
@@ -27,7 +31,7 @@ public class CompanyDao {
 	public Company getUserCompany(long userId) throws SQLException {
 		String getCompanyQuerry = "SELECT * FROM companies WHERE owner_id = ?";
 		
-		try(Connection connection = DBConnectionHelper.getConnection()) {
+		try(Connection connection = connectionPool.getConnection()) {
 			PreparedStatement getCompanyStatement = connection.prepareStatement(getCompanyQuerry);
 			getCompanyStatement.setLong(1, userId);
 			
@@ -59,7 +63,7 @@ public class CompanyDao {
 	public Company getUserCompany(String loginEmail) throws SQLException {
 		String getCompanyQuerry = "SELECT c.company_id, c.name, c.cash, c.owner_id FROM companies c INNER JOIN users u ON u.user_id = c.owner_id WHERE u.login = ? OR u.email = ?";
 		
-		try(Connection connection = DBConnectionHelper.getConnection()) {
+		try(Connection connection = connectionPool.getConnection()) {
 			PreparedStatement getCompanyStatement = connection.prepareStatement(getCompanyQuerry);
 			getCompanyStatement.setString(1, loginEmail);
 			getCompanyStatement.setString(2, loginEmail);
@@ -86,7 +90,7 @@ public class CompanyDao {
 	
 	@Loggable
 	public long recordCompany(Company newCompany) throws SQLException {
-		Connection connection = DBConnectionHelper.getConnection();
+		Connection connection = connectionPool.getConnection();
 		
 		String recordCompanyQuerry = "INSERT INTO companies (company_id, name, cash, owner_id) VALUES ("
 				+ "NULL, ?, ?, ?);";

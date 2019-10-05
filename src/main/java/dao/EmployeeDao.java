@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import aspects.annotations.Loggable;
 import entities.Employee;
 import entities.Company;
@@ -15,6 +17,9 @@ import entities.Company;
 public class EmployeeDao {
 	
 	private final int ORDER_BY_NAME = 0;
+	
+	@Autowired
+	ConnectionPool connectionPool;
 	
 	@Loggable
 	public List<Employee> getEmployeesList(long companyId, int orderNum, int pageNum, int pageLimit) throws SQLException {
@@ -24,7 +29,7 @@ public class EmployeeDao {
 		case ORDER_BY_NAME: orderBy = "name";break;
 		}
 		
-		try(Connection connection = DBConnectionHelper.getConnection();) {
+		try(Connection connection = connectionPool.getConnection();) {
 			String getEmployeesQuerry = "SELECT * FROM employees WHERE company_id = ? "
 					+ "ORDER BY " + orderBy + " LIMIT " + pageNum*pageLimit + ", " + pageLimit;
 			
@@ -55,7 +60,7 @@ public class EmployeeDao {
 	
 	@Loggable
 	public long createEmployee(Employee employee, long companyId) throws SQLException {
-		Connection connection = DBConnectionHelper.getConnection();
+		Connection connection = connectionPool.getConnection();
 		
 		String recordEmployeeQuerry = "INSERT INTO employees (employee_id, name, age, sex, salary, performance, description, company_id) VALUES ("
 				+ "NULL, ?, ?, ?, ?, ?, ?, ?);";
@@ -93,7 +98,7 @@ public class EmployeeDao {
 				+ "salary = ?, performance = ?, description = ? WHERE employee_id = ?";
 		
 		PreparedStatement recordEmployeeStatement = null;
-		try(Connection connection = DBConnectionHelper.getConnection();) {
+		try(Connection connection = connectionPool.getConnection();) {
 			recordEmployeeStatement = connection.prepareStatement(recordEmployeeQuerry, Statement.RETURN_GENERATED_KEYS);
 						
 			recordEmployeeStatement.setString(1, employee.getName());

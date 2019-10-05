@@ -6,11 +6,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import entities.Contract;
 
 public class ContractDao {
+	
+	@Autowired
+	private ConnectionPool connectionPool;
+	
 	public long recordContract(Contract contract, long companyId) throws SQLException {
-		Connection connection = DBConnectionHelper.getConnection();
+		Connection connection = connectionPool.getConnection();
 		
 		String recordContractQuerry = "INSERT INTO contracts (contract_id, name, performance_units, fee, deadline, progress, description, company_id) VALUES ("
 				+ "NULL, ?, ?, ?, ?, ?, ?, ?);";

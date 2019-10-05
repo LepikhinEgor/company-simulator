@@ -27,16 +27,9 @@ public class ConnectionPool {
             "&amp"+
             "&serverTimezone=UTC";
 	
-	private static ConnectionPool instance;
-	private static BasicDataSource dataSource;
+	private BasicDataSource dataSource;
 	
-	public static ConnectionPool getInstance() {
-		if (instance == null)
-			instance = new ConnectionPool();
-		return instance;
-	}
-	
-	private ConnectionPool() {
+	public ConnectionPool() {
 			dataSource = new BasicDataSource();
 			dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
 			dataSource.setUrl(URL);

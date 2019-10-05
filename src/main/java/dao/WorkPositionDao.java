@@ -6,11 +6,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import entities.Contract;
 
 public class WorkPositionDao {
+	
+	@Autowired
+	private ConnectionPool connectionPool;
+	
 	public long recordWorkPosition(long employeeId, long contractId) throws SQLException {
-		Connection connection = DBConnectionHelper.getConnection();
+		Connection connection = connectionPool.getConnection();
 		
 		String recordWorkPositionQuerry = "INSERT INTO work_positions (position_id, employee_id, contract_id) VALUES ("
 				+ "NULL, ?, ?);";
