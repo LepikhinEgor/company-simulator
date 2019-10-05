@@ -90,8 +90,7 @@ public class EmployeeServiceTest {
 		Employee expectedEmployee = new Employee(employeeData);
 		expectedEmployee.setId(1);
 		
-		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenReturn(goodUser);
-		when(companyServiceMock.getUserCompany(goodUser.getId())).thenReturn(goodCompany);
+		when(companyServiceMock.getUserCompany(loginEmail)).thenReturn(goodCompany);
 		when(employeeDaoMock.updateEmployee(expectedEmployee, goodCompany.getId())).thenReturn(expectedEmployee.getId());
 		
 		employeeService.setUserService(userServiceMock);
@@ -110,8 +109,7 @@ public class EmployeeServiceTest {
 		Employee expectedEmployee = new Employee(employeeData);
 		expectedEmployee.setId(1);
 		
-		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenReturn(goodUser);
-		when(companyServiceMock.getUserCompany(goodUser.getId())).thenThrow(new DatabaseAccessException());
+		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
 		when(employeeDaoMock.updateEmployee(expectedEmployee, goodCompany.getId())).thenReturn(expectedEmployee.getId());
 		
 		employeeService.setUserService(userServiceMock);
@@ -124,51 +122,13 @@ public class EmployeeServiceTest {
 		
 	}
 	
-	@Test(expected = DatabaseAccessException.class)
-	public void updateEmployeeThrowDBExceptionFromUserService() throws DatabaseAccessException, SQLException {
-		
-		Employee expectedEmployee = new Employee(employeeData);
-		expectedEmployee.setId(1);
-		
-		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenThrow(new DatabaseAccessException());
-		when(companyServiceMock.getUserCompany(goodUser.getId())).thenReturn(goodCompany);
-		when(employeeDaoMock.updateEmployee(expectedEmployee, goodCompany.getId())).thenReturn(expectedEmployee.getId());
-		
-		employeeService.setUserService(userServiceMock);
-		employeeService.setEmployeeDao(employeeDaoMock);
-		employeeService.setCompanyService(companyServiceMock);
-		
-		Employee actualEmployee = employeeService.updateEmployee(employeeData, loginEmail);
-		
-		assertTrue(expectedEmployee.equals(actualEmployee));	
-		
-	}
 	
 	@Test
 	public void successReturnCompanyEmployeesList() throws DatabaseAccessException, SQLException, EmployeesListException, IncorrectOrderNumException, IncorrectPageNumException {
 		final int PAGE_LIMIT = 10;
 		
 		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenReturn(goodUser);
-		when(companyServiceMock.getUserCompany(goodUser.getId())).thenReturn(goodCompany);
-		when(employeeDaoMock.getEmployeesList(goodCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), PAGE_LIMIT)).
-		thenReturn(employees);
-		
-		employeeService.setUserService(userServiceMock);
-		employeeService.setEmployeeDao(employeeDaoMock);
-		employeeService.setCompanyService(companyServiceMock);
-		
-		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail);
-		
-		assertTrue(actualEmployees.size() == employees.size());
-	}
-	
-	@Test(expected = DatabaseAccessException.class)
-	public void getEmployeesListReturnDatabaseExceptionFromUserService() throws DatabaseAccessException, SQLException, EmployeesListException, IncorrectOrderNumException, IncorrectPageNumException {
-
-		final int PAGE_LIMIT = 10;
-		
-		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenThrow(new DatabaseAccessException());
-		when(companyServiceMock.getUserCompany(goodUser.getId())).thenReturn(goodCompany);
+		when(companyServiceMock.getUserCompany(loginEmail)).thenReturn(goodCompany);
 		when(employeeDaoMock.getEmployeesList(goodCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), PAGE_LIMIT)).
 		thenReturn(employees);
 		
@@ -186,8 +146,7 @@ public class EmployeeServiceTest {
 
 		final int PAGE_LIMIT = 10;
 		
-		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenReturn(goodUser);
-		when(companyServiceMock.getUserCompany(goodUser.getId())).thenThrow(new DatabaseAccessException());
+		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
 		when(employeeDaoMock.getEmployeesList(goodCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), PAGE_LIMIT)).
 		thenReturn(employees);
 		
@@ -205,8 +164,7 @@ public class EmployeeServiceTest {
 
 		final int PAGE_LIMIT = 10;
 		
-		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenReturn(goodUser);
-		when(companyServiceMock.getUserCompany(goodUser.getId())).thenThrow(new DatabaseAccessException());
+		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
 		when(employeeDaoMock.getEmployeesList(goodCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), PAGE_LIMIT)).
 		thenThrow(new SQLException());
 		
@@ -228,8 +186,7 @@ public class EmployeeServiceTest {
 		querryData.setPageNum(-1);
 		querryData.setOrderNum(0);
 		
-		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenReturn(goodUser);
-		when(companyServiceMock.getUserCompany(goodUser.getId())).thenThrow(new DatabaseAccessException());
+		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
 		when(employeeDaoMock.getEmployeesList(goodCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), PAGE_LIMIT)).
 		thenThrow(new SQLException());
 		
@@ -250,8 +207,7 @@ public class EmployeeServiceTest {
 		querryData.setPageNum(0);
 		querryData.setOrderNum(12);
 		
-		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenReturn(goodUser);
-		when(companyServiceMock.getUserCompany(goodUser.getId())).thenThrow(new DatabaseAccessException());
+		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
 		when(employeeDaoMock.getEmployeesList(goodCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), PAGE_LIMIT)).
 		thenThrow(new SQLException());
 		

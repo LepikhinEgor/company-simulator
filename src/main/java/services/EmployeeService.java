@@ -59,11 +59,7 @@ public class EmployeeService {
 		if (!isPageNumCorrect(querryData.getPageNum()))
 			throw new IncorrectPageNumException("Page num must be more then 0");
 		
-		User userData = userService.getUserDataByLoginEmail(loginEmail);
-		if (userData == null)
-			throw new EmployeesListException("User with login " + loginEmail + " has not been found");
-		
-		Company userCompany = companyService.getUserCompany(userData.getId());
+		Company userCompany = companyService.getUserCompany(loginEmail);
 		
 		try {
 			return employeeDao.getEmployeesList(userCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), EMPLOYEES_PAGE_LIMIT);
@@ -86,7 +82,7 @@ public class EmployeeService {
 		
 		try {
 			User user = userService.getUserDataByLoginEmail(userLoginEmail);
-			Company company = companyService.getUserCompany(user.getId());
+			Company company = companyService.getUserCompany(userLoginEmail);
 		
 			long createdEmployeeId = employeeDao.updateEmployee(newEmployee, company.getId());
 			newEmployee.setId(createdEmployeeId);
@@ -104,8 +100,7 @@ public class EmployeeService {
 		Employee newEmployee = new Employee(employeeData);
 		
 		try {
-			User user = userService.getUserDataByLoginEmail(userLoginEmail);
-			Company company = companyService.getUserCompany(user.getId());
+			Company company = companyService.getUserCompany(userLoginEmail);
 		
 			long createdEmployeeId = employeeDao.createEmployee(newEmployee, company.getId());
 			newEmployee.setId(createdEmployeeId);

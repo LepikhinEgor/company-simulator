@@ -53,7 +53,7 @@ public class CompanyController {
 		String companyName = "company";
 		String userLogin = "username";
 		try {
-			Company company = companyService.getCompany(loginEmail);
+			Company company = companyService.getUserCompany(loginEmail);
 			companyName = company.getName();
 			
 			User user = userService.getUserDataByLoginEmail(loginEmail);

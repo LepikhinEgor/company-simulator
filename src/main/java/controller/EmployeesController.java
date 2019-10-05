@@ -39,12 +39,6 @@ public class EmployeesController {
 	private static final Logger logger = LoggerFactory.getLogger(EmployeesController.class);
 	
 	@Autowired
-	UserService userService;
-	
-	@Autowired
-	CompanyService companyService;
-	
-	@Autowired
 	EmployeeService employeeService;
 	
 	@RequestMapping(value = "/company/hr", method = RequestMethod.GET)

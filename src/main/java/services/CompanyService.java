@@ -34,18 +34,6 @@ public class CompanyService {
 		this.companyDao = companyDao;
 	}
 	
-	@Loggable
-	public Company getCompany(String loginEmail) throws DatabaseAccessException {
-		Company company = null;
-		try {
-			company = companyDao.getUserCompany(loginEmail);
-		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-			throw new DatabaseAccessException("Error trying get company by loginEmail");
-		}
-		
-		return company;
-	}
 	
 	/**
 	 * @param loginEmail user login or email
@@ -75,6 +63,13 @@ public class CompanyService {
 		return companyInfo;
 	}
 
+	@Loggable
+	public Company getUserCompany(String loginEmail) throws DatabaseAccessException {
+		User user = userService.getUserDataByLoginEmail(loginEmail);
+		Company company = getUserCompany(user.getId());
+		
+		return company;
+	}
 	
 	/**
 	 * @param userId Company owner ID
