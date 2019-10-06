@@ -3,18 +3,33 @@ function contractsPageSetup() {
 //	requestEmployeesList();
 }
 
+var changedContractId;
+
 function refreshContractsEventHandlers() {
     $('#create_new_contract').off('click');
     $('#apply_contract_data').off('click');
-//    $('.employee_name').off('click');
+    $('.contract_name').off('click');
 
     $('#create_new_contract').on('click', newContractOpenModal);
     $('#apply_contract_data').on('click', applyContractData);
-//    $('.employee_name').on('click', changeEmployeeOpenModal);
+    $('.contract_name').on('click', changeContractOpenModal);
+}
+
+function changeContractOpenModal() {
+    var parent = $(this).closest("tr");
+    changedContractId = parent.attr("id");
+
+    var newContract = {
+        name: parent.find(".contract_name").text() || "",
+        size : parent.find(".contract_size").text() || "",
+        fee : parent.find(".contract_fee").text() || "0",
+        deadline : parent.find(".contract_deadline").text() || "0",
+    }
+    openContractModalWindow(newContract);
 }
 
 function newContractOpenModal() {
-    changedEmployeeID = "newUser";
+    changedContractId = "newContract";
 
     var newContract = {
         name: "",
@@ -26,13 +41,11 @@ function newContractOpenModal() {
     openContractModalWindow(newContract);
 }
 
-function openContractModalWindow(employeeData) {
-    var sexVal = $("input[name=choose_employee_sex]").filter(":checked").val();
-
-    $('.input_contract_name').val(employeeData.name || "");
-    $('.input_contract_size').val(employeeData.size || "");
-    $('.input_contract_fee').val(employeeData.fee || "");
-    $('.input_contract_deadline').val(employeeData.deadline || "");
+function openContractModalWindow(contractData) {
+    $('.input_contract_name').val(contractData.name || "");
+    $('.input_contract_size').val(contractData.size || "");
+    $('.input_contract_fee').val(contractData.fee || "");
+    $('.input_contract_deadline').val(contractData.deadline || "");
 
     document.location.href = "#contract_modal_window";
 }
@@ -45,12 +58,22 @@ function applyContractData() {
         deadline : $('.input_contract_deadline').val() || "0",
     }
 
-    if (changedEmployeeID === "newUser")
+    if (changedContractId === "newContract")
         addNewContract(newContract);
     else
-        changeEnployeeData(newEmployee);
+    	changeContractData(newContract);
     
     document.location.href = "#";
+}
+
+function changeContractData(contractData) {
+//	requestUpdateEmployee(employeeData);
+	
+    var selector = "#" + changedContractId;
+    $(selector).find(".contract_name").text(contractData.name);
+    $(selector).find(".contract_size").text(contractData.size);
+    $(selector).find(".contract_fee").text(contractData.fee);
+    $(selector).find(".contract_deadline").text(contractData.deadline);
 }
 
 function addNewContract(newContract) {
@@ -68,12 +91,12 @@ function addContractToTable(contractData) {
 	str += "<td class=\"contract_progress\">" + contractData.progress + "</td>";
 	str += "<td class=\"contract_perfomance\">" + contractData.perfomance + "</td>";
 	str += "<td class=\"contract_expected\">" + contractData.expected + "</td>";
-	str += "<td class=\contract_deadline\">" + contractData.deadline + "</td>";
+	str += "<td class=\"contract_deadline\">" + contractData.deadline + "</td>";
 	str += "</tr>";
 	
 	$('#contracts_table').append(str);
 	tempId++;
 	
-	refreshEmpEventHandlers();
+	refreshContractsEventHandlers();
 }
 
