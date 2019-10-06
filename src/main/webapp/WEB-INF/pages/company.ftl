@@ -6,6 +6,7 @@
 	<script src="./resources/js/company.js" type="text/javascript"></script>
 	<script src="./resources/js/stats.js" type="text/javascript"></script>
     <script src="./resources/js/employees.js" type="text/javascript"></script>
+    <script src="./resources/js/contracts.js" type="text/javascript"></script>
     <title>Горизонтальное выпадающее меню</title>
 </head>
 <body>

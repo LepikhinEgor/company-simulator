@@ -19,24 +19,19 @@
     	<form>
     		<p>
     			<span>Name:</span>
-    			<input type="text" class="input_employee_name"></p>
+    			<input type="text" class="input_contract_name"></p>
     		<p>
-    			<span>Age:</span>
-    			<input type="text" class="input_employee_age">
+    			<span>Size:</span>
+    			<input type="text" class="input_contract_size">
     		</p>
     		<p>
-    			<span>Perfomance:</span>
-    			<input type="text" class="input_employee_perf">
+    			<span>Fee:</span>
+    			<input type="text" class="input_contract_fee">
     		</p>
     		<p>
-    			<span>Salary:</span>
-    			<input type="text" class="input_employee_salary">
+    			<span>Deadline:</span>
+    			<input type="text" class="input_contract_deadline">
     		</p>
-    		<p>
-    			<span>Sex:</span>
-    			<input type="radio" name="choose_employee_sex" value="male"><label>male</label>
-    			<input type="radio" name="choose_employee_sex" value="female"><label>female</label>
-			</p>
 			<p>
     			<input type="button" id="apply_contract_data" value="Apply">
     		</p>

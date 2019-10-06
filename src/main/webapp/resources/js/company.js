@@ -40,6 +40,7 @@ function requestContractsPage() {
         contentType: 'application/json',
         success: function(data) {
 			$('#tab_content').html(data);
+			contractsPageSetup();
 		}
       });
 }
