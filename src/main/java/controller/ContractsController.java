@@ -4,8 +4,13 @@ import javax.servlet.http.Cookie;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import controller.input.CreateContractData;
+import controller.messages.CreateContractMessage;
 
 @Controller
 public class ContractsController {
@@ -20,5 +25,13 @@ public class ContractsController {
 			return "contracts";			
 		}
 		
+	}
+	
+	@RequestMapping(value="/company/contracts/create-contract", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateContractMessage createContract(@RequestBody CreateContractData contractData) {
+		CreateContractMessage message = new CreateContractMessage(1);
+		
+		return message;
 	}
 }

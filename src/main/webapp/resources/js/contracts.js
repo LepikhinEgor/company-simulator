@@ -77,10 +77,36 @@ function changeContractData(contractData) {
 }
 
 function addNewContract(newContract) {
-	newContract.progress = 0;
-	newContract.perfomance = 0;
-	newContract.expected = 0;
-	addContractToTable(newContract);
+	var status = requestCreateContract(newContract);
+	if (status == 1) {
+		newContract.progress = 0;
+		newContract.perfomance = 0;
+		newContract.expected = 0;
+		
+		addContractToTable(newContract);
+	}
+}
+
+function requestCreateContract(newContract) {
+	var contractData =  {
+			name : "f5f5",
+			size : 45,
+			fee : 53,
+			deadline : 34
+			
+	};
+	var status = 0;
+	$.ajax({
+        type: "POST",
+        url: "/company-simulator/company/contracts/create-contract",
+        contentType: 'application/json',
+        data: JSON.stringify(newContract),
+        success: function(data) {
+			console.log(data);
+			status = data.status;
+		}
+      });
+	return status;
 }
 
 function addContractToTable(contractData) {
