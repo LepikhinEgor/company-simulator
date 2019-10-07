@@ -30,7 +30,7 @@ public class ContractsController {
 	@RequestMapping(value="/company/contracts/create-contract", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateContractMessage createContract(@RequestBody CreateContractData contractData) {
-		CreateContractMessage message = new CreateContractMessage(1);
+		CreateContractMessage message = new CreateContractMessage(0);
 		
 		return message;
 	}

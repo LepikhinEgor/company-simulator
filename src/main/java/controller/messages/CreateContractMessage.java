@@ -1,13 +1,7 @@
 package controller.messages;
 
-public class CreateContractMessage {
-	
-	public static final int SUCCESS = 0;
-	public static final int FAIL = 1;
-	
-	private int status;
-	private String message;
-	
+public class CreateContractMessage extends Message {
+
 	public CreateContractMessage(int status) {
 		this.status = status;
 		
@@ -18,25 +12,6 @@ public class CreateContractMessage {
 	}
 	
 	public CreateContractMessage(int status, String message) {
-		this.message = message;
-		this.status = status;
+		super(status, message);
 	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	
-	
 }

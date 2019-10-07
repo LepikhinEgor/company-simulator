@@ -67,12 +67,12 @@ public class HomeController {
 			return new SignInMessage(SignInMessage.INVALID_LOGIN);
 		} catch (DatabaseAccessException e) {
 			logger.error("Sign in error", e);
-			return new SignInMessage(SignInMessage.OTHER_MISTAKE);
+			return new SignInMessage(SignInMessage.FAIL);
 		}
 		
 		if (signInSuccess) {
 			logger.info("User sign in successful");
-			return new SignInMessage(SignInMessage.SUCCESS_SIGN_IN, signedUser.getLogin());
+			return new SignInMessage(SignInMessage.SUCCESS, signedUser.getLogin());
 		} else {
 			logger.info("Invalid password");
 			return new SignInMessage(SignInMessage.INCORRECT_LOGIN_OR_PASSWORD);
@@ -91,7 +91,7 @@ public class HomeController {
 		
 		try {
 			userService.createNewUser(newUserData);
-			return new RegistrationMessage(RegistrationMessage.SUCCES_REGISTRATION);
+			return new RegistrationMessage(RegistrationMessage.SUCCESS);
 		} catch (InvalidLoginRegistrationException e) {
 			return new RegistrationMessage(RegistrationMessage.INCORRECT_LOGIN);
 		} catch (LoginAlreadyExistException e) {
@@ -104,6 +104,9 @@ public class HomeController {
 			return new RegistrationMessage(RegistrationMessage.INCORRECT_EMAIL);
 		} catch (InvalidPasswordRegistrationException e) {
 			return new RegistrationMessage(RegistrationMessage.INCORRECT_PASSWORD);
+		} catch (Exception ex) {
+			logger.error(ex.getMessage(), ex);
+			return new RegistrationMessage(RegistrationMessage.FAIL);
 		}
 		
 	}

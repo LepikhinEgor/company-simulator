@@ -1,13 +1,6 @@
 package controller.messages;
 
-public class CompanyInfoMessage {
-	
-	public static final int SUCCESS = 0;
-	public static final int FAIL = 1;
-	
-	private int status;
-	private String message;
-	
+public class CompanyInfoMessage extends Message {
 	private long id;
 	private String name;
 	private long cash;
@@ -19,7 +12,7 @@ public class CompanyInfoMessage {
 	private int contractsFailed;
 	
 	public CompanyInfoMessage() {
-		
+		super();
 	}
 	
 	public CompanyInfoMessage(int status) {
@@ -32,8 +25,7 @@ public class CompanyInfoMessage {
 	}
 	
 	public CompanyInfoMessage(int status, String message) {
-		this.status = status;
-		this.message = message;
+		super(status, message);
 	}
 	
 	public long getId() {
@@ -89,18 +81,6 @@ public class CompanyInfoMessage {
 	}
 	public void setContractsExecuting(int contractsExecuting) {
 		this.contractsExecuting = contractsExecuting;
-	}
-	public int getStatus() {
-		return status;
-	}
-	public void setStatus(int status) {
-		this.status = status;
-	}
-	public String getMessage() {
-		return message;
-	}
-	public void setMessage(String message) {
-		this.message = message;
 	}
 	
 }
