@@ -21,30 +21,6 @@ public class Employee {
 	public Employee() {
 	}
 	
-	public Employee(EmployeeCreateData employeeData) {
-		this.name = employeeData.getName();
-		this.age = employeeData.getAge();
-		this.salary = employeeData.getSalary();
-		this.sex = employeeData.getSex();
-		this.perfomance = employeeData.getPerfomance();
-		
-		this.description = "No description";
-	}
-	
-	public Employee(EmployeeUpdateData employeeData) {
-		if (employeeData == null)
-			throw new IllegalArgumentException("Employee data must be not null");
-		
-		this.id = employeeData.getId();
-		this.name = employeeData.getName();
-		this.age = employeeData.getAge();
-		this.salary = employeeData.getSalary();
-		this.sex = employeeData.getSex();
-		this.perfomance = employeeData.getPerfomance();
-		
-		this.description = "No description";
-	}
-	
 	public Employee(String name, int age, String sex, int perfomanse, int salary, String description) {
 		this.name = name;
 		this.age = age;

@@ -13,6 +13,7 @@ import dao.ContractDao;
 import entities.Company;
 import entities.Contract;
 import exceptions.DatabaseAccessException;
+import services.utils.EntitiesConventer;
 
 @Service
 public class ContractService {
@@ -20,6 +21,7 @@ public class ContractService {
 	private static final Logger logger = LoggerFactory.getLogger(ContractService.class);
 	
 	CompanyService companyService;
+	EntitiesConventer entitiesConventer;
 	
 	ContractDao contractDao;
 	
@@ -33,9 +35,14 @@ public class ContractService {
 		this.companyService = companyService;
 	}
 	
+	@Autowired
+	public void setEntitiesConventer(EntitiesConventer conventer) {
+		this.entitiesConventer = conventer;
+	}
+	
 	@Loggable
 	public Contract createContract(CreateContractData contractData, String userLogin) throws DatabaseAccessException {
-		Contract newContract = new Contract(contractData);
+		Contract newContract = entitiesConventer.trasformToContract(contractData);
 		
 		Company userCompany = companyService.getUserCompany(userLogin);
 		

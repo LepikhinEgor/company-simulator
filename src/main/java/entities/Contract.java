@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import controller.input.CreateContractData;
 
 public class Contract {
+	private int id;
 	private String name;
 	private int perfomanceUnits;
 	private int fee;
@@ -15,6 +16,10 @@ public class Contract {
 	private long progress;
 	private String description;
 	
+	public Contract() {
+		super();
+	}
+	
 	public Contract(String name, int fee, int performanceUnits, long deadline, String description) {
 		this.name = name;
 		this.fee = fee;
@@ -22,15 +27,6 @@ public class Contract {
 		this.deadline = deadline;
 		this.progress = 0;
 		this.description = description;
-	}
-	
-	public Contract(CreateContractData contractData) {
-		this.name = contractData.getName();
-		this.perfomanceUnits = contractData.getSize();
-		this.fee = contractData.getFee();
-		this.deadline = contractData.getDeadline();
-		this.progress = 0;
-		this.description = "";
 	}
 	
 	public String getName() {
@@ -76,6 +72,14 @@ public class Contract {
 
 	public void setProgress(long progress) {
 		this.progress = progress;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	

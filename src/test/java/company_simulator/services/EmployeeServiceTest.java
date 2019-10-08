@@ -26,6 +26,7 @@ import exceptions.employees.IncorrectPageNumException;
 import services.CompanyService;
 import services.EmployeeService;
 import services.UserService;
+import services.utils.EntitiesConventer;
 
 public class EmployeeServiceTest {
 
@@ -34,6 +35,8 @@ public class EmployeeServiceTest {
 	private UserService userServiceMock;
 	
 	private EmployeeDao employeeDaoMock;
+	
+	private EntitiesConventer entitiesConventer;
 	
 	//methods arguments
 	//updateEmployee()
@@ -54,6 +57,8 @@ public class EmployeeServiceTest {
 		userServiceMock = mock(UserService.class);
 		companyServiceMock = mock(CompanyService.class);
 		employeeDaoMock = mock(EmployeeDao.class);
+		
+		entitiesConventer = new EntitiesConventer();
 		
 		employeeData = new EmployeeUpdateData();
 		employeeData.setAge(21);
@@ -87,7 +92,7 @@ public class EmployeeServiceTest {
 	@Test
 	public void successUpdateEmployee() throws DatabaseAccessException, SQLException {
 		
-		Employee expectedEmployee = new Employee(employeeData);
+		Employee expectedEmployee = entitiesConventer.transormToEmployee(employeeData);
 		expectedEmployee.setId(1);
 		
 		when(companyServiceMock.getUserCompany(loginEmail)).thenReturn(goodCompany);
@@ -96,6 +101,7 @@ public class EmployeeServiceTest {
 		employeeService.setUserService(userServiceMock);
 		employeeService.setEmployeeDao(employeeDaoMock);
 		employeeService.setCompanyService(companyServiceMock);
+		employeeService.setEntitiesConventer(entitiesConventer);
 		
 		Employee actualEmployee = employeeService.updateEmployee(employeeData, loginEmail);
 		
@@ -106,7 +112,7 @@ public class EmployeeServiceTest {
 	@Test(expected = DatabaseAccessException.class)
 	public void updateEmployeeThrowDBExceptionFromCompanyService() throws DatabaseAccessException, SQLException {		
 		
-		Employee expectedEmployee = new Employee(employeeData);
+		Employee expectedEmployee = entitiesConventer.transormToEmployee(employeeData);
 		expectedEmployee.setId(1);
 		
 		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
@@ -115,6 +121,7 @@ public class EmployeeServiceTest {
 		employeeService.setUserService(userServiceMock);
 		employeeService.setEmployeeDao(employeeDaoMock);
 		employeeService.setCompanyService(companyServiceMock);
+		employeeService.setEntitiesConventer(entitiesConventer);
 		
 		Employee actualEmployee = employeeService.updateEmployee(employeeData, loginEmail);
 		

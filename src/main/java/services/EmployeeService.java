@@ -21,6 +21,7 @@ import exceptions.DatabaseAccessException;
 import exceptions.employees.EmployeesListException;
 import exceptions.employees.IncorrectOrderNumException;
 import exceptions.employees.IncorrectPageNumException;
+import services.utils.EntitiesConventer;
 
 @Service
 public class EmployeeService {
@@ -35,6 +36,8 @@ public class EmployeeService {
 	
 	UserService userService;
 	
+	EntitiesConventer entitiesConventer;
+	
 	@Autowired
 	public void setEmployeeDao(EmployeeDao employeeDao) {
 		this.employeeDao = employeeDao;
@@ -48,6 +51,11 @@ public class EmployeeService {
 	@Autowired
 	public void setUserService(UserService userService) {
 		this.userService = userService;
+	}
+	
+	@Autowired
+	public void setEntitiesConventer(EntitiesConventer conventer) {
+		this.entitiesConventer = conventer;
 	}
 	
 	@Loggable
@@ -78,7 +86,7 @@ public class EmployeeService {
 	
 	@Loggable
 	public Employee updateEmployee(EmployeeUpdateData employeeData, String userLoginEmail) throws DatabaseAccessException {
-		Employee newEmployee = new Employee(employeeData);
+		Employee newEmployee = entitiesConventer.transormToEmployee(employeeData);
 		
 		try {
 			User user = userService.getUserDataByLoginEmail(userLoginEmail);
@@ -97,7 +105,7 @@ public class EmployeeService {
 	
 	@Loggable
 	public Employee createEmployee(EmployeeCreateData employeeData, String userLoginEmail) throws DatabaseAccessException {
-		Employee newEmployee = new Employee(employeeData);
+		Employee newEmployee = entitiesConventer.transformToEmployee(employeeData);
 		
 		try {
 			Company company = companyService.getUserCompany(userLoginEmail);
