@@ -49,6 +49,13 @@ public class EmployeeServiceTest {
 	EmployeesListQuerryData querryData;
 	List<Employee> employees;
 	
+	private void injectDependensies() {
+		employeeService.setUserService(userServiceMock);
+		employeeService.setEmployeeDao(employeeDaoMock);
+		employeeService.setCompanyService(companyServiceMock);
+		employeeService.setEntitiesConventer(entitiesConventer);
+	}
+	
 	
 	@Before
 	public void testsInit() {
@@ -98,10 +105,7 @@ public class EmployeeServiceTest {
 		when(companyServiceMock.getUserCompany(loginEmail)).thenReturn(goodCompany);
 		when(employeeDaoMock.updateEmployee(expectedEmployee, goodCompany.getId())).thenReturn(expectedEmployee.getId());
 		
-		employeeService.setUserService(userServiceMock);
-		employeeService.setEmployeeDao(employeeDaoMock);
-		employeeService.setCompanyService(companyServiceMock);
-		employeeService.setEntitiesConventer(entitiesConventer);
+		injectDependensies();
 		
 		Employee actualEmployee = employeeService.updateEmployee(employeeData, loginEmail);
 		
@@ -118,10 +122,7 @@ public class EmployeeServiceTest {
 		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
 		when(employeeDaoMock.updateEmployee(expectedEmployee, goodCompany.getId())).thenReturn(expectedEmployee.getId());
 		
-		employeeService.setUserService(userServiceMock);
-		employeeService.setEmployeeDao(employeeDaoMock);
-		employeeService.setCompanyService(companyServiceMock);
-		employeeService.setEntitiesConventer(entitiesConventer);
+		injectDependensies();
 		
 		Employee actualEmployee = employeeService.updateEmployee(employeeData, loginEmail);
 		
@@ -139,9 +140,7 @@ public class EmployeeServiceTest {
 		when(employeeDaoMock.getEmployeesList(goodCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), PAGE_LIMIT)).
 		thenReturn(employees);
 		
-		employeeService.setUserService(userServiceMock);
-		employeeService.setEmployeeDao(employeeDaoMock);
-		employeeService.setCompanyService(companyServiceMock);
+		injectDependensies();
 		
 		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail);
 		
@@ -157,9 +156,7 @@ public class EmployeeServiceTest {
 		when(employeeDaoMock.getEmployeesList(goodCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), PAGE_LIMIT)).
 		thenReturn(employees);
 		
-		employeeService.setUserService(userServiceMock);
-		employeeService.setEmployeeDao(employeeDaoMock);
-		employeeService.setCompanyService(companyServiceMock);
+		injectDependensies();
 		
 		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail);
 		
@@ -175,9 +172,7 @@ public class EmployeeServiceTest {
 		when(employeeDaoMock.getEmployeesList(goodCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), PAGE_LIMIT)).
 		thenThrow(new SQLException());
 		
-		employeeService.setUserService(userServiceMock);
-		employeeService.setEmployeeDao(employeeDaoMock);
-		employeeService.setCompanyService(companyServiceMock);
+		injectDependensies();
 		
 		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail);
 		
@@ -197,9 +192,7 @@ public class EmployeeServiceTest {
 		when(employeeDaoMock.getEmployeesList(goodCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), PAGE_LIMIT)).
 		thenThrow(new SQLException());
 		
-		employeeService.setUserService(userServiceMock);
-		employeeService.setEmployeeDao(employeeDaoMock);
-		employeeService.setCompanyService(companyServiceMock);
+		injectDependensies();
 		
 		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail);
 		
@@ -218,9 +211,7 @@ public class EmployeeServiceTest {
 		when(employeeDaoMock.getEmployeesList(goodCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), PAGE_LIMIT)).
 		thenThrow(new SQLException());
 		
-		employeeService.setUserService(userServiceMock);
-		employeeService.setEmployeeDao(employeeDaoMock);
-		employeeService.setCompanyService(companyServiceMock);
+		injectDependensies();
 		
 		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail);
 		
