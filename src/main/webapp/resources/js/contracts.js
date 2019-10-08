@@ -78,7 +78,7 @@ function changeContractData(contractData) {
 
 function addNewContract(newContract) {
 	var status = requestCreateContract(newContract);
-	if (status == 1) {
+	if (status == 0) {
 		newContract.progress = 0;
 		newContract.perfomance = 0;
 		newContract.expected = 0;
@@ -88,13 +88,6 @@ function addNewContract(newContract) {
 }
 
 function requestCreateContract(newContract) {
-	var contractData =  {
-			name : "f5f5",
-			size : 45,
-			fee : 53,
-			deadline : 34
-			
-	};
 	var status = 0;
 	$.ajax({
         type: "POST",
