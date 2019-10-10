@@ -1,6 +1,7 @@
 package services;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,5 +55,9 @@ public class ContractService {
 		}
 		
 		return newContract;
+	}
+	
+	public List<Contract> getUserActiveContracts(int sortOrder, String login) {
+		contractDao.getContractsList();
 	}
 }

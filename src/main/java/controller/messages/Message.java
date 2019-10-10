@@ -25,6 +25,7 @@ public class Message {
 		switch(status) {
 		case SUCCESS: this.message = "Success";
 		case FAIL: this.message = "Fail";
+		default: this.message = "Status undefined";
 		}
 	}
 	
