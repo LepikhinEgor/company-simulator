@@ -115,8 +115,7 @@ public class EmployeeService {
 			
 			return newEmployee;
 		} catch(SQLException e) {
-			throw new DatabaseAccessException("Error trying record new employee to database");
-		} catch(DatabaseAccessException e) {
+			logger.error(e.getMessage(), e);
 			throw new DatabaseAccessException("Error trying record new employee to database");
 		}
 	}
