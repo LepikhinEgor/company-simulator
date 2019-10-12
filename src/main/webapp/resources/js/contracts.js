@@ -1,6 +1,6 @@
 function contractsPageSetup() {
 	refreshContractsEventHandlers();
-//	requestEmployeesList();
+	requestContractsList();
 }
 
 var changedContractId;
@@ -100,6 +100,42 @@ function requestCreateContract(newContract) {
 		}
       });
 	return status;
+}
+
+function requestContractsList() {
+	var requestData = {
+		sortOrder: 0,
+		pageNum: 0
+    }
+
+	$.ajax({
+        type: "GET",
+        url: "/company-simulator/company/contracts/get-active-contracts?sortOrder=0&pageNum=0",
+        contentType: 'application/json',
+        success: function(data) {
+			console.log(data);
+			
+			for (var key in data) {
+				if (key === "contracts") {
+					var contracts = data[key];
+					for(var contract in contracts) {
+						console.log(contracts[contract]);
+						var contractData = {
+							name: contracts[contract].name,
+							size: contracts[contract].perfomanceUnits,
+							fee: contracts[contract].fee,
+							deadline: contracts[contract].deadline,
+							progress: 0,
+							perfomance: 0,
+							expected: 0
+						}
+						
+			    		addContractToTable(contractData);
+					}
+				}
+			}
+		}
+      });
 }
 
 function addContractToTable(contractData) {
