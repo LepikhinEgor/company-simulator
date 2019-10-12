@@ -7,6 +7,7 @@
 	  <th>Perfomance/h</th>
 	  <th>Expected</th>
 	  <th>Deadline</th>
+	  <th>Team</th>
 	</tr>
 </table>
 <form id="contracts_control">
@@ -38,5 +39,32 @@
     	</form>
     </div>
     <a href="#" class="close_modal_contract">Закрыть окно</a>
+  </div>
+</div>
+<div id="contract_team_modal_window">
+  <div id="contract_team_window">
+    <div id="contract_team_window_content">
+    	<p><h3>Hired employees</h3></p>
+    	<div id="contract_employees_change_block">
+	    	<table id="contract_hired_employees_table">
+				<tr>
+				  <th>Name</th>
+				  <th>Perfomance</th>
+				  <th>Remove</th>
+				</tr>
+			</table>
+		</div>
+		<p><h3>Free employees</h3></p>
+    	<div id="contract_employees_change_block">
+	    	<table id="contract_free_employees_table">
+				<tr>
+				  <th>Name</th>
+				  <th>Perfomance</th>
+				  <th>Remove</th>
+				</tr>
+			</table>
+		</div>
+    </div>
+    <a href="#" class="close_modal_contract_team">Закрыть окно</a>
   </div>
 </div>

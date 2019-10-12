@@ -9,10 +9,12 @@ function refreshContractsEventHandlers() {
     $('#create_new_contract').off('click');
     $('#apply_contract_data').off('click');
     $('.contract_name').off('click');
+    $('.change_contract_team').off('click');
 
     $('#create_new_contract').on('click', newContractOpenModal);
     $('#apply_contract_data').on('click', applyContractData);
     $('.contract_name').on('click', changeContractOpenModal);
+    $('.change_contract_team').on('click', changeContractTeamOpenModal);
 }
 
 function changeContractOpenModal() {
@@ -28,6 +30,7 @@ function changeContractOpenModal() {
     openContractModalWindow(newContract);
 }
 
+
 function newContractOpenModal() {
     changedContractId = "newContract";
 
@@ -39,6 +42,18 @@ function newContractOpenModal() {
     }
 
     openContractModalWindow(newContract);
+}
+
+function changeContractTeamOpenModal() {
+	var parent = $(this).closest("tr");
+	changedContractId = parent.attr("id");
+	
+//	var employeesForContract = requestContractTeamAndFreeEmployees();
+	openContractTeamModalWindow(0);
+}
+
+function openContractTeamModalWindow(employeesSet) {
+	document.location.href = "#contract_team_modal_window";
 }
 
 function openContractModalWindow(contractData) {
@@ -67,7 +82,6 @@ function applyContractData() {
 }
 
 function changeContractData(contractData) {
-//	requestUpdateEmployee(employeeData);
 	
     var selector = "#" + changedContractId;
     $(selector).find(".contract_name").text(contractData.name);
@@ -147,6 +161,7 @@ function addContractToTable(contractData) {
 	str += "<td class=\"contract_perfomance\">" + contractData.perfomance + "</td>";
 	str += "<td class=\"contract_expected\">" + contractData.expected + "</td>";
 	str += "<td class=\"contract_deadline\">" + contractData.deadline + "</td>";
+	str += "<td class=\"contract_team\"><input  type=\"button\" class = \"change_contract_team\" value=\"Change team\"></td>";
 	str += "</tr>";
 	
 	$('#contracts_table').append(str);

@@ -176,6 +176,29 @@ left: -.5em;
 border-left-color: #9097A2;
 }
 
+#contract_hired_employees_table, #contract_free_employees_table {
+	vertical-align: top;
+	text-align:center;
+	width:100%;
+	height:170px;
+	margin-left:auto;
+	margin-right:auto;
+
+}
+
+th {
+	vertical-align: top;
+}
+
+
+
+#contract_employees_change_block {
+	margin-left:auto;
+	margin-right:auto;
+	height:170px;
+	width:90%;
+	overflow-y:scroll;
+}
 
 
 
@@ -206,12 +229,7 @@ border-left-color: #9097A2;
 
 
 
-
-
-
-
-
-#employee_modal_window, #contract_modal_window {
+#employee_modal_window, #contract_modal_window ,#contract_team_modal_window  {
         background: rgba(102, 102, 102, 0.5);
         width: 100%;
         height: 100%;
@@ -220,9 +238,7 @@ border-left-color: #9097A2;
         left: 0;
         display: none;
       }
-#employee_window, #contract_window {
-        width: 400px;
-        height: 220px;
+#employee_window, #contract_window, #contract_team_window {
         text-align: center;
         padding: 15px;
         border: 3px solid #0000cc;
@@ -236,8 +252,21 @@ border-left-color: #9097A2;
         margin: auto;
         background: #fff;
       }
- #employee_modal_window:target, #contract_modal_window:target {display: block;}
-      .close_modal_employee {
+ #employee_window {
+ 		width: 400px;
+        height: 250px;
+ }
+ #contract_window {
+ 		width: 400px;
+        height: 250px;
+ }
+ #contract_team_window {
+ 		width: 450px;
+        height: 500px;
+ }
+ 
+ #employee_modal_window:target, #contract_modal_window:target, #contract_team_modal_window:target {display: block;}
+      .close_modal_employee, .close_modal_contract,.close_modal_contract_team  {
         display: inline-block;
         border: 1px solid #0000cc;
         color: #0000cc;
@@ -249,7 +278,7 @@ border-left-color: #9097A2;
         cursor:pointer;
         vertical-align: bottom;
       }
-.close_modal_employee:hover, .close_modal_contract:hover {background: #e6e6ff;}
-      #employee_window_content, #contract_window_content {
+.close_modal_employee:hover, .close_modal_contract:hover, .close_modal_contract_team:hover {background: #e6e6ff;}
+      #employee_window_content, #contract_window_content, #contract_team_window_content {
 
       }
