@@ -67,7 +67,7 @@ public class ContractService {
 		List<Contract> contracts = null;
 		
 		try {
-			contracts = contractDao.getContractsList(pageNum, PAGE_LIMIT, userCompany.getId());
+			contracts = contractDao.getContractsList(sortOrder, pageNum, PAGE_LIMIT, userCompany.getId());
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DatabaseAccessException(e.getMessage());

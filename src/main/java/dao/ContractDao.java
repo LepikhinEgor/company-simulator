@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.SortOrder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import aspects.annotations.Loggable;
@@ -59,11 +61,13 @@ public class ContractDao {
 	 * @throws SQLException
 	 */
 	@Loggable
-	public List<Contract> getContractsList(int pageNum,int pageLimit, long companyId) throws SQLException {
+	public List<Contract> getContractsList(int sortOrder, int pageNum, int pageLimit, long companyId) throws SQLException {
 		
 		List<Contract> contracts = new ArrayList<Contract>();
 		
-		String querry = "SELECT * FROM contracts WHERE company_id = ?" +
+		String order = getSortOrderStr(sortOrder);
+		
+		String querry = "SELECT * FROM contracts WHERE company_id = ? " + order +
 				" LIMIT " + pageNum*pageLimit + ", " + pageLimit;
 		
 		try(Connection connection = connectionPool.getConnection()) {
@@ -89,6 +93,26 @@ public class ContractDao {
 		return contracts;
 	}
 	
+	private String getSortOrderStr(int sortOrderNum) {
+		if (sortOrderNum < 0 || sortOrderNum > 14)
+			throw new IllegalArgumentException("Incorrect sort order number");
+		
+		String sortOrder = "ORDER BY ";
+		
+		switch (sortOrderNum) {
+		case 0 : sortOrder += "name";break;
+		case 1 : sortOrder += "name DESC";break;
+		case 2 : sortOrder += "performance_units";break;
+		case 3 : sortOrder += "performance_units DESC";break;
+		case 4 : sortOrder += "fee";break;
+		case 5 : sortOrder += "fee DESC";break;
+		case 12 : sortOrder += "deadline";break;
+		case 13: sortOrder += "deadline DESC";break;
+		}
+		
+		return sortOrder;
+		
+	}
 	private long getGeneratedId(PreparedStatement statement) throws SQLException {
 		try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
             if (generatedKeys.next()) {
