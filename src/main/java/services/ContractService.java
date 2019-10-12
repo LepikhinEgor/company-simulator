@@ -26,6 +26,8 @@ public class ContractService {
 	
 	ContractDao contractDao;
 	
+	private final int PAGE_LIMIT = 10; 
+	
 	@Autowired
 	public void setContractDao(ContractDao contractDao) {
 		this.contractDao = contractDao;
@@ -57,7 +59,20 @@ public class ContractService {
 		return newContract;
 	}
 	
-	public List<Contract> getUserActiveContracts(int sortOrder, String login) {
-		contractDao.getContractsList();
+	@Loggable
+	public List<Contract> getUserActiveContracts(int sortOrder, int pageNum, String login) throws DatabaseAccessException {
+		
+		Company userCompany = companyService.getUserCompany(login);
+		
+		List<Contract> contracts = null;
+		
+		try {
+			contracts = contractDao.getContractsList(pageNum, PAGE_LIMIT, userCompany.getId());
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+			throw new DatabaseAccessException(e.getMessage());
+		}
+		
+		return contracts;
 	}
 }

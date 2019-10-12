@@ -5,9 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import aspects.annotations.Loggable;
 import entities.Contract;
 
 public class ContractDao {
@@ -45,6 +48,45 @@ public class ContractDao {
 			if (connection != null)
 				connection.close();
 		}
+	}
+	
+	/**
+	 * 
+	 * @param pageNum 
+	 * @param pageLimit limit of contracts in one page
+	 * @param companyId
+	 * @return List of company contracts
+	 * @throws SQLException
+	 */
+	@Loggable
+	public List<Contract> getContractsList(int pageNum,int pageLimit, long companyId) throws SQLException {
+		
+		List<Contract> contracts = new ArrayList<Contract>();
+		
+		String querry = "SELECT * FROM contracts WHERE company_id = ?" +
+				" LIMIT " + pageNum*pageLimit + ", " + pageLimit;
+		
+		try(Connection connection = connectionPool.getConnection()) {
+			PreparedStatement statement = connection.prepareStatement(querry);
+			statement.setLong(1, companyId);
+			
+			ResultSet resultSet = statement.executeQuery();
+			
+			while(resultSet.next()) {
+				Contract contract = new Contract();
+				
+				contract.setId(resultSet.getInt(1));
+				contract.setName(resultSet.getString(2));
+				contract.setPerfomanceUnits(resultSet.getInt(3));
+				contract.setFee(resultSet.getInt(4));
+				contract.setDeadline(resultSet.getLong(5));
+				contract.setDescription(resultSet.getString(7));
+				
+				contracts.add(contract);
+			}
+		}
+		
+		return contracts;
 	}
 	
 	private long getGeneratedId(PreparedStatement statement) throws SQLException {

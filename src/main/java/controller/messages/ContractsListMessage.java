@@ -19,5 +19,13 @@ public class ContractsListMessage extends Message{
 	public ContractsListMessage(int status, String message, List<Contract> contracts) {
 		super(status, message);
 		this.contracts = contracts;
+	}
+
+	public List<Contract> getContracts() {
+		return contracts;
+	}
+
+	public void setContracts(List<Contract> contracts) {
+		this.contracts = contracts;
 	} 
 }

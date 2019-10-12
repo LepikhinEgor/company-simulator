@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.List;
+
 import javax.servlet.http.Cookie;
 
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import controller.input.CreateContractData;
 import controller.messages.ContractsListMessage;
 import controller.messages.CreateContractMessage;
 import controller.messages.Message;
+import entities.Contract;
 import exceptions.DatabaseAccessException;
 import services.ContractService;
 
@@ -64,9 +67,10 @@ public class ContractsController {
 		return new CreateContractMessage(0);
 	}
 	
-	@RequestMapping(value="/company/contracts/get-active-contracts", method = RequestMethod.POST)
+	@RequestMapping(value="/company/contracts/get-active-contracts", method = RequestMethod.GET)
 	@ResponseBody
-	public ContractsListMessage getContractsList(@RequestParam int sortOrder,
+	public ContractsListMessage getContractsList(@RequestParam(value = "sortOrder") int sortOrder,
+			@RequestParam(value = "pageNum") int pageNum,
 			@CookieValue(value="signedUser", required = false) Cookie cookie) {
 		String login;
 		if (cookie != null) 
@@ -74,6 +78,14 @@ public class ContractsController {
 		else 
 			return new ContractsListMessage(Message.FAIL);
 		
-		contractService.getUserActiveContracts(sortOrder, login);
+		List<Contract> contracts = null;
+		
+		try {
+			contracts = contractService.getUserActiveContracts(sortOrder, pageNum, login);
+		} catch (DatabaseAccessException e) {
+			return new ContractsListMessage(Message.FAIL, e.getMessage());
+		}
+		
+		return new ContractsListMessage(Message.SUCCESS,"Success return contracts list" , contracts);
 	}
 }
