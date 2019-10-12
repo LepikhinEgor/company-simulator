@@ -1,6 +1,21 @@
 $(document).ready(function() {
 	setEventHandlers();
-	fillCompanyInfoPage();
+	
+	var lastTab = localStorage.getItem("content_tab");
+
+	switch (lastTab) {
+	  case "info":
+		  fillCompanyInfoPage();
+		  break;
+	  case "hr":
+		  fillEmployeesPage();
+		  break;
+	  case "contracts":
+		  requestContractsPage();
+		  break;
+	  default:
+		  fillCompanyInfoPage();
+	}
 });
 
 function setEventHandlers() {
@@ -18,6 +33,7 @@ function fillCompanyInfoPage() {
 			$('#tab_content').html(data);
 		}
       });
+	localStorage.setItem("content_tab", "info");
 	requestCompanyInfo();
 }
 
@@ -29,6 +45,7 @@ function fillEmployeesPage() {
         success: function(data) {
 			$('#tab_content').html(data);
 			employeesPageSetup();
+			localStorage.setItem("content_tab", "hr");
 		}
       });
 }
@@ -41,6 +58,7 @@ function requestContractsPage() {
         success: function(data) {
 			$('#tab_content').html(data);
 			contractsPageSetup();
+			localStorage.setItem("content_tab", "contracts");
 		}
       });
 }
