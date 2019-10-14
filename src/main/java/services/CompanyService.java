@@ -74,6 +74,10 @@ public class CompanyService {
 			throw new DatabaseAccessException(e.getMessage());
 		}
 		
+		if (company == null) {
+			company = createCompany(loginEmail); 
+		}
+		
 		return company;
 	}
 	
@@ -96,21 +100,30 @@ public class CompanyService {
 		//if company not exist it will created
 		if (userCompany == null) {
 			userCompany = createCompany(userId); 
-			long companyId;
-			try {
-				companyId = companyDao.recordCompany(userCompany);
-			} catch (SQLException e) {
-				throw new DatabaseAccessException("Error trying to record user company to database");
-			}	
-			userCompany.setId(companyId);
 		}
 				
 		return userCompany;
 	}
 	
-	private Company createCompany(long userId) {
+	@Loggable
+	public Company createCompany(String loginEmail) throws DatabaseAccessException {
+		User user = userService.getUserDataByLoginEmail(loginEmail);
+		
+		return createCompany(user.getId());
+	}
+	
+	@Loggable
+	public Company createCompany(long userId) throws DatabaseAccessException {
 		Company newCompany = new Company();
 		newCompany.setOwnerId(userId);
+		
+		long companyId;
+		try {
+			companyId = companyDao.recordCompany(newCompany);
+			newCompany.setId(companyId);
+		} catch (SQLException e) {
+			throw new DatabaseAccessException("Error trying to record user company to database");
+		}	
 		
 		return newCompany;
 	}
