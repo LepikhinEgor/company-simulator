@@ -65,8 +65,14 @@ public class CompanyService {
 
 	@Loggable
 	public Company getUserCompany(String loginEmail) throws DatabaseAccessException {
-		User user = userService.getUserDataByLoginEmail(loginEmail);
-		Company company = getUserCompany(user.getId());
+		Company company;
+		
+		try {
+			company = companyDao.getUserCompany(loginEmail);
+		} catch (SQLException e) {
+			logger.error(e.getMessage(),e);
+			throw new DatabaseAccessException(e.getMessage());
+		}
 		
 		return company;
 	}
