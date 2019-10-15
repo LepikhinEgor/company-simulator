@@ -121,15 +121,31 @@ public class EmployeeService {
 	}
 	
 	@Loggable
-	public List<Employee> getContractTeam() {
+	public List<Employee> getContractTeam(String login, long contractId) throws DatabaseAccessException {
 		List<Employee> contractTeam = null;
+		
+		try {
+			contractTeam = employeeDao.getContractEmployees(contractId);
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+			throw new DatabaseAccessException(e.getMessage());
+		}
 		
 		return contractTeam;
 	}
 	
 	@Loggable
-	public List<Employee> getFreeEmployees() {
+	public List<Employee> getFreeEmployees(String login) throws DatabaseAccessException {
 		List<Employee> freeEmployees = null;
+		
+		Company company = companyService.getUserCompany(login);
+		
+		try {
+			freeEmployees = employeeDao.getFreeEmployees(company.getId());
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+			throw new DatabaseAccessException(e.getMessage());
+		}
 		
 		return freeEmployees;
 	}

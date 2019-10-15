@@ -118,6 +118,64 @@ public class EmployeeDao {
 		}
 	}
 	
+	public List<Employee> getContractEmployees(long contractId) throws SQLException {
+		String querry = "SELECT * FROM employees e INNER JOIN work_positions wp ON e.employee_id = wp.employee_id WHERE wp.contract_id = ?"; 
+		
+		ArrayList<Employee> contractEmployees = new ArrayList<Employee>();
+		
+		try (Connection connection = connectionPool.getConnection()) {
+			PreparedStatement statement = connection.prepareStatement(querry);
+			statement.setLong(1, contractId);
+			
+			ResultSet rs = statement.executeQuery();
+			
+			while(rs.next()) {
+				Employee employee = new Employee();
+				
+				employee.setId(rs.getLong(1));
+				employee.setName(rs.getString(2));
+				employee.setAge(rs.getInt(3));
+				employee.setSex(rs.getString(4));
+				employee.setSalary(rs.getInt(5));
+				employee.setPerfomance(rs.getInt(6));
+				employee.setDescription(rs.getString(7));
+				
+				contractEmployees.add(employee);
+			}
+		}
+		
+		return contractEmployees;
+	}
+	
+	public List<Employee> getFreeEmployees(long companyId) throws SQLException {
+		String querry = "SELECT * FROM employees e LEFT JOIN work_positions wp ON e.employee_id = wp.employee_id WHERE wp.contract_id is NULL AND e.company_id = ?"; 
+		
+		ArrayList<Employee> contractEmployees = new ArrayList<Employee>();
+		
+		try (Connection connection = connectionPool.getConnection()) {
+			PreparedStatement statement = connection.prepareStatement(querry);
+			statement.setLong(1, companyId);
+			
+			ResultSet rs = statement.executeQuery();
+			
+			while(rs.next()) {
+				Employee employee = new Employee();
+				
+				employee.setId(rs.getLong(1));
+				employee.setName(rs.getString(2));
+				employee.setAge(rs.getInt(3));
+				employee.setSex(rs.getString(4));
+				employee.setSalary(rs.getInt(5));
+				employee.setPerfomance(rs.getInt(6));
+				employee.setDescription(rs.getString(7));
+				
+				contractEmployees.add(employee);
+			}
+		}
+		
+		return contractEmployees;
+	}
+	
 	private long getGeneratedId(PreparedStatement statement) throws SQLException {
 		try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
             if (generatedKeys.next()) {

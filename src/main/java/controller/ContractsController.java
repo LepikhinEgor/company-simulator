@@ -112,10 +112,15 @@ public class ContractsController {
 		List<Employee> contractTeam;
 		List<Employee> freeEmployees;
 		
-		contractTeam = employeeService.getContractTeam();
-		freeEmployees = employeeService.getFreeEmployees();
+		try {
+			contractTeam = employeeService.getContractTeam(login, contractId);
+			freeEmployees = employeeService.getFreeEmployees(login);
+		} catch (DatabaseAccessException e) {
+			logger.error(e.getMessage(), e);
+			return new ContractTeamMessage(Message.FAIL, e.getMessage());
+		}
 		
-		return new ContractTeamMessage(Message.SUCCESS);
+		return new ContractTeamMessage(Message.SUCCESS, "Success return contract employees data", contractTeam, freeEmployees);
 		
 	}
 }

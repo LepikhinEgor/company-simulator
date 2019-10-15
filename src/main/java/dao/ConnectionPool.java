@@ -42,8 +42,6 @@ public class ConnectionPool {
 	}
 	
 	public Connection getConnection() throws SQLException {
-		logger.info(dataSource.getNumActive() + " - active");
-		logger.info(dataSource.getNumIdle() + " - idle");
 		return dataSource.getConnection();
 	}
 	
