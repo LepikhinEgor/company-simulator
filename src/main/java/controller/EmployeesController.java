@@ -21,6 +21,7 @@ import controller.input.EmployeeCreateData;
 import controller.messages.EmployeeCreateMessage;
 import controller.input.EmployeeUpdateData;
 import controller.messages.EmployeesListMessage;
+import controller.messages.Message;
 import controller.input.EmployeesListQuerryData;
 import entities.Company;
 import entities.Employee;
@@ -86,6 +87,7 @@ public class EmployeesController {
 			
 		} catch (DatabaseAccessException e) {
 			logger.error("employee not created", e);
+			return new EmployeeCreateMessage(Message.FAIL);
 		}
 		
 		return new EmployeeCreateMessage(0);

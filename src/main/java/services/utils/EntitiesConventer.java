@@ -43,7 +43,7 @@ public class EntitiesConventer {
 		employee.setName(createData.getName());
 		employee.setAge(createData.getAge());
 		employee.setSalary(createData.getSalary());
-		employee.setSex(createData.getName());
+		employee.setSex(createData.getSex());
 		employee.setPerfomance(createData.getPerfomance());
 		
 		return employee;

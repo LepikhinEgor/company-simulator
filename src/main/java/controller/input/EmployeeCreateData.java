@@ -36,5 +36,10 @@ public class EmployeeCreateData {
 	public void setSex(String sex) {
 		this.sex = sex;
 	}
+	@Override
+	public String toString() {
+		return "EmployeeCreateData [name=" + name + ", age=" + age + ", perfomance=" + perfomance + ", salary=" + salary
+				+ ", sex=" + sex + "]";
+	}
 	
 }
