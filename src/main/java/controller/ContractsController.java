@@ -16,12 +16,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import controller.input.CreateContractData;
+import controller.messages.ContractTeamMessage;
 import controller.messages.ContractsListMessage;
 import controller.messages.CreateContractMessage;
 import controller.messages.Message;
 import entities.Contract;
+import entities.Employee;
 import exceptions.DatabaseAccessException;
 import services.ContractService;
+import services.EmployeeService;
 
 @Controller
 public class ContractsController {
@@ -30,9 +33,16 @@ public class ContractsController {
 	
 	private ContractService contractService;
 	
+	private EmployeeService employeeService;
+	
 	@Autowired
 	public void serContractService(ContractService contractService) {
 		this.contractService = contractService;
+	}
+	
+	@Autowired
+	public void serContractService(EmployeeService employeeService) {
+		this.employeeService = employeeService;
 	}
 	
 	@RequestMapping(value = "/company/contracts", method = RequestMethod.GET)
@@ -87,5 +97,25 @@ public class ContractsController {
 		}
 		
 		return new ContractsListMessage(Message.SUCCESS,"Success return contracts list" , contracts);
+	}
+	
+	@RequestMapping(value="/company/contracts/get-contract-team", method = RequestMethod.GET)
+	@ResponseBody
+	public ContractTeamMessage getContractTeamMessage(@RequestParam(value = "contractId") long contractId,
+			@CookieValue(value="signedUser", required = false) Cookie cookie) {
+		String login;
+		if (cookie != null) 
+			login = cookie.getValue();
+		else 
+			return new ContractTeamMessage(Message.FAIL);
+		
+		List<Employee> contractTeam;
+		List<Employee> freeEmployees;
+		
+		contractTeam = employeeService.getContractTeam();
+		freeEmployees = employeeService.getFreeEmployees();
+		
+		return new ContractTeamMessage(Message.SUCCESS);
+		
 	}
 }

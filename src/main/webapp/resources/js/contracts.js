@@ -48,7 +48,9 @@ function changeContractTeamOpenModal() {
 	var parent = $(this).closest("tr");
 	changedContractId = parent.attr("id");
 	
-//	var employeesForContract = requestContractTeamAndFreeEmployees();
+	var idNum = changedContractId.substring(9);
+	
+	var employeesForContract = requestContractTeamAndFreeEmployees(idNum);
 	openContractTeamModalWindow(0);
 }
 
@@ -135,6 +137,7 @@ function requestContractsList() {
 					for(var contract in contracts) {
 						console.log(contracts[contract]);
 						var contractData = {
+							id: contracts[contract].id,
 							name: contracts[contract].name,
 							size: contracts[contract].perfomanceUnits,
 							fee: contracts[contract].fee,
@@ -148,6 +151,36 @@ function requestContractsList() {
 					}
 				}
 			}
+		}
+      });
+}
+
+function requestContractTeamAndFreeEmployees(contractId) {
+	$.ajax({
+        type: "GET",
+        url: "/company-simulator/company/contracts/get-contract-team?contractId=" + contractId,
+        success: function(data) {
+			console.log(data);
+			
+//			for (var key in data) {
+//				if (key === "contracts") {
+//					var contracts = data[key];
+//					for(var contract in contracts) {
+//						console.log(contracts[contract]);
+//						var contractData = {
+//							name: contracts[contract].name,
+//							size: contracts[contract].perfomanceUnits,
+//							fee: contracts[contract].fee,
+//							deadline: contracts[contract].deadline,
+//							progress: 0,
+//							perfomance: 0,
+//							expected: 0
+//						}
+//						
+//			    		addContractToTable(contractData);
+//					}
+//				}
+//			}
 		}
       });
 }
