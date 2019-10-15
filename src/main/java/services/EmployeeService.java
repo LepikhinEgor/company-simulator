@@ -119,4 +119,19 @@ public class EmployeeService {
 			throw new DatabaseAccessException("Error trying record new employee to database");
 		}
 	}
+	
+	@Loggable
+	public List<Employee> getContractTeam() {
+		List<Employee> contractTeam = null;
+		
+		return contractTeam;
+	}
+	
+	@Loggable
+	public List<Employee> getFreeEmployees() {
+		List<Employee> freeEmployees = null;
+		
+		return freeEmployees;
+	}
+	
 }
