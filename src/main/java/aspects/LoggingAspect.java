@@ -34,6 +34,10 @@ public class LoggingAspect {
 			throw e;
 		}
 		
+		String methodReturnStr = methodReturn == null ? "null" : methodReturn.toString();
+		
+		logger.info("Method " + methodName + " return " + methodReturnStr);
+		
 		return methodReturn;
 	}
 }
