@@ -60,7 +60,7 @@
 				<tr>
 				  <th>Name</th>
 				  <th>Perfomance</th>
-				  <th>Remove</th>
+				  <th>Hire</th>
 				</tr>
 			</table>
 		</div>
