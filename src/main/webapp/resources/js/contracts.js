@@ -5,6 +5,9 @@ function contractsPageSetup() {
 
 var changedContractId;
 
+var oldFreeEmployeesId = [];
+var oldHiredEmployeesId = [];
+
 function refreshContractsEventHandlers() {
     $('#create_new_contract').off('click');
     $('#apply_contract_data').off('click');
@@ -15,6 +18,14 @@ function refreshContractsEventHandlers() {
     $('#apply_contract_data').on('click', applyContractData);
     $('.contract_name').on('click', changeContractOpenModal);
     $('.change_contract_team').on('click', changeContractTeamOpenModal);
+}
+
+function refreshContractTeamEventHandlers() {
+	$('.hire_employee_to_contract').off('click');
+	$('.make_employee_free').off('click');
+	
+	$('.hire_employee_to_contract').on('click', hireEmployeeToContract);
+	$('.make_employee_free').on('click', makeEmployeeFree);
 }
 
 function changeContractOpenModal() {
@@ -175,6 +186,7 @@ function requestContractTeamAndFreeEmployees(contractId) {
 							perfomance: employees[employee].perfomance,
 						}
 						hiredEmployees.push(employeeData);
+						oldHiredEmployeesId.push(employees[employee].id);
 					}
 				}
 			}
@@ -192,6 +204,7 @@ function requestContractTeamAndFreeEmployees(contractId) {
 							perfomance: employees[employee].perfomance,
 						}
 						freeEmployees.push(employeeData);
+						oldFreeEmployeesId.push(employees[employee].id);
 					}
 				}
 			}
@@ -204,25 +217,69 @@ function requestContractTeamAndFreeEmployees(contractId) {
 
 function fillHiredEmployeesTable(hiredEmployees) {
 	for (var hiredEmployee in hiredEmployees) {
-		var str = "<tr id='h_emp_" + hiredEmployees[hiredEmployee].id + "'>";
-		str += "<td><a class=\"h_emp_name\">" + hiredEmployees[hiredEmployee].name + "</a></td>";
-		str += "<td class=\"h_emp_perfomance\">" + hiredEmployees[hiredEmployee].perfomance + "</td>";
-		str += "<td class=\"h_emp_\"><input  type=\"button\" class = \"change_contract_team\" value=\"Remove\"></td>";
-	
-		$('#contract_hired_employees_table').append(str);
+		appendEmployeeToHiredTable(hiredEmployees[hiredEmployee]);
 	}
+	refreshContractTeamEventHandlers();
 }	
 
 function fillFreeEmployeesTable(freeEmployees) {
-	console.log("free " + freeEmployees);
 	for (var freeEmployee in freeEmployees) {
-		var str = "<tr id='f_emp_" + freeEmployees[freeEmployee].id + "'>";
-		str += "<td><a class=\"f_emp_name\">" + freeEmployees[freeEmployee].name + "</a></td>";
-		str += "<td class=\"f_emp_perfomance\">" + freeEmployees[freeEmployee].perfomance + "</td>";
-		str += "<td class=\"f_emp_\"><input  type=\"button\" class = \"change_contract_team\" value=\"Hire\"></td>";
-	
-		$('#contract_free_employees_table').append(str);
+		appendEmployeeToFreeTable(freeEmployees[freeEmployee]);
 	}
+	refreshContractTeamEventHandlers();
+}
+
+function hireEmployeeToContract() {
+	var parent = $(this).closest("tr");
+	var contractId = parent.attr("id");
+	
+	var selector = "#" + contractId;
+	
+	var employeeData = {
+			id: contractId,
+			name: $(selector).find(".f_emp_name").text(),
+			perfomance: $(selector).find(".f_emp_perfomance").text()
+	}
+	parent.remove();
+	appendEmployeeToHiredTable(employeeData);
+	
+	refreshContractTeamEventHandlers();
+}
+
+function makeEmployeeFree() {
+	var parent = $(this).closest("tr");
+	var contractId = parent.attr("id");
+	
+	var selector = "#" + contractId;
+	
+	var employeeData = {
+			id: contractId,
+			name: $(selector).find(".h_emp_name").text(),
+			perfomance: $(selector).find(".h_emp_perfomance").text()
+	}
+	parent.remove();
+	appendEmployeeToFreeTable(employeeData);
+	refreshContractTeamEventHandlers();
+}
+
+function appendEmployeeToHiredTable(employeeData) {
+	var str = "<tr id='h_emp_" + employeeData.id + "' class = \"contract_emp_tr\">";
+	str += "<td><a class=\"h_emp_name\">" + employeeData.name + "</a></td>";
+	str += "<td class=\"h_emp_perfomance\">" + employeeData.perfomance + "</td>";
+	str += "<td class=\"h_emp_\"><input  type=\"button\" class = \"make_employee_free\" value=\"Remove\"></td>";
+
+	var placeholder = $('#contract_hired_employees_table').find(".table_placeholder");
+	placeholder.before(str);
+}
+
+function appendEmployeeToFreeTable(employeeData) {
+	var str = "<tr id='f_emp_" + employeeData.id + "' class=\"contract_emp_tr\">";
+	str += "<td><a class=\"f_emp_name\">" + employeeData.name + "</a></td>";
+	str += "<td class=\"f_emp_perfomance\">" + employeeData.perfomance + "</td>";
+	str += "<td class=\"f_emp_\"><input  type=\"button\" class = \"hire_employee_to_contract\" value=\"Hire\"></td>";
+
+	var placeholder = $('#contract_free_employees_table').find(".table_placeholder");
+	placeholder.before(str);
 }
 
 function addContractToTable(contractData) {

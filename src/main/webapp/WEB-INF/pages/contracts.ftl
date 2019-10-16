@@ -52,6 +52,11 @@
 				  <th>Perfomance</th>
 				  <th>Remove</th>
 				</tr>
+				<tr class="table_placeholder">
+				  <td></td>
+				  <td></td>
+				  <td></td>
+				</tr>
 			</table>
 		</div>
 		<p><h3>Free employees</h3></p>
@@ -61,6 +66,11 @@
 				  <th>Name</th>
 				  <th>Perfomance</th>
 				  <th>Hire</th>
+				</tr>
+				<tr class="table_placeholder">
+				  <td></td>
+				  <td></td>
+				  <td></td>
 				</tr>
 			</table>
 		</div>
