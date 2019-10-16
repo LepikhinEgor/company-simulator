@@ -274,7 +274,7 @@ th {
  }
  
  #employee_modal_window:target, #contract_modal_window:target, #contract_team_modal_window:target {display: block;}
-      .close_modal_employee, .close_modal_contract,.close_modal_contract_team  {
+      .close_modal_employee, .close_modal_contract,.close_modal_contract_team, .close_modal_contract_team_apply  {
         display: inline-block;
         border: 1px solid #0000cc;
         color: #0000cc;
@@ -286,7 +286,8 @@ th {
         cursor:pointer;
         vertical-align: bottom;
       }
-.close_modal_employee:hover, .close_modal_contract:hover, .close_modal_contract_team:hover {background: #e6e6ff;}
+.close_modal_employee:hover, .close_modal_contract:hover, .close_modal_contract_team:hover
+.close_modal_contract_team_apply {background: #e6e6ff;}
       #employee_window_content, #contract_window_content, #contract_team_window_content {
 
       }

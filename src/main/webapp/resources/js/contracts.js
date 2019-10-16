@@ -13,11 +13,13 @@ function refreshContractsEventHandlers() {
     $('#apply_contract_data').off('click');
     $('.contract_name').off('click');
     $('.change_contract_team').off('click');
+    $(".close_modal_contract_team_apply").off('click');
 
     $('#create_new_contract').on('click', newContractOpenModal);
     $('#apply_contract_data').on('click', applyContractData);
     $('.contract_name').on('click', changeContractOpenModal);
     $('.change_contract_team').on('click', changeContractTeamOpenModal);
+    $(".close_modal_contract_team_apply").on('click', applyContractTeamChanges)
 }
 
 function refreshContractTeamEventHandlers() {
@@ -26,6 +28,53 @@ function refreshContractTeamEventHandlers() {
 	
 	$('.hire_employee_to_contract').on('click', hireEmployeeToContract);
 	$('.make_employee_free').on('click', makeEmployeeFree);
+}
+
+function applyContractTeamChanges() {
+	var newHiredEmployeesId = [];
+	var newFreeEmployeesId = [];
+	
+	$('#contract_hired_employees_table tr[id]').each(function () {
+		var fullId =  $(this).attr('id');
+		var id = fullId.substring(6);
+		
+		newHiredEmployeesId.push(id);
+	});
+	
+	$('#contract_free_employees_table tr[id]').each(function () {
+		var fullId =  $(this).attr('id');
+		var id = fullId.substring(6);
+		
+		newFreeEmployeesId.push(id);
+	});
+	
+	var hiredEmployeesId = [];
+	for (var emp_id in newHiredEmployeesId) {
+		if (!contains(oldHiredEmployeesId, newHiredEmployeesId[emp_id])) {
+			hiredEmployeesId.push((newHiredEmployeesId[emp_id]));
+		}
+	}
+	
+	var freeEmployeesId = [];
+	for (var f_emp_id in newFreeEmployeesId) {
+		if (!contains(oldFreeEmployeesId, newFreeEmployeesId[f_emp_id])) {
+			freeEmployeesId.push(newFreeEmployeesId[f_emp_id]);
+		}
+	}
+	
+	console.log(hiredEmployeesId);
+	console.log(freeEmployeesId); 
+	
+	requestChangeContractTeam(hiredEmployeesId, freeEmployeesId);
+}
+
+function contains(arr, elem) {
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i] == elem) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function changeContractOpenModal() {
@@ -41,6 +90,22 @@ function changeContractOpenModal() {
     openContractModalWindow(newContract);
 }
 
+function requestChangeContractTeam(hiredEmployeesId, freeEmployeesId) {
+	var employeesId = {
+		hiredEmployees: hiredEmployeesId,
+		freeEmployees: freeEmployeesId
+	}
+	$.ajax({
+        type: "POST",
+        url: "/company-simulator/company/contracts/change-contract-team",
+        contentType: 'application/json',
+        data: JSON.stringify(employeesId),
+        success: function(data) {
+			console.log(data);
+			status = data.status;
+		}
+      });
+}
 
 function newContractOpenModal() {
     changedContractId = "newContract";
@@ -236,7 +301,7 @@ function hireEmployeeToContract() {
 	var selector = "#" + contractId;
 	
 	var employeeData = {
-			id: contractId,
+			id: contractId.substring(6),
 			name: $(selector).find(".f_emp_name").text(),
 			perfomance: $(selector).find(".f_emp_perfomance").text()
 	}
@@ -253,7 +318,7 @@ function makeEmployeeFree() {
 	var selector = "#" + contractId;
 	
 	var employeeData = {
-			id: contractId,
+			id: contractId.substring(6),
 			name: $(selector).find(".h_emp_name").text(),
 			perfomance: $(selector).find(".h_emp_perfomance").text()
 	}
@@ -266,7 +331,7 @@ function appendEmployeeToHiredTable(employeeData) {
 	var str = "<tr id='h_emp_" + employeeData.id + "' class = \"contract_emp_tr\">";
 	str += "<td><a class=\"h_emp_name\">" + employeeData.name + "</a></td>";
 	str += "<td class=\"h_emp_perfomance\">" + employeeData.perfomance + "</td>";
-	str += "<td class=\"h_emp_\"><input  type=\"button\" class = \"make_employee_free\" value=\"Remove\"></td>";
+	str += "<td class=\"h_emp_button\"><input  type=\"button\" class = \"make_employee_free\" value=\"Remove\"></td>";
 
 	var placeholder = $('#contract_hired_employees_table').find(".table_placeholder");
 	placeholder.before(str);
@@ -276,7 +341,7 @@ function appendEmployeeToFreeTable(employeeData) {
 	var str = "<tr id='f_emp_" + employeeData.id + "' class=\"contract_emp_tr\">";
 	str += "<td><a class=\"f_emp_name\">" + employeeData.name + "</a></td>";
 	str += "<td class=\"f_emp_perfomance\">" + employeeData.perfomance + "</td>";
-	str += "<td class=\"f_emp_\"><input  type=\"button\" class = \"hire_employee_to_contract\" value=\"Hire\"></td>";
+	str += "<td class=\"f_emp_button\"><input  type=\"button\" class = \"hire_employee_to_contract\" value=\"Hire\"></td>";
 
 	var placeholder = $('#contract_free_employees_table').find(".table_placeholder");
 	placeholder.before(str);

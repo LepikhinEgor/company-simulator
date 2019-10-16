@@ -75,6 +75,7 @@
 			</table>
 		</div>
     </div>
-    <a href="#" class="close_modal_contract_team">Закрыть окно</a>
+    <a href="#" class="close_modal_contract_team">Отмена</a>
+    <a href="#" class="close_modal_contract_team_apply">Принять</a>
   </div>
 </div>
