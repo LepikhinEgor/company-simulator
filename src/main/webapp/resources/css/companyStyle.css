@@ -183,7 +183,7 @@ border-left-color: #9097A2;
 	height:170px;
 	margin-left:auto;
 	margin-right:auto;
-
+	table-layout: fixed;
 }
 
 th {
@@ -192,7 +192,7 @@ th {
 }
 
 .contract_emp_tr {
-	max-height: 50px;
+	max-height: 70px;
 	height:30px;
 	
 }
@@ -207,7 +207,10 @@ th {
 
 
 
-
+.h_emp_name, .h_emp_perfomance, .h_emp_button {
+	width: 33%;
+	max-width: 33%;
+}
 
 
 
