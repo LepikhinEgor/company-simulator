@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import controller.input.ChangeContractTeamData;
 import controller.input.CreateContractData;
 import controller.messages.ContractTeamMessage;
 import controller.messages.ContractsListMessage;
@@ -122,5 +123,12 @@ public class ContractsController {
 		
 		return new ContractTeamMessage(Message.SUCCESS, "Success return contract employees data", contractTeam, freeEmployees);
 		
+	}
+	
+	@RequestMapping(value="/company/contracts/change-contract-team", method = RequestMethod.POST)
+	@ResponseBody
+	public Message changeContractTeamMessage(@RequestBody ChangeContractTeamData newTeamData) {
+		logger.info(newTeamData.toString());
+		return new Message(Message.SUCCESS);
 	}
 }
