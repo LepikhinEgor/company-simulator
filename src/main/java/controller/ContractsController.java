@@ -24,6 +24,7 @@ import controller.messages.Message;
 import entities.Contract;
 import entities.Employee;
 import exceptions.DatabaseAccessException;
+import exceptions.employees.DoubleEmployeeIdException;
 import services.ContractService;
 import services.EmployeeService;
 
@@ -129,6 +130,14 @@ public class ContractsController {
 	@ResponseBody
 	public Message changeContractTeamMessage(@RequestBody ChangeContractTeamData newTeamData) {
 		logger.info(newTeamData.toString());
+		
+		try {
+			employeeService.reassignEmployees(newTeamData.getHiredEmployees(), newTeamData.getFreeEmployees(), newTeamData.getContractId());
+		} catch (DoubleEmployeeIdException e) {
+			logger.error(e.getMessage(),e);
+			return new Message(Message.FAIL, e.getMessage());
+		}
+		
 		return new Message(Message.SUCCESS);
 	}
 }

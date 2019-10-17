@@ -93,7 +93,8 @@ function changeContractOpenModal() {
 function requestChangeContractTeam(hiredEmployeesId, freeEmployeesId) {
 	var employeesId = {
 		hiredEmployees: hiredEmployeesId,
-		freeEmployees: freeEmployeesId
+		freeEmployees: freeEmployeesId,
+		contractId: changedContractId.substring(9)
 	}
 	$.ajax({
         type: "POST",
