@@ -18,6 +18,7 @@ import entities.Company;
 import entities.Employee;
 import entities.User;
 import exceptions.DatabaseAccessException;
+import exceptions.employees.DoubleEmployeeIdException;
 import exceptions.employees.EmployeesListException;
 import exceptions.employees.IncorrectOrderNumException;
 import exceptions.employees.IncorrectPageNumException;
@@ -150,4 +151,31 @@ public class EmployeeService {
 		return freeEmployees;
 	}
 	
+	@Loggable
+	public void reassignEmployees(long[] newHiredEmployees, long[] newFreeEmployeees, long contractId) throws DoubleEmployeeIdException, DatabaseAccessException {
+		if (newHiredEmployees != null && newFreeEmployeees != null)
+			if (containsSameId(newHiredEmployees, newFreeEmployeees)) {
+				throw new DoubleEmployeeIdException("Employee can't be free and hired at the same time");
+			}
+		
+		try {
+			employeeDao.hireEmployeesToContract(newHiredEmployees, contractId);
+			//record free employees
+		} catch (SQLException e) {
+			throw new DatabaseAccessException("Error, when record ehired employees to db");
+		}
+	}
+	
+	
+	private boolean containsSameId(long[] hiredEmployeesId, long[] freeEmployeesId) {
+		
+		for (int i = 0; i < hiredEmployeesId.length; i++) {
+			for (int j = 0; j < freeEmployeesId.length ;j++) {
+				if (hiredEmployeesId[i] == freeEmployeesId[j])
+					return true;
+			}
+		}
+		
+		return false;
+	}
 }

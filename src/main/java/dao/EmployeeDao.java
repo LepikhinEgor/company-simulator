@@ -22,6 +22,31 @@ public class EmployeeDao {
 	ConnectionPool connectionPool;
 	
 	@Loggable
+	public List<Long> hireEmployeesToContract(long[] hiredEmployeesId, long contractId) throws SQLException {
+		String querry = "INSERT INTO work_positions (position_id, employee_id, contract_id) "
+				+ "VALUES (NULL, ?, ?)";
+		
+		ArrayList<Long> generatedIds = new ArrayList<Long>();
+		
+		try (Connection connection = connectionPool.getConnection()) {
+			PreparedStatement statement = connection.prepareStatement(querry);
+			
+			for (int i = 0; i < hiredEmployeesId.length; i++) {
+				statement.setLong(1, hiredEmployeesId[i]);
+				statement.setLong(2, contractId);
+				statement.executeUpdate();
+			}
+			
+			ResultSet generatedKeys = statement.getGeneratedKeys();
+			while (generatedKeys.next()) {
+				generatedIds.add(generatedKeys.getLong(1));
+			}
+		}
+		
+		return generatedIds;
+	}
+	
+	@Loggable
 	public List<Employee> getEmployeesList(long companyId, int orderNum, int pageNum, int pageLimit) throws SQLException {
 		
 		String orderBy = "";
@@ -118,6 +143,7 @@ public class EmployeeDao {
 		}
 	}
 	
+	@Loggable
 	public List<Employee> getContractEmployees(long contractId) throws SQLException {
 		String querry = "SELECT * FROM employees e INNER JOIN work_positions wp ON e.employee_id = wp.employee_id WHERE wp.contract_id = ?"; 
 		
@@ -147,6 +173,7 @@ public class EmployeeDao {
 		return contractEmployees;
 	}
 	
+	@Loggable
 	public List<Employee> getFreeEmployees(long companyId) throws SQLException {
 		String querry = "SELECT * FROM employees e LEFT JOIN work_positions wp ON e.employee_id = wp.employee_id WHERE wp.contract_id is NULL AND e.company_id = ?"; 
 		
