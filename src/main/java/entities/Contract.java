@@ -1,17 +1,20 @@
 package entities;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import controller.input.CreateContractData;
 
 public class Contract {
-	private int id;
+	private long id;
 	private String name;
 	private int perfomanceUnits;
 	private int fee;
+	private int workSpeed;
 	/**
 	 * deadline - the count of millis since taking the contract to its deadline
 	 */
+	private Timestamp startDate;
 	private long deadline;
 	private long progress;
 	private String description;
@@ -74,13 +77,28 @@ public class Contract {
 		this.progress = progress;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
-	
+
+	public Timestamp getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Timestamp startDate) {
+		this.startDate = startDate;
+	}
+
+	public int getWorkSpeed() {
+		return workSpeed;
+	}
+
+	public void setWorkSpeed(int workSpeed) {
+		this.workSpeed = workSpeed;
+	}
 	
 }

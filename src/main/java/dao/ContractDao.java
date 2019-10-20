@@ -23,7 +23,7 @@ public class ContractDao {
 	public long recordContract(Contract contract, long companyId) throws SQLException {
 		Connection connection = connectionPool.getConnection();
 		
-		String recordContractQuerry = "INSERT INTO contracts (contract_id, name, performance_units, fee, deadline, progress, description, company_id) VALUES ("
+		String recordContractQuerry = "INSERT INTO contracts (contract_id, name, performance_units, fee, start_date ,deadline, description, company_id) VALUES ("
 				+ "NULL, ?, ?, ?, ?, ?, ?, ?);";
 		
 		PreparedStatement recordContractStatement = null;
@@ -33,8 +33,8 @@ public class ContractDao {
 			recordContractStatement.setString(1, contract.getName());
 			recordContractStatement.setInt(2, contract.getPerfomanceUnits());
 			recordContractStatement.setInt(3, contract.getFee());
-			recordContractStatement.setLong(4, contract.getDeadline());
-			recordContractStatement.setLong(5, contract.getProgress());
+			recordContractStatement.setTimestamp(4, contract.getStartDate());
+			recordContractStatement.setLong(5, contract.getDeadline());
 			recordContractStatement.setString(6, contract.getDescription());
 			recordContractStatement.setLong(7, companyId);
 			
@@ -83,14 +83,38 @@ public class ContractDao {
 				contract.setName(resultSet.getString(2));
 				contract.setPerfomanceUnits(resultSet.getInt(3));
 				contract.setFee(resultSet.getInt(4));
-				contract.setDeadline(resultSet.getLong(5));
+				contract.setStartDate(resultSet.getTimestamp(5));
+				contract.setDeadline(resultSet.getLong(6));
 				contract.setDescription(resultSet.getString(7));
 				
 				contracts.add(contract);
 			}
+			contracts = getContractListWithPerfomance(contracts, connection);
+		}		
+		
+		return contracts;
+	}
+	
+	private List<Contract> getContractListWithPerfomance(List<Contract> contractsList, Connection connection) throws SQLException {
+		List<Contract> contracts = new ArrayList<Contract>(contractsList);
+		
+		String querry = "SELECT e.performance FROM work_positions wp INNER JOIN employees e ON e.employee_id = wp.employee_id "
+				+ "WHERE contract_id = ?";
+		PreparedStatement statement = connection.prepareStatement(querry);
+		
+		for (Contract contract : contractsList) {
+			statement.setLong(1, contract.getId());
+			
+			ResultSet rs = statement.executeQuery();
+			int perfomance = 0;
+			while(rs.next()) {
+				perfomance += rs.getInt(1);
+			}
+			contract.setWorkSpeed(perfomance);
 		}
 		
 		return contracts;
+		
 	}
 	
 	private String getSortOrderStr(int sortOrderNum) {
