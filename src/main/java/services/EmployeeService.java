@@ -153,10 +153,15 @@ public class EmployeeService {
 	
 	@Loggable
 	public void reassignEmployees(long[] newHiredEmployees, long[] newFreeEmployeees, long contractId) throws DoubleEmployeeIdException, DatabaseAccessException {
-		if (newHiredEmployees != null && newFreeEmployeees != null)
+		if (newHiredEmployees != null && newFreeEmployeees != null) {
 			if (containsSameId(newHiredEmployees, newFreeEmployeees)) {
 				throw new DoubleEmployeeIdException("Employee can't be free and hired at the same time");
 			}
+			if (containsDoubleId(newHiredEmployees))
+				throw new DoubleEmployeeIdException("Hired employees can't contains double ids");
+			if (containsDoubleId(newFreeEmployeees))
+				throw new DoubleEmployeeIdException("Hired employees can't contains double ids");
+		}
 		
 		try {
 			employeeDao.reassignEmployees(newHiredEmployees, newFreeEmployeees, contractId);
@@ -171,6 +176,17 @@ public class EmployeeService {
 		for (int i = 0; i < hiredEmployeesId.length; i++) {
 			for (int j = 0; j < freeEmployeesId.length ;j++) {
 				if (hiredEmployeesId[i] == freeEmployeesId[j])
+					return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private boolean containsDoubleId(long[] employeesId) {
+		for (int i = 0; i < employeesId.length; i++) {
+			for (int j = i + 1; j < employeesId.length ;j++) {
+				if (employeesId[i] == employeesId[j])
 					return true;
 			}
 		}
