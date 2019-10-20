@@ -40,6 +40,11 @@ FOREIGN KEY(company_id) REFERENCES companies(company_id) ON DELETE CASCADE);
 
 ALTER TABLE contracts DROP COLUMN `start_date`;
 ALTER TABLE contracts ADD COLUMN start_date TIMESTAMP NOT NULL AFTER fee;
+ALTER TABLE contracts ADD COLUMN last_progress INT NOT NULL AFTER deadline;
+
+ALTER TABLE contracts CHANGE COLUMN `start_date` `team_changed_date` TIMESTAMP NOT NULL;
+ALTER TABLE contracts CHANGE COLUMN `team_changed_date` `team_changed_date` TIMESTAMP NOT NULL  DEFAULT CURRENT_TIMESTAMP;
+
 
 CREATE TABLE work_positions (
 position_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,

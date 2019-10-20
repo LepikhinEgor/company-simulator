@@ -22,43 +22,6 @@ public class EmployeeDao {
 	ConnectionPool connectionPool;
 	
 	@Loggable
-	public void reassignEmployees(long[] hiredEmployeesId, long[] freeEmployeesId, long contractId) throws SQLException {
-		try (Connection connection = connectionPool.getConnection()) {
-			connection.setAutoCommit(false);
-			
-			hireEmployeesToContract(hiredEmployeesId, contractId, connection);
-			freeEmployeesFromContract(freeEmployeesId, contractId, connection);
-			
-			connection.commit();
-		}
-	}
-	
-	private void hireEmployeesToContract(long[] hiredEmployeesId, long contractId, Connection connection) throws SQLException {
-		String querry = "INSERT INTO work_positions (position_id, employee_id, contract_id) "
-				+ "VALUES (NULL, ?, ?)";
-		
-		PreparedStatement statement = connection.prepareStatement(querry);
-		
-		for (int i = 0; i < hiredEmployeesId.length; i++) {
-			statement.setLong(1, hiredEmployeesId[i]);
-			statement.setLong(2, contractId);
-			statement.executeUpdate();
-		}
-	}
-	
-	private void freeEmployeesFromContract(long[] freeEmployeesId, long contractId, Connection connection) throws SQLException {
-		String querry = "DELETE FROM work_positions WHERE employee_id = ? AND contract_id = ?";
-		
-		PreparedStatement statement = connection.prepareStatement(querry);
-		
-		for (int i = 0; i < freeEmployeesId.length; i++) {
-			statement.setLong(1, freeEmployeesId[i]);
-			statement.setLong(2, contractId);
-			statement.executeUpdate();
-		}
-	}
-	
-	@Loggable
 	public List<Employee> getEmployeesList(long companyId, int orderNum, int pageNum, int pageLimit) throws SQLException {
 		
 		String orderBy = "";

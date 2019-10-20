@@ -14,7 +14,7 @@ public class Contract {
 	/**
 	 * deadline - the count of millis since taking the contract to its deadline
 	 */
-	private Timestamp startDate;
+	private Timestamp teamChangedDate;
 	private long deadline;
 	private long progress;
 	private String description;
@@ -85,12 +85,13 @@ public class Contract {
 		this.id = id;
 	}
 
-	public Timestamp getStartDate() {
-		return startDate;
+
+	public Timestamp getTeamChangedDate() {
+		return teamChangedDate;
 	}
 
-	public void setStartDate(Timestamp startDate) {
-		this.startDate = startDate;
+	public void setTeamChangedDate(Timestamp teamChangedDate) {
+		this.teamChangedDate = teamChangedDate;
 	}
 
 	public int getWorkSpeed() {

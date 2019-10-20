@@ -132,7 +132,7 @@ public class ContractsController {
 		logger.info(newTeamData.toString());
 		
 		try {
-			employeeService.reassignEmployees(newTeamData.getHiredEmployees(), newTeamData.getFreeEmployees(), newTeamData.getContractId());
+			contractService.reassignEmployees(newTeamData.getHiredEmployees(), newTeamData.getFreeEmployees(), newTeamData.getContractId());
 		} catch (DoubleEmployeeIdException e) {
 			logger.error(e.getMessage(),e);
 			return new Message(Message.FAIL, e.getMessage());

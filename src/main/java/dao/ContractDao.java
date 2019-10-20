@@ -33,7 +33,7 @@ public class ContractDao {
 			recordContractStatement.setString(1, contract.getName());
 			recordContractStatement.setInt(2, contract.getPerfomanceUnits());
 			recordContractStatement.setInt(3, contract.getFee());
-			recordContractStatement.setTimestamp(4, contract.getStartDate());
+			recordContractStatement.setTimestamp(4, contract.getTeamChangedDate());
 			recordContractStatement.setLong(5, contract.getDeadline());
 			recordContractStatement.setString(6, contract.getDescription());
 			recordContractStatement.setLong(7, companyId);
@@ -83,7 +83,7 @@ public class ContractDao {
 				contract.setName(resultSet.getString(2));
 				contract.setPerfomanceUnits(resultSet.getInt(3));
 				contract.setFee(resultSet.getInt(4));
-				contract.setStartDate(resultSet.getTimestamp(5));
+				contract.setTeamChangedDate(resultSet.getTimestamp(5));
 				contract.setDeadline(resultSet.getLong(6));
 				contract.setDescription(resultSet.getString(7));
 				
@@ -137,6 +137,44 @@ public class ContractDao {
 		return sortOrder;
 		
 	}
+	
+	@Loggable
+	public void reassignEmployees(long[] hiredEmployeesId, long[] freeEmployeesId, long contractId) throws SQLException {
+		try (Connection connection = connectionPool.getConnection()) {
+			connection.setAutoCommit(false);
+			
+			hireEmployeesToContract(hiredEmployeesId, contractId, connection);
+			freeEmployeesFromContract(freeEmployeesId, contractId, connection);
+			
+			connection.commit();
+		}
+	}
+	
+	private void hireEmployeesToContract(long[] hiredEmployeesId, long contractId, Connection connection) throws SQLException {
+		String querry = "INSERT INTO work_positions (position_id, employee_id, contract_id) "
+				+ "VALUES (NULL, ?, ?)";
+		
+		PreparedStatement statement = connection.prepareStatement(querry);
+		
+		for (int i = 0; i < hiredEmployeesId.length; i++) {
+			statement.setLong(1, hiredEmployeesId[i]);
+			statement.setLong(2, contractId);
+			statement.executeUpdate();
+		}
+	}
+	
+	private void freeEmployeesFromContract(long[] freeEmployeesId, long contractId, Connection connection) throws SQLException {
+		String querry = "DELETE FROM work_positions WHERE employee_id = ? AND contract_id = ?";
+		
+		PreparedStatement statement = connection.prepareStatement(querry);
+		
+		for (int i = 0; i < freeEmployeesId.length; i++) {
+			statement.setLong(1, freeEmployeesId[i]);
+			statement.setLong(2, contractId);
+			statement.executeUpdate();
+		}
+	}
+	
 	private long getGeneratedId(PreparedStatement statement) throws SQLException {
 		try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
             if (generatedKeys.next()) {
