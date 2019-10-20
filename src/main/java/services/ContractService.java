@@ -1,6 +1,7 @@
 package services;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -90,7 +91,11 @@ public class ContractService {
 		}
 		
 		try {
-			contractDao.reassignEmployees(newHiredEmployees, newFreeEmployeees, contractId);
+			Contract contract = contractDao.getContractById(contractId);
+			
+			contract.setProgress(calculateContractProgress(contract));
+			
+			contractDao.reassignEmployees(newHiredEmployees, newFreeEmployeees, contract);
 		} catch (SQLException e) {
 			throw new DatabaseAccessException("Error, when record hired employees to db");
 		}
@@ -117,5 +122,18 @@ public class ContractService {
 		}
 		
 		return false;
+	}
+	
+	private int calculateContractProgress(Contract contract) {
+		int progress = 0;
+		
+		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+		Timestamp teamChangeTime = contract.getTeamChangedDate();
+		
+		int minuteDiff = (int)(currentTime.getTime() - teamChangeTime.getTime()) / (1000 * 60);
+		
+		progress = minuteDiff * contract.getWorkSpeed();
+		
+		return progress;
 	}
 }

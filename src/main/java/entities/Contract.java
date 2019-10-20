@@ -16,7 +16,7 @@ public class Contract {
 	 */
 	private Timestamp teamChangedDate;
 	private long deadline;
-	private long progress;
+	private int progress;
 	private String description;
 	
 	public Contract() {
@@ -69,11 +69,11 @@ public class Contract {
 		this.perfomanceUnits = perfomanceUnits;
 	}
 
-	public long getProgress() {
+	public int getProgress() {
 		return progress;
 	}
 
-	public void setProgress(long progress) {
+	public void setProgress(int progress) {
 		this.progress = progress;
 	}
 

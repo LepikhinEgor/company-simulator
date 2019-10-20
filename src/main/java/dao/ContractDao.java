@@ -20,6 +20,37 @@ public class ContractDao {
 	@Autowired
 	private ConnectionPool connectionPool;
 	
+	@Loggable
+	public Contract getContractById(long contractId) throws SQLException {
+		String querry = "SELECT * FROM contracts WHERE contract_id = ?";
+		
+		try(Connection connection = connectionPool.getConnection()) {
+			
+			PreparedStatement statement = connection.prepareStatement(querry);
+			statement.setLong(1, contractId);
+			
+			ResultSet resultSet = statement.executeQuery();
+			
+			Contract contract = null;
+			if (resultSet.next()) {
+				contract = new Contract();
+				contract.setId(resultSet.getInt(1));
+				contract.setName(resultSet.getString(2));
+				contract.setPerfomanceUnits(resultSet.getInt(3));
+				contract.setFee(resultSet.getInt(4));
+				contract.setTeamChangedDate(resultSet.getTimestamp(5));
+				contract.setDeadline(resultSet.getLong(6));
+				contract.setDescription(resultSet.getString(7));
+			}
+			
+			int contractSpeed = getContractPerfomance(contractId, connection);
+			contract.setWorkSpeed(contractSpeed);
+			
+			return contract;
+		}
+	}
+	
+	@Loggable
 	public long recordContract(Contract contract, long companyId) throws SQLException {
 		Connection connection = connectionPool.getConnection();
 		
@@ -114,7 +145,24 @@ public class ContractDao {
 		}
 		
 		return contracts;
+	}
+	
+	private int getContractPerfomance(long contractId, Connection connection) throws SQLException {
 		
+		String querry = "SELECT e.performance FROM work_positions wp INNER JOIN employees e ON e.employee_id = wp.employee_id "
+				+ "WHERE contract_id = ?";
+		PreparedStatement statement = connection.prepareStatement(querry);
+		
+		statement.setLong(1, contractId);
+		
+		ResultSet rs = statement.executeQuery();
+		
+		int perfomance = 0;
+		while(rs.next()) {
+			perfomance += rs.getInt(1);
+		}
+		
+		return perfomance;
 	}
 	
 	private String getSortOrderStr(int sortOrderNum) {
@@ -139,15 +187,21 @@ public class ContractDao {
 	}
 	
 	@Loggable
-	public void reassignEmployees(long[] hiredEmployeesId, long[] freeEmployeesId, long contractId) throws SQLException {
+	public void reassignEmployees(long[] hiredEmployeesId, long[] freeEmployeesId, Contract contract) throws SQLException {
 		try (Connection connection = connectionPool.getConnection()) {
 			connection.setAutoCommit(false);
 			
-			hireEmployeesToContract(hiredEmployeesId, contractId, connection);
-			freeEmployeesFromContract(freeEmployeesId, contractId, connection);
+			recordContractProgress(contract.getId(), contract.getProgress());
+			
+			hireEmployeesToContract(hiredEmployeesId, contract.getId(), connection);
+			freeEmployeesFromContract(freeEmployeesId, contract.getId(), connection);
 			
 			connection.commit();
 		}
+	}
+	
+	private void recordContractProgress(long contractId, int progress) {
+		//todo
 	}
 	
 	private void hireEmployeesToContract(long[] hiredEmployeesId, long contractId, Connection connection) throws SQLException {
