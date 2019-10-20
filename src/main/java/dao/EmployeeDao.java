@@ -22,28 +22,40 @@ public class EmployeeDao {
 	ConnectionPool connectionPool;
 	
 	@Loggable
-	public List<Long> hireEmployeesToContract(long[] hiredEmployeesId, long contractId) throws SQLException {
+	public void reassignEmployees(long[] hiredEmployeesId, long[] freeEmployeesId, long contractId) throws SQLException {
+		try (Connection connection = connectionPool.getConnection()) {
+			connection.setAutoCommit(false);
+			
+			hireEmployeesToContract(hiredEmployeesId, contractId, connection);
+			freeEmployeesFromContract(freeEmployeesId, contractId, connection);
+			
+			connection.commit();
+		}
+	}
+	
+	private void hireEmployeesToContract(long[] hiredEmployeesId, long contractId, Connection connection) throws SQLException {
 		String querry = "INSERT INTO work_positions (position_id, employee_id, contract_id) "
 				+ "VALUES (NULL, ?, ?)";
 		
-		ArrayList<Long> generatedIds = new ArrayList<Long>();
+		PreparedStatement statement = connection.prepareStatement(querry);
 		
-		try (Connection connection = connectionPool.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(querry);
-			
-			for (int i = 0; i < hiredEmployeesId.length; i++) {
-				statement.setLong(1, hiredEmployeesId[i]);
-				statement.setLong(2, contractId);
-				statement.executeUpdate();
-			}
-			
-			ResultSet generatedKeys = statement.getGeneratedKeys();
-			while (generatedKeys.next()) {
-				generatedIds.add(generatedKeys.getLong(1));
-			}
+		for (int i = 0; i < hiredEmployeesId.length; i++) {
+			statement.setLong(1, hiredEmployeesId[i]);
+			statement.setLong(2, contractId);
+			statement.executeUpdate();
 		}
+	}
+	
+	private void freeEmployeesFromContract(long[] freeEmployeesId, long contractId, Connection connection) throws SQLException {
+		String querry = "DELETE FROM work_positions WHERE employee_id = ? AND contract_id = ?";
 		
-		return generatedIds;
+		PreparedStatement statement = connection.prepareStatement(querry);
+		
+		for (int i = 0; i < freeEmployeesId.length; i++) {
+			statement.setLong(1, freeEmployeesId[i]);
+			statement.setLong(2, contractId);
+			statement.executeUpdate();
+		}
 	}
 	
 	@Loggable

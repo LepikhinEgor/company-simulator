@@ -159,10 +159,9 @@ public class EmployeeService {
 			}
 		
 		try {
-			employeeDao.hireEmployeesToContract(newHiredEmployees, contractId);
-			//record free employees
+			employeeDao.reassignEmployees(newHiredEmployees, newFreeEmployeees, contractId);
 		} catch (SQLException e) {
-			throw new DatabaseAccessException("Error, when record ehired employees to db");
+			throw new DatabaseAccessException("Error, when record hired employees to db");
 		}
 	}
 	

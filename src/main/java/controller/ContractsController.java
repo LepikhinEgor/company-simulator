@@ -136,6 +136,9 @@ public class ContractsController {
 		} catch (DoubleEmployeeIdException e) {
 			logger.error(e.getMessage(),e);
 			return new Message(Message.FAIL, e.getMessage());
+		} catch (DatabaseAccessException e) {
+			logger.error(e.getMessage(),e);
+			return new Message(Message.FAIL, e.getMessage());
 		}
 		
 		return new Message(Message.SUCCESS);
