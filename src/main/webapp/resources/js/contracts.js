@@ -13,13 +13,15 @@ function refreshContractsEventHandlers() {
     $('#apply_contract_data').off('click');
     $('.contract_name').off('click');
     $('.change_contract_team').off('click');
-    $(".close_modal_contract_team_apply").off('click');
+    $('.close_modal_contract_team_apply').off('click');
+    $(".close_modal_contract_team").off('click');
 
     $('#create_new_contract').on('click', newContractOpenModal);
     $('#apply_contract_data').on('click', applyContractData);
     $('.contract_name').on('click', changeContractOpenModal);
     $('.change_contract_team').on('click', changeContractTeamOpenModal);
-    $(".close_modal_contract_team_apply").on('click', applyContractTeamChanges)
+    $(".close_modal_contract_team_apply").on('click', applyContractTeamChanges);
+    $(".close_modal_contract_team").on('click', clearContractEmployeesData);
 }
 
 function refreshContractTeamEventHandlers() {
@@ -62,10 +64,18 @@ function applyContractTeamChanges() {
 		}
 	}
 	
-	console.log(hiredEmployeesId);
-	console.log(freeEmployeesId); 
-	
 	requestChangeContractTeam(hiredEmployeesId, freeEmployeesId);
+	
+	clearContractEmployeesData();
+}
+
+function clearContractEmployeesData() {
+	$('#contract_hired_employees_table tr[id]').remove();
+	$('#contract_free_employees_table tr[id]').remove();
+	oldHiredEmployeesId = [];
+	oldFreeEmployeesId = [];
+	newHiredEmployeesId = [];
+	newFreeEmployeesId = [];
 }
 
 function contains(arr, elem) {
