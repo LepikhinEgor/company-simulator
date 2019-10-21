@@ -14,6 +14,7 @@ import static org.mockito.Mockito.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import dao.EmployeeDao;
@@ -153,6 +154,26 @@ public class EmployeeServiceTest {
 		
 	}
 	
+	@Test(expected = DatabaseAccessException.class)
+	public void updateEmployeeThrowSQLExceptionFromEmployeeDao() throws DatabaseAccessException, SQLException {		
+		
+		EmployeeUpdateData employeeData = getEmployeeUpdateData();
+		Company goodCompany = getGoodCompany();
+		
+		Employee expectedEmployee = entitiesConventer.transormToEmployee(employeeData);
+		expectedEmployee.setId(1);
+		
+		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
+		when(employeeDaoMock.updateEmployee(expectedEmployee, goodCompany.getId())).thenThrow(new SQLException());
+		
+		injectDependensies();
+		
+		Employee actualEmployee = employeeService.updateEmployee(employeeData, loginEmail);
+		
+		assertTrue(expectedEmployee.equals(actualEmployee));	
+		
+	}
+	
 	
 	@Test
 	public void successReturnCompanyEmployeesList() throws DatabaseAccessException, SQLException, EmployeesListException, IncorrectOrderNumException, IncorrectPageNumException {
@@ -169,7 +190,7 @@ public class EmployeeServiceTest {
 		
 		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail);
 		
-		assertTrue(actualEmployees.size() == employees.size());
+		assertTrue(employees.equals(actualEmployees));
 	}
 	
 	@Test(expected = DatabaseAccessException.class)
@@ -188,7 +209,7 @@ public class EmployeeServiceTest {
 		
 		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail);
 		
-		assertTrue(actualEmployees.size() == employees.size());
+		assertTrue(employees.equals(actualEmployees));
 	}
 	
 	@Test(expected = DatabaseAccessException.class)
@@ -207,7 +228,7 @@ public class EmployeeServiceTest {
 		
 		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail);
 		
-		assertTrue(actualEmployees.size() == employees.size());
+		assertTrue(employees.equals(actualEmployees));
 	}
 	
 	
@@ -229,7 +250,7 @@ public class EmployeeServiceTest {
 		
 		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail);
 		
-		assertTrue(actualEmployees.size() == employees.size());
+		assertTrue(employees.equals(actualEmployees));
 	}
 	
 	@Test(expected = IncorrectOrderNumException.class)
@@ -250,7 +271,7 @@ public class EmployeeServiceTest {
 		
 		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail);
 		
-		assertTrue(actualEmployees.size() == employees.size());
+		assertTrue(employees.equals(actualEmployees));
 	}
 	
 	@Test
@@ -307,5 +328,77 @@ public class EmployeeServiceTest {
 		expectedEmployee.setId(1);
 		
 		assertTrue(expectedEmployee.equals(actualEmployee));
+	}
+	
+	@Test
+	public void getContractTeamSuccess() throws SQLException, DatabaseAccessException {
+		int contractId = 1;
+		List<Employee> expectedTeam = Arrays.asList(new Employee(), new Employee(), new Employee(), new Employee());
+		
+		when(employeeDaoMock.getContractEmployees(contractId)).thenReturn(expectedTeam);
+		
+		injectDependensies();
+		
+		List<Employee> actualTeam = employeeService.getContractTeam(loginEmail, contractId);
+		
+		assertTrue(expectedTeam.equals(actualTeam));
+	}
+	
+	@Test(expected = DatabaseAccessException.class)
+	public void getContractTeamThrowDBExceptionFromEmployeeDao() throws SQLException, DatabaseAccessException {
+		int contractId = 1;
+		List<Employee> expectedTeam = Arrays.asList(new Employee(), new Employee(), new Employee(), new Employee());
+		
+		when(employeeDaoMock.getContractEmployees(contractId)).thenThrow(new SQLException());
+		
+		injectDependensies();
+		List<Employee> actualTeam = employeeService.getContractTeam(loginEmail, contractId);
+	
+		assertTrue(expectedTeam.equals(actualTeam));
+	}
+	
+	@Test
+	public void getFreeEmployeesSuccess() throws DatabaseAccessException, SQLException {
+		Company company = getGoodCompany();
+		List<Employee> expectedEmployees = Arrays.asList(new Employee(), new Employee(), new Employee(), new Employee());
+		
+		when(companyServiceMock.getUserCompany(loginEmail)).thenReturn(company);
+		when(employeeDaoMock.getFreeEmployees(company.getId())).thenReturn(expectedEmployees);
+		
+		injectDependensies();
+		
+		List<Employee> actualEmployees = employeeService.getFreeEmployees(loginEmail);
+		
+		assertTrue(expectedEmployees.equals(actualEmployees));
+	}
+	
+	@Test(expected = DatabaseAccessException.class)
+	public void getFreeEmployeesThrowDBExceptionFromCompanyService() throws DatabaseAccessException, SQLException {
+		Company company = getGoodCompany();
+		List<Employee> expectedEmployees = Arrays.asList(new Employee(), new Employee(), new Employee(), new Employee());
+		
+		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
+		when(employeeDaoMock.getFreeEmployees(company.getId())).thenReturn(expectedEmployees);
+		
+		injectDependensies();
+		
+		List<Employee> actualEmployees = employeeService.getFreeEmployees(loginEmail);
+		
+		assertTrue(expectedEmployees.equals(actualEmployees));
+	}
+	
+	@Test(expected = DatabaseAccessException.class)
+	public void getFreeEmployeesThrowSQLExceptionFromEmployeeDao() throws DatabaseAccessException, SQLException {
+		Company company = getGoodCompany();
+		List<Employee> expectedEmployees = Arrays.asList(new Employee(), new Employee(), new Employee(), new Employee());
+		
+		when(companyServiceMock.getUserCompany(loginEmail)).thenReturn(company);
+		when(employeeDaoMock.getFreeEmployees(company.getId())).thenThrow(new SQLException());
+		
+		injectDependensies();
+		
+		List<Employee> actualEmployees = employeeService.getFreeEmployees(loginEmail);
+		
+		assertTrue(expectedEmployees.equals(actualEmployees));
 	}
 }
