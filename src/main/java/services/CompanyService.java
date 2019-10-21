@@ -105,15 +105,13 @@ public class CompanyService {
 		return userCompany;
 	}
 	
-	@Loggable
-	public Company createCompany(String loginEmail) throws DatabaseAccessException {
+	private Company createCompany(String loginEmail) throws DatabaseAccessException {
 		User user = userService.getUserDataByLoginEmail(loginEmail);
 		
 		return createCompany(user.getId());
 	}
 	
-	@Loggable
-	public Company createCompany(long userId) throws DatabaseAccessException {
+	private Company createCompany(long userId) throws DatabaseAccessException {
 		Company newCompany = new Company();
 		newCompany.setOwnerId(userId);
 		

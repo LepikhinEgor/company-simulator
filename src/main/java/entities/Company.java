@@ -84,5 +84,45 @@ public class Company {
 	public String toString() {
 		return "Company [id=" + id + ", name=" + name + ", ownerId=" + ownerId + ", cash=" + cash + "]";
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (cash ^ (cash >>> 32));
+		result = prime * result + ((contracts == null) ? 0 : contracts.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + (int) (ownerId ^ (ownerId >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Company other = (Company) obj;
+		if (cash != other.cash)
+			return false;
+		if (contracts == null) {
+			if (other.contracts != null)
+				return false;
+		} else if (!contracts.equals(other.contracts))
+			return false;
+		if (id != other.id)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (ownerId != other.ownerId)
+			return false;
+		return true;
+	}
 	
 }

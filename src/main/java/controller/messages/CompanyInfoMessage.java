@@ -82,5 +82,66 @@ public class CompanyInfoMessage extends Message {
 	public void setContractsExecuting(int contractsExecuting) {
 		this.contractsExecuting = contractsExecuting;
 	}
+
+	@Override
+	public String toString() {
+		return "CompanyInfoMessage [id=" + id + ", name=" + name + ", cash=" + cash + ", defaultCash=" + defaultCash
+				+ ", ownerName=" + ownerName + ", employeesCount=" + employeesCount + ", contractsExecuting="
+				+ contractsExecuting + ", contractsCompleted=" + contractsCompleted + ", contractsFailed="
+				+ contractsFailed + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + (int) (cash ^ (cash >>> 32));
+		result = prime * result + contractsCompleted;
+		result = prime * result + contractsExecuting;
+		result = prime * result + contractsFailed;
+		result = prime * result + (int) (defaultCash ^ (defaultCash >>> 32));
+		result = prime * result + employeesCount;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((ownerName == null) ? 0 : ownerName.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CompanyInfoMessage other = (CompanyInfoMessage) obj;
+		if (cash != other.cash)
+			return false;
+		if (contractsCompleted != other.contractsCompleted)
+			return false;
+		if (contractsExecuting != other.contractsExecuting)
+			return false;
+		if (contractsFailed != other.contractsFailed)
+			return false;
+		if (defaultCash != other.defaultCash)
+			return false;
+		if (employeesCount != other.employeesCount)
+			return false;
+		if (id != other.id)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (ownerName == null) {
+			if (other.ownerName != null)
+				return false;
+		} else if (!ownerName.equals(other.ownerName))
+			return false;
+		return true;
+	}
+	
 	
 }
