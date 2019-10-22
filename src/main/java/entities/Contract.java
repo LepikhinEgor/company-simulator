@@ -15,6 +15,7 @@ public class Contract {
 	private long deadline;
 	private int lastProgress;
 	private String description;
+	private boolean isCompleted;
 	
 	public Contract() {
 		super();
@@ -45,8 +46,6 @@ public class Contract {
 		
 		int minuteDiff = (int)(currentTime.getTime() - teamChangeTime.getTime()) / (1000 * 60);
 		
-		System.out.println("minute diff " + minuteDiff);
-		System.out.println("work speed " + workSpeed);
 		progress = lastProgress + minuteDiff * workSpeed;
 		
 		return progress;
@@ -120,11 +119,20 @@ public class Contract {
 		this.lastProgress = lastProgress;
 	}
 
+	public boolean isCompleted() {
+		return isCompleted;
+	}
+
+	public void setCompleted(boolean isCompleted) {
+		this.isCompleted = isCompleted;
+	}
+
 	@Override
 	public String toString() {
 		return "Contract [id=" + id + ", name=" + name + ", perfomanceUnits=" + perfomanceUnits + ", fee=" + fee
 				+ ", workSpeed=" + workSpeed + ", teamChangedDate=" + teamChangedDate + ", deadline=" + deadline
-				+ ", lastProgress=" + lastProgress + ", description=" + description + "]";
+				+ ", lastProgress=" + lastProgress + ", description=" + description + ", isCompleted=" + isCompleted
+				+ "]";
 	}
 	
 }

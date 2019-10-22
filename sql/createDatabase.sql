@@ -44,7 +44,7 @@ ALTER TABLE contracts ADD COLUMN last_progress INT NOT NULL AFTER deadline;
 
 ALTER TABLE contracts CHANGE COLUMN `start_date` `team_changed_date` TIMESTAMP NOT NULL;
 ALTER TABLE contracts CHANGE COLUMN `team_changed_date` `team_changed_date` TIMESTAMP NOT NULL  DEFAULT CURRENT_TIMESTAMP;
-
+ALTER TABLE contracts ADD COLUMN isComplete BOOLEAN NOT NULL DEFAULT 0;
 
 CREATE TABLE work_positions (
 position_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
