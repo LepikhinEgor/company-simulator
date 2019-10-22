@@ -67,6 +67,12 @@ public class ContractRestData {
 	public void setExpectedCompletionTime(int expectedCompletionTime) {
 		this.expectedCompletionTime = expectedCompletionTime;
 	}
+	@Override
+	public String toString() {
+		return "ContractRestData [id=" + id + ", name=" + name + ", size=" + size + ", fee=" + fee + ", workSpeed="
+				+ workSpeed + ", deadline=" + deadline + ", progress=" + progress + ", description=" + description
+				+ ", expectedCompletionTime=" + expectedCompletionTime + "]";
+	}
 	
 	
 }

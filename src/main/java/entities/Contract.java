@@ -29,6 +29,9 @@ public class Contract {
 	}
 	
 	public int getTimeBeforeCompletion() {
+		if (workSpeed == 0)
+			return -1;
+		
 		int minutes = (int)Math.ceil((perfomanceUnits - calculateProgress()) / workSpeed);
 		
 		return minutes;
@@ -42,6 +45,8 @@ public class Contract {
 		
 		int minuteDiff = (int)(currentTime.getTime() - teamChangeTime.getTime()) / (1000 * 60);
 		
+		System.out.println("minute diff " + minuteDiff);
+		System.out.println("work speed " + workSpeed);
 		progress = lastProgress + minuteDiff * workSpeed;
 		
 		return progress;
@@ -113,6 +118,13 @@ public class Contract {
 
 	public void setLastProgress(int lastProgress) {
 		this.lastProgress = lastProgress;
+	}
+
+	@Override
+	public String toString() {
+		return "Contract [id=" + id + ", name=" + name + ", perfomanceUnits=" + perfomanceUnits + ", fee=" + fee
+				+ ", workSpeed=" + workSpeed + ", teamChangedDate=" + teamChangedDate + ", deadline=" + deadline
+				+ ", lastProgress=" + lastProgress + ", description=" + description + "]";
 	}
 	
 }

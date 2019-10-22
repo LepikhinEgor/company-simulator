@@ -37,14 +37,17 @@ public class ContractDao {
 			
 			Contract contract = null;
 			if (resultSet.next()) {
+				Calendar calendar = Calendar.getInstance();
+				
 				contract = new Contract();
 				contract.setId(resultSet.getInt(1));
 				contract.setName(resultSet.getString(2));
 				contract.setPerfomanceUnits(resultSet.getInt(3));
 				contract.setFee(resultSet.getInt(4));
-				contract.setTeamChangedDate(resultSet.getTimestamp(5));
+				contract.setTeamChangedDate(resultSet.getTimestamp(5, calendar));
 				contract.setDeadline(resultSet.getLong(6));
-				contract.setDescription(resultSet.getString(7));
+				contract.setLastProgress(resultSet.getInt(7));
+				contract.setDescription(resultSet.getString(8));
 			}
 			
 			int contractSpeed = getContractPerfomance(contractId, connection);
@@ -58,8 +61,8 @@ public class ContractDao {
 	public long recordContract(Contract contract, long companyId) throws SQLException {
 		Connection connection = connectionPool.getConnection();
 		
-		String recordContractQuerry = "INSERT INTO contracts (contract_id, name, performance_units, fee, start_date ,deadline, description, company_id) VALUES ("
-				+ "NULL, ?, ?, ?, ?, ?, ?, ?);";
+		String recordContractQuerry = "INSERT INTO contracts (contract_id, name, performance_units, fee, team_changed_date ,deadline,last_progress, description, company_id) VALUES ("
+				+ "NULL, ?, ?, ?, NOW(), ?, ?, ?, ?);";
 		
 		PreparedStatement recordContractStatement = null;
 		try {
@@ -68,8 +71,8 @@ public class ContractDao {
 			recordContractStatement.setString(1, contract.getName());
 			recordContractStatement.setInt(2, contract.getPerfomanceUnits());
 			recordContractStatement.setInt(3, contract.getFee());
-			recordContractStatement.setTimestamp(4, contract.getTeamChangedDate());
-			recordContractStatement.setLong(5, contract.getDeadline());
+			recordContractStatement.setLong(4, contract.getDeadline());
+			recordContractStatement.setInt(5, 0);
 			recordContractStatement.setString(6, contract.getDescription());
 			recordContractStatement.setLong(7, companyId);
 			
@@ -209,6 +212,8 @@ public class ContractDao {
 	
 	private void recordContractProgress(long contractId, int progress) throws SQLException {
 		String querry = "UPDATE contracts SET last_progress = ?, team_changed_date = NOW() WHERE contract_id = ?";
+		
+		System.out.println("recordContractProggress " + progress);
 		
 		try(Connection connection = connectionPool.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(querry);
