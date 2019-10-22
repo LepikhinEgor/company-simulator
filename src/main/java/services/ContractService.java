@@ -70,6 +70,10 @@ public class ContractService {
 		
 		try {
 			contracts = contractDao.getContractsList(sortOrder, pageNum, PAGE_LIMIT, userCompany.getId());
+			
+			for (Contract contract : contracts) {
+				contract.setProgress(calculateContractProgress(contract));
+			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DatabaseAccessException(e.getMessage());
@@ -132,7 +136,7 @@ public class ContractService {
 		
 		int minuteDiff = (int)(currentTime.getTime() - teamChangeTime.getTime()) / (1000 * 60);
 		
-		progress = minuteDiff * contract.getWorkSpeed();
+		progress = contract.getLastProgress() + minuteDiff * contract.getWorkSpeed();
 		
 		return progress;
 	}

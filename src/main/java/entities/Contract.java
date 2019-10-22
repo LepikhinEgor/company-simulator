@@ -11,11 +11,9 @@ public class Contract {
 	private int perfomanceUnits;
 	private int fee;
 	private int workSpeed;
-	/**
-	 * deadline - the count of millis since taking the contract to its deadline
-	 */
 	private Timestamp teamChangedDate;
 	private long deadline;
+	private int lastProgress;
 	private int progress;
 	private String description;
 	
@@ -84,8 +82,6 @@ public class Contract {
 	public void setId(long id) {
 		this.id = id;
 	}
-
-
 	public Timestamp getTeamChangedDate() {
 		return teamChangedDate;
 	}
@@ -100,6 +96,14 @@ public class Contract {
 
 	public void setWorkSpeed(int workSpeed) {
 		this.workSpeed = workSpeed;
+	}
+
+	public int getLastProgress() {
+		return lastProgress;
+	}
+
+	public void setLastProgress(int lastProgress) {
+		this.lastProgress = lastProgress;
 	}
 	
 }

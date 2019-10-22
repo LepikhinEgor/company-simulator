@@ -5,8 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.swing.SortOrder;
 
@@ -110,13 +114,16 @@ public class ContractDao {
 			while(resultSet.next()) {
 				Contract contract = new Contract();
 				
+				Calendar calendar = Calendar.getInstance();
+				
 				contract.setId(resultSet.getInt(1));
 				contract.setName(resultSet.getString(2));
 				contract.setPerfomanceUnits(resultSet.getInt(3));
 				contract.setFee(resultSet.getInt(4));
-				contract.setTeamChangedDate(resultSet.getTimestamp(5));
+				contract.setTeamChangedDate(resultSet.getTimestamp(5,calendar));
 				contract.setDeadline(resultSet.getLong(6));
-				contract.setDescription(resultSet.getString(7));
+				contract.setLastProgress(resultSet.getInt(7));
+				contract.setDescription(resultSet.getString(8));
 				
 				contracts.add(contract);
 			}
@@ -200,8 +207,20 @@ public class ContractDao {
 		}
 	}
 	
-	private void recordContractProgress(long contractId, int progress) {
-		//todo
+	private void recordContractProgress(long contractId, int progress) throws SQLException {
+		String querry = "UPDATE contracts SET last_progress = ?, team_changed_date = NOW() WHERE contract_id = ?";
+		
+		try(Connection connection = connectionPool.getConnection()) {
+			PreparedStatement statement = connection.prepareStatement(querry);
+			
+			statement.setInt(1, progress);
+			statement.setLong(2, contractId);
+			
+			int contractChanged = statement.executeUpdate();
+			if (contractChanged == 0) {
+				throw new RuntimeException("Contract not changed");
+			}
+		}
 	}
 	
 	private void hireEmployeesToContract(long[] hiredEmployeesId, long contractId, Connection connection) throws SQLException {
