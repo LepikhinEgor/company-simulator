@@ -198,7 +198,7 @@ public class ContractDao {
 		try (Connection connection = connectionPool.getConnection()) {
 			connection.setAutoCommit(false);
 			
-			recordContractProgress(contract.getId(), contract.getProgress());
+			recordContractProgress(contract.getId(), contract.calculateProgress());
 			
 			hireEmployeesToContract(hiredEmployeesId, contract.getId(), connection);
 			freeEmployeesFromContract(freeEmployeesId, contract.getId(), connection);

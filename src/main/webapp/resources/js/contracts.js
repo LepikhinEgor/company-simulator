@@ -226,12 +226,12 @@ function requestContractsList() {
 						var contractData = {
 							id: contracts[contract].id,
 							name: contracts[contract].name,
-							size: contracts[contract].perfomanceUnits,
+							size: contracts[contract].size,
 							fee: contracts[contract].fee,
 							deadline: contracts[contract].deadline,
-							progress: 0,
-							perfomance: 0,
-							expected: 0
+							progress: contracts[contract].progress,
+							perfomance: contracts[contract].workSpeed,
+							expected: contracts[contract].expectedCompletionTime
 						}
 						
 			    		addContractToTable(contractData);

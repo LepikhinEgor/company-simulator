@@ -2,6 +2,7 @@ package services;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import aspects.annotations.Loggable;
 import controller.input.CreateContractData;
+import controller.messages.entities.ContractRestData;
 import dao.ContractDao;
 import entities.Company;
 import entities.Contract;
@@ -62,24 +64,24 @@ public class ContractService {
 	}
 	
 	@Loggable
-	public List<Contract> getUserActiveContracts(int sortOrder, int pageNum, String login) throws DatabaseAccessException {
+	public List<ContractRestData> getUserActiveContracts(int sortOrder, int pageNum, String login) throws DatabaseAccessException {
 		
 		Company userCompany = companyService.getUserCompany(login);
 		
 		List<Contract> contracts = null;
-		
+		List<ContractRestData> contractsRest=  new ArrayList<ContractRestData>();
 		try {
 			contracts = contractDao.getContractsList(sortOrder, pageNum, PAGE_LIMIT, userCompany.getId());
 			
-			for (Contract contract : contracts) {
-				contract.setProgress(calculateContractProgress(contract));
+			for (Contract contract: contracts) {
+				contractsRest.add(entitiesConventer.transformToContractRestData(contract));
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DatabaseAccessException(e.getMessage());
 		}
 		
-		return contracts;
+		return contractsRest;
 	}
 	
 	@Loggable
@@ -96,8 +98,6 @@ public class ContractService {
 		
 		try {
 			Contract contract = contractDao.getContractById(contractId);
-			
-			contract.setProgress(calculateContractProgress(contract));
 			
 			contractDao.reassignEmployees(newHiredEmployees, newFreeEmployeees, contract);
 		} catch (SQLException e) {
@@ -126,18 +126,5 @@ public class ContractService {
 		}
 		
 		return false;
-	}
-	
-	private int calculateContractProgress(Contract contract) {
-		int progress = 0;
-		
-		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-		Timestamp teamChangeTime = contract.getTeamChangedDate();
-		
-		int minuteDiff = (int)(currentTime.getTime() - teamChangeTime.getTime()) / (1000 * 60);
-		
-		progress = contract.getLastProgress() + minuteDiff * contract.getWorkSpeed();
-		
-		return progress;
 	}
 }

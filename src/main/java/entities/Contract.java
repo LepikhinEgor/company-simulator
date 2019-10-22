@@ -14,7 +14,6 @@ public class Contract {
 	private Timestamp teamChangedDate;
 	private long deadline;
 	private int lastProgress;
-	private int progress;
 	private String description;
 	
 	public Contract() {
@@ -26,8 +25,26 @@ public class Contract {
 		this.fee = fee;
 		this.perfomanceUnits = performanceUnits;
 		this.deadline = deadline;
-		this.progress = 0;
 		this.description = description;
+	}
+	
+	public int getTimeBeforeCompletion() {
+		int minutes = (int)Math.ceil((perfomanceUnits - calculateProgress()) / workSpeed);
+		
+		return minutes;
+	}
+	
+	public int calculateProgress() {
+		int progress = 0;
+		
+		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+		Timestamp teamChangeTime = teamChangedDate;
+		
+		int minuteDiff = (int)(currentTime.getTime() - teamChangeTime.getTime()) / (1000 * 60);
+		
+		progress = lastProgress + minuteDiff * workSpeed;
+		
+		return progress;
 	}
 	
 	public String getName() {
@@ -65,14 +82,6 @@ public class Contract {
 	}
 	public void setPerfomanceUnits(int perfomanceUnits) {
 		this.perfomanceUnits = perfomanceUnits;
-	}
-
-	public int getProgress() {
-		return progress;
-	}
-
-	public void setProgress(int progress) {
-		this.progress = progress;
 	}
 
 	public long getId() {

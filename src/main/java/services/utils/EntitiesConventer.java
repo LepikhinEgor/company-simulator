@@ -5,12 +5,29 @@ import org.springframework.stereotype.Service;
 import controller.input.CreateContractData;
 import controller.input.EmployeeCreateData;
 import controller.input.EmployeeUpdateData;
+import controller.messages.entities.ContractRestData;
 import entities.Contract;
 import entities.Employee;
 
 @Service
 public class EntitiesConventer {
 
+	public ContractRestData transformToContractRestData(Contract contract) {
+		ContractRestData contractRestData = new ContractRestData();
+		
+		contractRestData.setId(contract.getId());
+		contractRestData.setDeadline(contract.getDeadline());
+		contractRestData.setDescription(contract.getDescription());
+		contractRestData.setExpectedCompletionTime(contract.getTimeBeforeCompletion());
+		contractRestData.setFee(contract.getFee());
+		contractRestData.setName(contract.getName());
+		contractRestData.setSize(contract.getPerfomanceUnits());
+		contractRestData.setWorkSpeed(contract.getWorkSpeed());
+		contractRestData.setProgress(contract.calculateProgress());
+		
+		return contractRestData;
+	}
+	
 	public Contract trasformToContract(CreateContractData contractData) {
 		Contract contract = new Contract();
 		
@@ -19,7 +36,6 @@ public class EntitiesConventer {
 		contract.setFee(contractData.getFee());
 		contract.setDeadline(contractData.getDeadline());
 		contract.setDescription("No description");
-		contract.setProgress(0);
 		
 		return contract;
 	}

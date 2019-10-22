@@ -21,6 +21,7 @@ import controller.messages.ContractTeamMessage;
 import controller.messages.ContractsListMessage;
 import controller.messages.CreateContractMessage;
 import controller.messages.Message;
+import controller.messages.entities.ContractRestData;
 import entities.Contract;
 import entities.Employee;
 import exceptions.DatabaseAccessException;
@@ -90,7 +91,7 @@ public class ContractsController {
 		else 
 			return new ContractsListMessage(Message.FAIL);
 		
-		List<Contract> contracts = null;
+		List<ContractRestData> contracts = null;
 		
 		try {
 			contracts = contractService.getUserActiveContracts(sortOrder, pageNum, login);
