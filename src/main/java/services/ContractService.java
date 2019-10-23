@@ -54,7 +54,8 @@ public class ContractService {
 		Company userCompany = companyService.getUserCompany(userLogin);
 		
 		try {
-			contractDao.recordContract(newContract, userCompany.getId());
+			long newId = contractDao.recordContract(newContract, userCompany.getId());
+			newContract.setId(newId);
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DatabaseAccessException(e.getMessage());

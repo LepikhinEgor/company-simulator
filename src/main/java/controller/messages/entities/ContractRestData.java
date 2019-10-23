@@ -73,6 +73,54 @@ public class ContractRestData {
 				+ workSpeed + ", deadline=" + deadline + ", progress=" + progress + ", description=" + description
 				+ ", expectedCompletionTime=" + expectedCompletionTime + "]";
 	}
-	
-	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (deadline ^ (deadline >>> 32));
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + expectedCompletionTime;
+		result = prime * result + fee;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + progress;
+		result = prime * result + size;
+		result = prime * result + workSpeed;
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ContractRestData other = (ContractRestData) obj;
+		if (deadline != other.deadline)
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (expectedCompletionTime != other.expectedCompletionTime)
+			return false;
+		if (fee != other.fee)
+			return false;
+		if (id != other.id)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (progress != other.progress)
+			return false;
+		if (size != other.size)
+			return false;
+		if (workSpeed != other.workSpeed)
+			return false;
+		return true;
+	}
 }

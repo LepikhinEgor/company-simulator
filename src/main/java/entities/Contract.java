@@ -134,5 +134,65 @@ public class Contract {
 				+ ", lastProgress=" + lastProgress + ", description=" + description + ", isCompleted=" + isCompleted
 				+ "]";
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (deadline ^ (deadline >>> 32));
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + fee;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + (isCompleted ? 1231 : 1237);
+		result = prime * result + lastProgress;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + perfomanceUnits;
+		result = prime * result + ((teamChangedDate == null) ? 0 : teamChangedDate.hashCode());
+		result = prime * result + workSpeed;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Contract other = (Contract) obj;
+		if (deadline != other.deadline)
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (fee != other.fee)
+			return false;
+		if (id != other.id)
+			return false;
+		if (isCompleted != other.isCompleted)
+			return false;
+		if (lastProgress != other.lastProgress)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (perfomanceUnits != other.perfomanceUnits)
+			return false;
+		if (teamChangedDate == null) {
+			if (other.teamChangedDate != null)
+				return false;
+		} else if (!teamChangedDate.equals(other.teamChangedDate))
+			return false;
+		if (workSpeed != other.workSpeed)
+			return false;
+		return true;
+	}
+	
+	
 	
 }
