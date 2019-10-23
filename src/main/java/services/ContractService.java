@@ -87,8 +87,9 @@ public class ContractService {
 	
 	@Loggable
 	public void reassignEmployees(long[] newHiredEmployees, long[] newFreeEmployeees, long contractId) throws DoubleEmployeeIdException, DatabaseAccessException {
-		if (newHiredEmployees != null && newFreeEmployeees != null &&
-				newHiredEmployees.length != 0 && newFreeEmployeees.length != 0) {
+		if (newHiredEmployees != null && newFreeEmployeees != null) {
+			if (newHiredEmployees.length == 0 && newFreeEmployeees.length == 0)
+				throw new IllegalArgumentException("Senselessly method call. Free and hired employees must be changed in same time");
 			if (containsSameId(newHiredEmployees, newFreeEmployeees)) {
 				throw new DoubleEmployeeIdException("Employee can't be free and hired at the same time");
 			}
