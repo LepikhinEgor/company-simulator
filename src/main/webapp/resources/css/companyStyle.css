@@ -74,7 +74,7 @@ html, body {
     border: 1px solid #C1C1C1; /* размер и цвет границы блока */
 }
 
-#employees_table, #contracts_table {
+#employees_table, #contracts_table, #completed_contracts_table {
     width: 100%;
     text-align: center;
 }

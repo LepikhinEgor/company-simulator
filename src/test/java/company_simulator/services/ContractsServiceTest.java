@@ -338,24 +338,8 @@ public class ContractsServiceTest {
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void reassignEmployeesThrowIllegalArgsExceptionByEmptyHiredEmployees() throws SQLException, DoubleEmployeeIdException, DatabaseAccessException {
+	public void reassignEmployeesThrowIllegalArgsExceptionByEmptyFreeAndHiredEmployees() throws SQLException, DoubleEmployeeIdException, DatabaseAccessException {
 		long[] hiredEmployees = {}; 
-		long[] freeEmployees = {1, 6, 7};
-		long contractId = 1;
-		
-		Contract validContract = getValidContract();
-		
-		when(contractDaoMock.getContractById(contractId)).thenReturn(validContract);
-		doNothing().when(contractDaoMock).reassignEmployees(hiredEmployees, freeEmployees, validContract);
-		
-		injectDependensies();
-		
-		contractService.reassignEmployees(hiredEmployees, freeEmployees, contractId);
-	}
-	
-	@Test(expected = IllegalArgumentException.class)
-	public void reassignEmployeesThrowIllegalArgsExceptionByEmptyFreeEmployees() throws SQLException, DoubleEmployeeIdException, DatabaseAccessException {
-		long[] hiredEmployees = {1,2,3}; 
 		long[] freeEmployees = {};
 		long contractId = 1;
 		

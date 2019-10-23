@@ -12,6 +12,7 @@ public class ContractRestData {
 	private int progress;
 	private String description;
 	private int expectedCompletionTime;
+	private boolean isCompleted;
 	
 	public long getId() {
 		return id;
@@ -67,11 +68,18 @@ public class ContractRestData {
 	public void setExpectedCompletionTime(int expectedCompletionTime) {
 		this.expectedCompletionTime = expectedCompletionTime;
 	}
+	public boolean isCompleted() {
+		return isCompleted;
+	}
+	public void setCompleted(boolean isCompleted) {
+		this.isCompleted = isCompleted;
+	}
+	
 	@Override
 	public String toString() {
 		return "ContractRestData [id=" + id + ", name=" + name + ", size=" + size + ", fee=" + fee + ", workSpeed="
 				+ workSpeed + ", deadline=" + deadline + ", progress=" + progress + ", description=" + description
-				+ ", expectedCompletionTime=" + expectedCompletionTime + "]";
+				+ ", expectedCompletionTime=" + expectedCompletionTime + ", isCompleted=" + isCompleted + "]";
 	}
 	@Override
 	public int hashCode() {
@@ -82,6 +90,7 @@ public class ContractRestData {
 		result = prime * result + expectedCompletionTime;
 		result = prime * result + fee;
 		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + (isCompleted ? 1231 : 1237);
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + progress;
 		result = prime * result + size;
@@ -109,6 +118,8 @@ public class ContractRestData {
 		if (fee != other.fee)
 			return false;
 		if (id != other.id)
+			return false;
+		if (isCompleted != other.isCompleted)
 			return false;
 		if (name == null) {
 			if (other.name != null)

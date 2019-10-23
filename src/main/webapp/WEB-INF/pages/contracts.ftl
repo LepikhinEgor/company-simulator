@@ -14,6 +14,14 @@
 	<input type="button" id="contract_employees" value="Eemployees">
 	<input type="button" id="create_new_contract" value="Create new contract">
 </form>
+<table id="completed_contracts_table">
+	<tr>
+	  <th>Name</th>
+	  <th>Fee</th>
+	  <th>Progress</th>
+	  <th>Get</th>
+	</tr>
+</table>
 <div id="contract_modal_window">
   <div id="contract_window">
     <div id="contract_window_content">
