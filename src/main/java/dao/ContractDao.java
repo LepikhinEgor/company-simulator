@@ -48,7 +48,7 @@ public class ContractDao {
 				contract.setDeadline(resultSet.getLong(6));
 				contract.setLastProgress(resultSet.getInt(7));
 				contract.setDescription(resultSet.getString(8));
-				contract.setCompleted(resultSet.getBoolean(10));
+				contract.setStatus(resultSet.getString(10));
 			}
 			
 			int contractSpeed = getContractPerfomance(contractId, connection);
@@ -128,7 +128,7 @@ public class ContractDao {
 				contract.setDeadline(resultSet.getLong(6));
 				contract.setLastProgress(resultSet.getInt(7));
 				contract.setDescription(resultSet.getString(8));
-				contract.setCompleted(resultSet.getBoolean(10));
+				contract.setStatus(resultSet.getString(10));
 				
 				contracts.add(contract);
 			}

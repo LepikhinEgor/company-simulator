@@ -12,7 +12,7 @@ public class ContractRestData {
 	private int progress;
 	private String description;
 	private int expectedCompletionTime;
-	private boolean isCompleted;
+	private String status;
 	
 	public long getId() {
 		return id;
@@ -68,18 +68,17 @@ public class ContractRestData {
 	public void setExpectedCompletionTime(int expectedCompletionTime) {
 		this.expectedCompletionTime = expectedCompletionTime;
 	}
-	public boolean isCompleted() {
-		return isCompleted;
+	public String getStatus() {
+		return status;
 	}
-	public void setCompleted(boolean isCompleted) {
-		this.isCompleted = isCompleted;
+	public void setStatus(String status) {
+		this.status = status;
 	}
-	
 	@Override
 	public String toString() {
 		return "ContractRestData [id=" + id + ", name=" + name + ", size=" + size + ", fee=" + fee + ", workSpeed="
 				+ workSpeed + ", deadline=" + deadline + ", progress=" + progress + ", description=" + description
-				+ ", expectedCompletionTime=" + expectedCompletionTime + ", isCompleted=" + isCompleted + "]";
+				+ ", expectedCompletionTime=" + expectedCompletionTime + ", status=" + status + "]";
 	}
 	@Override
 	public int hashCode() {
@@ -90,10 +89,10 @@ public class ContractRestData {
 		result = prime * result + expectedCompletionTime;
 		result = prime * result + fee;
 		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + (isCompleted ? 1231 : 1237);
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + progress;
 		result = prime * result + size;
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + workSpeed;
 		return result;
 	}
@@ -119,8 +118,6 @@ public class ContractRestData {
 			return false;
 		if (id != other.id)
 			return false;
-		if (isCompleted != other.isCompleted)
-			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -129,6 +126,11 @@ public class ContractRestData {
 		if (progress != other.progress)
 			return false;
 		if (size != other.size)
+			return false;
+		if (status == null) {
+			if (other.status != null)
+				return false;
+		} else if (!status.equals(other.status))
 			return false;
 		if (workSpeed != other.workSpeed)
 			return false;

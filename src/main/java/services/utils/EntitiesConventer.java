@@ -24,7 +24,7 @@ public class EntitiesConventer {
 		contractRestData.setSize(contract.getPerfomanceUnits());
 		contractRestData.setWorkSpeed(contract.getWorkSpeed());
 		contractRestData.setProgress(contract.calculateProgress());
-		contractRestData.setCompleted(contract.isCompleted());
+		contractRestData.setStatus(contract.getStatus());
 		
 		return contractRestData;
 	}

@@ -15,7 +15,7 @@ public class Contract {
 	private long deadline;
 	private int lastProgress;
 	private String description;
-	private boolean isCompleted;
+	private String status;
 	
 	public Contract() {
 		super();
@@ -119,20 +119,19 @@ public class Contract {
 		this.lastProgress = lastProgress;
 	}
 
-	public boolean isCompleted() {
-		return isCompleted;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setCompleted(boolean isCompleted) {
-		this.isCompleted = isCompleted;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	@Override
 	public String toString() {
 		return "Contract [id=" + id + ", name=" + name + ", perfomanceUnits=" + perfomanceUnits + ", fee=" + fee
 				+ ", workSpeed=" + workSpeed + ", teamChangedDate=" + teamChangedDate + ", deadline=" + deadline
-				+ ", lastProgress=" + lastProgress + ", description=" + description + ", isCompleted=" + isCompleted
-				+ "]";
+				+ ", lastProgress=" + lastProgress + ", description=" + description + ", status=" + status + "]";
 	}
 
 	@Override
@@ -143,10 +142,10 @@ public class Contract {
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + fee;
 		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + (isCompleted ? 1231 : 1237);
 		result = prime * result + lastProgress;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + perfomanceUnits;
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + ((teamChangedDate == null) ? 0 : teamChangedDate.hashCode());
 		result = prime * result + workSpeed;
 		return result;
@@ -172,8 +171,6 @@ public class Contract {
 			return false;
 		if (id != other.id)
 			return false;
-		if (isCompleted != other.isCompleted)
-			return false;
 		if (lastProgress != other.lastProgress)
 			return false;
 		if (name == null) {
@@ -182,6 +179,11 @@ public class Contract {
 		} else if (!name.equals(other.name))
 			return false;
 		if (perfomanceUnits != other.perfomanceUnits)
+			return false;
+		if (status == null) {
+			if (other.status != null)
+				return false;
+		} else if (!status.equals(other.status))
 			return false;
 		if (teamChangedDate == null) {
 			if (other.teamChangedDate != null)
