@@ -1,5 +1,7 @@
 package services.utils;
 
+import java.sql.Timestamp;
+
 import org.springframework.stereotype.Service;
 
 import controller.input.CreateContractData;
@@ -16,7 +18,7 @@ public class EntitiesConventer {
 		ContractRestData contractRestData = new ContractRestData();
 		
 		contractRestData.setId(contract.getId());
-		contractRestData.setDeadline(contract.getDeadline());
+		contractRestData.setDeadline(contract.getDeadline().getTime());
 		contractRestData.setDescription(contract.getDescription());
 		contractRestData.setExpectedCompletionTime(contract.getTimeBeforeCompletion());
 		contractRestData.setFee(contract.getFee());
@@ -35,8 +37,8 @@ public class EntitiesConventer {
 		contract.setName(contractData.getName());
 		contract.setPerfomanceUnits(contractData.getSize());
 		contract.setFee(contractData.getFee());
-		contract.setDeadline(contractData.getDeadline());
 		contract.setDescription("No description");
+		contract.setDeadline(new Timestamp(System.currentTimeMillis() + contractData.getDeadline()));
 		
 		return contract;
 	}

@@ -45,7 +45,7 @@ public class ContractDao {
 				contract.setPerfomanceUnits(resultSet.getInt(3));
 				contract.setFee(resultSet.getInt(4));
 				contract.setTeamChangedDate(resultSet.getTimestamp(5, calendar));
-				contract.setDeadline(resultSet.getLong(6));
+				contract.setDeadline(resultSet.getTimestamp(6, calendar));
 				contract.setLastProgress(resultSet.getInt(7));
 				contract.setDescription(resultSet.getString(8));
 				contract.setStatus(resultSet.getString(10));
@@ -72,7 +72,7 @@ public class ContractDao {
 			recordContractStatement.setString(1, contract.getName());
 			recordContractStatement.setInt(2, contract.getPerfomanceUnits());
 			recordContractStatement.setInt(3, contract.getFee());
-			recordContractStatement.setLong(4, contract.getDeadline());
+			recordContractStatement.setTimestamp(4, contract.getDeadline());
 			recordContractStatement.setInt(5, 0);
 			recordContractStatement.setString(6, contract.getDescription());
 			recordContractStatement.setLong(7, companyId);
@@ -125,7 +125,7 @@ public class ContractDao {
 				contract.setPerfomanceUnits(resultSet.getInt(3));
 				contract.setFee(resultSet.getInt(4));
 				contract.setTeamChangedDate(resultSet.getTimestamp(5,calendar));
-				contract.setDeadline(resultSet.getLong(6));
+				contract.setDeadline(resultSet.getTimestamp(6, calendar));
 				contract.setLastProgress(resultSet.getInt(7));
 				contract.setDescription(resultSet.getString(8));
 				contract.setStatus(resultSet.getString(10));

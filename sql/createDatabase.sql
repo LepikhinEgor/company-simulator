@@ -47,6 +47,8 @@ ALTER TABLE contracts CHANGE COLUMN `team_changed_date` `team_changed_date` TIME
 ALTER TABLE contracts ADD COLUMN isComplete BOOLEAN NOT NULL DEFAULT 0;
 ALTER TABLE contracts DROP COLUMN isComplete;
 ALTER TABLE contracts ADD COLUMN status VARCHAR(10) NOT NULL DEFAULT 'Performed';
+ALTER TABLE contracts DROP COLUMN deadline;
+ALTER TABLE contracts ADD COLUMN deadline TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER team_changed_date;
 
 CREATE TABLE work_positions (
 position_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,

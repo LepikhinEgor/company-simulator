@@ -6,27 +6,23 @@ import java.util.ArrayList;
 import controller.input.CreateContractData;
 
 public class Contract {
+	private static final String PERFORMED = "Performed";
+	private static final String COMPLETED = "Completed";
+	private static final String FAILED = "Failed";
+	
 	private long id;
 	private String name;
 	private int perfomanceUnits;
 	private int fee;
 	private int workSpeed;
 	private Timestamp teamChangedDate;
-	private long deadline;
+	private Timestamp deadline;
 	private int lastProgress;
 	private String description;
 	private String status;
 	
 	public Contract() {
 		super();
-	}
-	
-	public Contract(String name, int fee, int performanceUnits, long deadline, String description) {
-		this.name = name;
-		this.fee = fee;
-		this.perfomanceUnits = performanceUnits;
-		this.deadline = deadline;
-		this.description = description;
 	}
 	
 	public int getTimeBeforeCompletion() {
@@ -38,7 +34,7 @@ public class Contract {
 		return minutes;
 	}
 	
-	public int calculateProgress() {
+	public int calculateProgress() {//todo calculate by deadline
 		int progress = 0;
 		
 		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
@@ -51,6 +47,23 @@ public class Contract {
 		return progress;
 	}
 	
+	public String getActualStatus() {
+		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+		System.out.println(currentTime);
+		System.out.println(deadline);
+		if (deadline.before(currentTime)) {
+			if (calculateProgress() >= perfomanceUnits)
+				return COMPLETED;
+			else
+				return FAILED;
+		} else {
+			if (calculateProgress() >= perfomanceUnits)
+				return COMPLETED;
+			else 
+				return PERFORMED;
+		}
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -59,11 +72,11 @@ public class Contract {
 		this.name = name;
 	}
 
-	public long getDeadline() {
+	public Timestamp getDeadline() {
 		return deadline;
 	}
 
-	public void setDeadline(long deadline) {
+	public void setDeadline(Timestamp deadline) {
 		this.deadline = deadline;
 	}
 
@@ -120,7 +133,7 @@ public class Contract {
 	}
 
 	public String getStatus() {
-		return status;
+		return getActualStatus();
 	}
 
 	public void setStatus(String status) {
@@ -138,7 +151,7 @@ public class Contract {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (deadline ^ (deadline >>> 32));
+		result = prime * result + ((deadline == null) ? 0 : deadline.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + fee;
 		result = prime * result + (int) (id ^ (id >>> 32));
@@ -160,7 +173,10 @@ public class Contract {
 		if (getClass() != obj.getClass())
 			return false;
 		Contract other = (Contract) obj;
-		if (deadline != other.deadline)
+		if (deadline == null) {
+			if (other.deadline != null)
+				return false;
+		} else if (!deadline.equals(other.deadline))
 			return false;
 		if (description == null) {
 			if (other.description != null)

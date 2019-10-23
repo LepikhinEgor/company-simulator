@@ -70,7 +70,6 @@ public class ContractsServiceTest {
 		contract.setName("windows");
 		contract.setPerfomanceUnits(100);
 		contract.setFee(100);
-		contract.setDeadline(400);
 		contract.setDescription("No description");
 		
 		return contract;
