@@ -87,7 +87,8 @@ public class ContractService {
 	
 	@Loggable
 	public void reassignEmployees(long[] newHiredEmployees, long[] newFreeEmployeees, long contractId) throws DoubleEmployeeIdException, DatabaseAccessException {
-		if (newHiredEmployees != null && newFreeEmployeees != null) {
+		if (newHiredEmployees != null && newFreeEmployeees != null &&
+				newHiredEmployees.length != 0 && newFreeEmployeees.length != 0) {
 			if (containsSameId(newHiredEmployees, newFreeEmployeees)) {
 				throw new DoubleEmployeeIdException("Employee can't be free and hired at the same time");
 			}
@@ -95,7 +96,8 @@ public class ContractService {
 				throw new DoubleEmployeeIdException("Hired employees can't contains double ids");
 			if (containsDoubleId(newFreeEmployeees))
 				throw new DoubleEmployeeIdException("Hired employees can't contains double ids");
-		}
+		} else
+			throw new IllegalArgumentException("Senselessly method call. Free and hired employees must be changed in same time");
 		
 		try {
 			Contract contract = contractDao.getContractById(contractId);
