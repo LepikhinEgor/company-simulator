@@ -87,7 +87,7 @@ public class EmployeeService {
 	
 	@Loggable
 	public Employee updateEmployee(EmployeeUpdateData employeeData, String userLoginEmail) throws DatabaseAccessException {
-		Employee newEmployee = entitiesConventer.transormToEmployee(employeeData);
+		Employee newEmployee = entitiesConventer.transformToEmployee(employeeData);
 		
 		try {
 			User user = userService.getUserDataByLoginEmail(userLoginEmail);

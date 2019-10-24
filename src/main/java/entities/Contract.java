@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import controller.input.CreateContractData;
 
 public class Contract {
-	private static final String PERFORMED = "Performed";
-	private static final String COMPLETED = "Completed";
-	private static final String FAILED = "Failed";
+	public static final String PERFORMED = "Performed";
+	public static final String COMPLETED = "Completed";
+	public static final String FAILED = "Failed";
 	
 	private long id;
 	private String name;
@@ -49,8 +49,6 @@ public class Contract {
 	
 	public String getActualStatus() {
 		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-		System.out.println(currentTime);
-		System.out.println(deadline);
 		if (deadline.before(currentTime)) {
 			if (calculateProgress() >= perfomanceUnits)
 				return COMPLETED;

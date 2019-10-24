@@ -43,7 +43,7 @@ public class EntitiesConventer {
 		return contract;
 	}
 	
-	public Employee transormToEmployee(EmployeeUpdateData updateData) {
+	public Employee transformToEmployee(EmployeeUpdateData updateData) {
 		Employee employee = new Employee();
 		
 		employee.setId(updateData.getId());

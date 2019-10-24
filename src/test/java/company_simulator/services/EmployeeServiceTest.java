@@ -38,7 +38,7 @@ public class EmployeeServiceTest {
 	
 	private EmployeeDao employeeDaoMock;
 	
-	private EntitiesConventer entitiesConventer;
+	private EntitiesConventer entitiesConventerMock;
 	
 	//methods arguments
 	//updateEmployee()
@@ -48,7 +48,7 @@ public class EmployeeServiceTest {
 		employeeService.setUserService(userServiceMock);
 		employeeService.setEmployeeDao(employeeDaoMock);
 		employeeService.setCompanyService(companyServiceMock);
-		employeeService.setEntitiesConventer(entitiesConventer);
+		employeeService.setEntitiesConventer(entitiesConventerMock);
 	}
 	
 	
@@ -60,7 +60,7 @@ public class EmployeeServiceTest {
 		companyServiceMock = mock(CompanyService.class);
 		employeeDaoMock = mock(EmployeeDao.class);
 		
-		entitiesConventer = new EntitiesConventer();
+		entitiesConventerMock = mock(EntitiesConventer.class);
 		
 		loginEmail = "admin";
 		
@@ -114,17 +114,31 @@ public class EmployeeServiceTest {
 		return goodCompany;
 	}
 	
+	private Employee getValidEmployee() {
+		Employee employee = new Employee();
+		
+		employee.setId(1);
+		employee.setName("Ivan");
+		employee.setAge(21);
+		employee.setSalary(23000);
+		employee.setSex("male");
+		employee.setPerfomance(44);
+		
+		return employee;
+	}
+	
 	@Test
 	public void successUpdateEmployee() throws DatabaseAccessException, SQLException {
 		
 		EmployeeUpdateData employeeData = getEmployeeUpdateData();
 		Company goodCompany = getGoodCompany();
 		
-		Employee expectedEmployee = entitiesConventer.transormToEmployee(employeeData);
+		Employee expectedEmployee = getValidEmployee();
 		expectedEmployee.setId(1);
 		
 		when(companyServiceMock.getUserCompany(loginEmail)).thenReturn(goodCompany);
 		when(employeeDaoMock.updateEmployee(expectedEmployee, goodCompany.getId())).thenReturn(expectedEmployee.getId());
+		when(entitiesConventerMock.transformToEmployee(employeeData)).thenReturn(getValidEmployee());
 		
 		injectDependensies();
 		
@@ -140,11 +154,12 @@ public class EmployeeServiceTest {
 		EmployeeUpdateData employeeData = getEmployeeUpdateData();
 		Company goodCompany = getGoodCompany();
 		
-		Employee expectedEmployee = entitiesConventer.transormToEmployee(employeeData);
+		Employee expectedEmployee = getValidEmployee();
 		expectedEmployee.setId(1);
 		
 		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
 		when(employeeDaoMock.updateEmployee(expectedEmployee, goodCompany.getId())).thenReturn(expectedEmployee.getId());
+		when(entitiesConventerMock.transformToEmployee(employeeData)).thenReturn(getValidEmployee());
 		
 		injectDependensies();
 		
@@ -160,11 +175,12 @@ public class EmployeeServiceTest {
 		EmployeeUpdateData employeeData = getEmployeeUpdateData();
 		Company goodCompany = getGoodCompany();
 		
-		Employee expectedEmployee = entitiesConventer.transormToEmployee(employeeData);
+		Employee expectedEmployee = getValidEmployee();
 		expectedEmployee.setId(1);
 		
 		when(companyServiceMock.getUserCompany(loginEmail)).thenReturn(goodCompany);
 		when(employeeDaoMock.updateEmployee(expectedEmployee, goodCompany.getId())).thenThrow(new SQLException());
+		when(entitiesConventerMock.transformToEmployee(employeeData)).thenReturn(getValidEmployee());
 		
 		injectDependensies();
 		
@@ -278,10 +294,11 @@ public class EmployeeServiceTest {
 		Company goodCompany = getGoodCompany();
 		EmployeeCreateData createData = getEmployeeCreateData();
 		
-		Employee expectedEmployee = entitiesConventer.transformToEmployee(createData);
+		Employee expectedEmployee = getValidEmployee();
 		
 		when(companyServiceMock.getUserCompany(loginEmail)).thenReturn(goodCompany);
 		when(employeeDaoMock.createEmployee(expectedEmployee, goodCompany.getId())).thenReturn(1L);
+		when(entitiesConventerMock.transformToEmployee(createData)).thenReturn(getValidEmployee());
 		
 		injectDependensies();
 		
@@ -297,10 +314,11 @@ public class EmployeeServiceTest {
 		Company goodCompany = getGoodCompany();
 		EmployeeCreateData createData = getEmployeeCreateData();
 		
-		Employee expectedEmployee = entitiesConventer.transformToEmployee(createData);
+		Employee expectedEmployee = getValidEmployee();
 		
 		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
 		when(employeeDaoMock.createEmployee(expectedEmployee, goodCompany.getId())).thenReturn(1L);
+		when(entitiesConventerMock.transformToEmployee(createData)).thenReturn(getValidEmployee());
 		
 		injectDependensies();
 		
@@ -316,10 +334,11 @@ public class EmployeeServiceTest {
 		Company goodCompany = getGoodCompany();
 		EmployeeCreateData createData = getEmployeeCreateData();
 		
-		Employee expectedEmployee = entitiesConventer.transformToEmployee(createData);
+		Employee expectedEmployee = getValidEmployee();
 		
 		when(companyServiceMock.getUserCompany(loginEmail)).thenReturn(goodCompany);
 		when(employeeDaoMock.createEmployee(expectedEmployee, goodCompany.getId())).thenThrow(new SQLException());
+		when(entitiesConventerMock.transformToEmployee(createData)).thenReturn(getValidEmployee());
 		
 		injectDependensies();
 		
