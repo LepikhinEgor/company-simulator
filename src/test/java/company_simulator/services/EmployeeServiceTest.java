@@ -163,7 +163,7 @@ public class EmployeeServiceTest {
 		Employee expectedEmployee = entitiesConventer.transormToEmployee(employeeData);
 		expectedEmployee.setId(1);
 		
-		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
+		when(companyServiceMock.getUserCompany(loginEmail)).thenReturn(goodCompany);
 		when(employeeDaoMock.updateEmployee(expectedEmployee, goodCompany.getId())).thenThrow(new SQLException());
 		
 		injectDependensies();
@@ -213,14 +213,14 @@ public class EmployeeServiceTest {
 	}
 	
 	@Test(expected = DatabaseAccessException.class)
-	public void getEmployeesListReturnDatabaseException() throws DatabaseAccessException, SQLException, EmployeesListException, IncorrectOrderNumException, IncorrectPageNumException {
+	public void getEmployeesListThrowSQLExceptionFromDao() throws DatabaseAccessException, SQLException, EmployeesListException, IncorrectOrderNumException, IncorrectPageNumException {
 
 		final int PAGE_LIMIT = 10;
 		EmployeesListQuerryData querryData = getEmployeesListQuerryData();
 		ArrayList<Employee> employees = getEmployeesList();
 		Company goodCompany = getGoodCompany();
 		
-		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
+		when(companyServiceMock.getUserCompany(loginEmail)).thenReturn(getGoodCompany());
 		when(employeeDaoMock.getEmployeesList(goodCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), PAGE_LIMIT)).
 		thenThrow(new SQLException());
 		
@@ -230,7 +230,6 @@ public class EmployeeServiceTest {
 		
 		assertTrue(employees.equals(actualEmployees));
 	}
-	
 	
 	@Test(expected = IncorrectPageNumException.class)
 	public void getEmployeesListThrowIncorrectPageNumException() throws DatabaseAccessException, SQLException, EmployeesListException, IncorrectOrderNumException, IncorrectPageNumException {

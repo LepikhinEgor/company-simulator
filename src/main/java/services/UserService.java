@@ -67,7 +67,7 @@ public class UserService {
 	}
 	
 	@Loggable
-	public long createNewUser(NewUserData userData)throws InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, NotRecordToDBException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException {
+	public long createNewUser(NewUserData userData)throws InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException, DatabaseAccessException {
 		
 		if (!isCorrectEmail(userData.getEmail())) {
 			throw new InvalidEmailRegistrationException();
@@ -90,24 +90,24 @@ public class UserService {
 		return newUserId;
 	}
 	
-	private long recordNewUser(NewUserData userData) throws NotRecordToDBException {
+	private long recordNewUser(NewUserData userData) throws DatabaseAccessException   {
 		try {
 			long id = userDao.recordUser(userData.getLogin(), userData.getEmail(), userData.getPassword());
 			return id;
 		} catch (SQLException e) {
 			logger.error("User not recorded", e);
-			throw new NotRecordToDBException();
+			throw new DatabaseAccessException();
 		}
 	}
 	
 	@Loggable
-	public boolean checkUserLoginAlreadyExist(String userLogin) {
+	public boolean checkUserLoginAlreadyExist(String userLogin) throws DatabaseAccessException {
 		boolean loginExist = false;
 		
 		try {
 			loginExist = userDao.checkLoginAlreadyExist(userLogin);
 		} catch(SQLException sqlex) {
-			logger.error("Error when checking user login exist", sqlex);
+			throw new DatabaseAccessException("Error when checking user login exist");
 		}
 		
 		return loginExist;
@@ -125,13 +125,13 @@ public class UserService {
 		return user;
 	}
 	
-	private boolean checkUserEmailAlreadyExist(String userEmail) {
+	private boolean checkUserEmailAlreadyExist(String userEmail) throws DatabaseAccessException {
 		boolean loginExist = false;
 		
 		try {
 			loginExist = userDao.checkEmailAlreadyExist(userEmail);
 		} catch(SQLException sqlex) {
-			logger.error("Error when checking user email exist", sqlex);
+			throw new DatabaseAccessException();
 		}
 		
 		return loginExist;

@@ -98,7 +98,7 @@ public class HomeController {
 			return new RegistrationMessage(RegistrationMessage.LOGIN_ALREADY_EXIST);
 		} catch (EmailAlreadyExistException e) {
 			return new RegistrationMessage(RegistrationMessage.EMAIL_ALREADY_EXIST);
-		} catch (NotRecordToDBException e) {
+		} catch (DatabaseAccessException e) {
 			return new RegistrationMessage(RegistrationMessage.LOGIN_ALREADY_EXIST);
 		} catch (InvalidEmailRegistrationException e) {
 			return new RegistrationMessage(RegistrationMessage.INCORRECT_EMAIL);
@@ -115,7 +115,12 @@ public class HomeController {
 	@ResponseBody
 	public RegistrationMessage checkLoginExist(@RequestParam String login) {
 		
-		boolean loginExist = userService.checkUserLoginAlreadyExist(login);
+		boolean loginExist = false;
+		try {
+			loginExist = userService.checkUserLoginAlreadyExist(login);
+		} catch (DatabaseAccessException e) {
+			logger.error(e.getMessage(), e);
+		}
 		
 		if (loginExist) {
 			return new RegistrationMessage(RegistrationMessage.LOGIN_ALREADY_EXIST);

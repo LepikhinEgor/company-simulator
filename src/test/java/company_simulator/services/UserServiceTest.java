@@ -2,9 +2,12 @@ package company_simulator.services;
 
 import java.sql.SQLException;
 
+import javax.xml.crypto.Data;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.BDDMockito.Then;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -38,6 +41,17 @@ public class UserServiceTest {
 		userDaoMock = mock(UserDao.class);
 		
 		validUser = new User();
+	}
+	
+	private User getValidUser() {
+		User validUser = new User();
+		
+		validUser.setEmail("admin@mail.ru");
+		validUser.setId(1);
+		validUser.setLogin("admin");
+		validUser.setPassword("qwerty");
+		
+		return validUser;
 	}
 	
 	@Test(expected = InvalidSignInLoginEmail.class)
@@ -102,7 +116,7 @@ public class UserServiceTest {
 	}
 	
 	@Test(expected = InvalidEmailRegistrationException.class)
-	public void invalidEmailCreateUser() throws InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, NotRecordToDBException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException {
+	public void invalidEmailCreateUser() throws InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException, DatabaseAccessException {
 		NewUserData newUserData = new NewUserData();
 		newUserData.setEmail("newUser@mail");
 		newUserData.setLogin("user123");
@@ -112,7 +126,7 @@ public class UserServiceTest {
 	}
 	
 	@Test(expected = InvalidLoginRegistrationException.class)
-	public void invalidLoginCreateUser() throws InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, NotRecordToDBException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException {
+	public void invalidLoginCreateUser() throws InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException, DatabaseAccessException {
 		NewUserData newUserData = new NewUserData();
 		newUserData.setEmail("newUser@mail.sru");
 		newUserData.setLogin("user$%123");
@@ -122,7 +136,7 @@ public class UserServiceTest {
 	}
 	
 	@Test(expected = InvalidPasswordRegistrationException.class)
-	public void invalidPasswordCreateUser() throws InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, NotRecordToDBException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException {
+	public void invalidPasswordCreateUser() throws InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException, DatabaseAccessException {
 		NewUserData newUserData = new NewUserData();
 		newUserData.setEmail("newUser@mail.sru");
 		newUserData.setLogin("user123");
@@ -133,7 +147,7 @@ public class UserServiceTest {
 	
 	@SuppressWarnings("unchecked")
 	@Test(expected = EmailAlreadyExistException.class)
-	public void emailExistCreateUser() throws SQLException, InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, NotRecordToDBException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException {
+	public void emailExistCreateUser() throws SQLException, InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, NotRecordToDBException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException, DatabaseAccessException {
 		String email = "newUser@mail.ru";
 		String login = "user123";
 		String password = "password";
@@ -152,7 +166,7 @@ public class UserServiceTest {
 	
 	@SuppressWarnings("unchecked")
 	@Test(expected = LoginAlreadyExistException.class)
-	public void loginExistCreateUser() throws SQLException, InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, NotRecordToDBException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException {
+	public void loginExistCreateUser() throws SQLException, InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException, DatabaseAccessException {
 		String email = "newUser@mail.ru";
 		String login = "user1234";
 		String password = "password";
@@ -170,7 +184,7 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public void correctCreateUser() throws SQLException, InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, NotRecordToDBException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException {
+	public void correctCreateUser() throws SQLException, InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException, DatabaseAccessException {
 		String email = "newUser@mail.ru";
 		String login = "user1234";
 		String password = "password";
@@ -187,6 +201,136 @@ public class UserServiceTest {
 		long id = userService.createNewUser(newUserData);
 		
 		assertNotEquals(0, id);
+	}
+	
+	@Test(expected = DatabaseAccessException.class)
+	public void createNewUserThrowSQLExceptionFromDao() throws SQLException, InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException, DatabaseAccessException {
+		String email = "newUser@mail.ru";
+		String login = "user1234";
+		String password = "password";
+		
+		NewUserData newUserData = new NewUserData();
+		newUserData.setEmail(email);
+		newUserData.setLogin(login);
+		newUserData.setPassword(password);
+		
+		when(userDaoMock.recordUser(login, email, password)).thenThrow(new SQLException());
+		
+		userService.setUserDao(userDaoMock);
+		
+		long id = userService.createNewUser(newUserData);
+		
+		assertNotEquals(0, id);
+	}
+	
+	@Test(expected = LoginAlreadyExistException.class)
+	public void createNewUserLoginExist() throws SQLException, InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException, DatabaseAccessException {
+		String email = "newUser@mail.ru";
+		String login = "user1234";
+		String password = "password";
+		
+		NewUserData newUserData = new NewUserData();
+		newUserData.setEmail(email);
+		newUserData.setLogin(login);
+		newUserData.setPassword(password);
+		
+		when(userDaoMock.checkLoginAlreadyExist(login)).thenReturn(true);
+		when(userDaoMock.recordUser(login, email, password)).thenReturn(1L);
+		
+		userService.setUserDao(userDaoMock);
+		
+		long id = userService.createNewUser(newUserData);
+		
+		assertNotEquals(0, id);
+	}
+	
+	@Test(expected = DatabaseAccessException.class)
+	public void createNewUserThrowDBExceptionCheckingLoginExist() throws SQLException, InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException, DatabaseAccessException {
+		String email = "newUser@mail.ru";
+		String login = "user1234";
+		String password = "password";
+		
+		NewUserData newUserData = new NewUserData();
+		newUserData.setEmail(email);
+		newUserData.setLogin(login);
+		newUserData.setPassword(password);
+		
+		when(userDaoMock.checkLoginAlreadyExist(login)).thenThrow(new SQLException());
+		when(userDaoMock.recordUser(login, email, password)).thenReturn(1L);
+		
+		userService.setUserDao(userDaoMock);
+		
+		long id = userService.createNewUser(newUserData);
+		
+		assertNotEquals(0, id);
+	}
+	
+	@Test(expected = EmailAlreadyExistException.class)
+	public void createNewUserEmailExist() throws SQLException, InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException, DatabaseAccessException {
+		String email = "newUser@mail.ru";
+		String login = "user1234";
+		String password = "password";
+		
+		NewUserData newUserData = new NewUserData();
+		newUserData.setEmail(email);
+		newUserData.setLogin(login);
+		newUserData.setPassword(password);
+		
+		when(userDaoMock.checkEmailAlreadyExist(email)).thenReturn(true);
+		when(userDaoMock.recordUser(login, email, password)).thenReturn(1L);
+		
+		userService.setUserDao(userDaoMock);
+		
+		long id = userService.createNewUser(newUserData);
+		
+		assertNotEquals(0, id);
+	}
+	
+	@Test(expected = DatabaseAccessException.class)
+	public void createNewUserThrowDBExceptionCheckingEmailExist() throws SQLException, InvalidLoginRegistrationException, LoginAlreadyExistException, EmailAlreadyExistException, InvalidEmailRegistrationException, InvalidPasswordRegistrationException, DatabaseAccessException {
+		String email = "newUser@mail.ru";
+		String login = "user1234";
+		String password = "password";
+		
+		NewUserData newUserData = new NewUserData();
+		newUserData.setEmail(email);
+		newUserData.setLogin(login);
+		newUserData.setPassword(password);
+		
+		when(userDaoMock.checkEmailAlreadyExist(email)).thenThrow(new SQLException());
+		when(userDaoMock.recordUser(login, email, password)).thenReturn(1L);
+		
+		userService.setUserDao(userDaoMock);
+		
+		long id = userService.createNewUser(newUserData);
+		
+		assertNotEquals(0, id);
+	}
+	
+	@Test
+	public void getUserDataByLoginEmailSuccess() throws SQLException, DatabaseAccessException {
+		User validUser = getValidUser();
+		
+		when(userDaoMock.getUserDataByLoginEmail(validUser.getLogin())).thenReturn(validUser);
+		
+		userService.setUserDao(userDaoMock);
+		
+		User actualUser = userService.getUserDataByLoginEmail(validUser.getLogin());
+		
+		assertTrue(validUser.equals(actualUser));
+	}
+	
+	@Test(expected = DatabaseAccessException.class)
+	public void getUserDataByLoginEmailThrowSQLExceptionFromDao() throws SQLException, DatabaseAccessException {
+		User validUser = getValidUser();
+		
+		when(userDaoMock.getUserDataByLoginEmail(validUser.getLogin())).thenThrow(new SQLException());
+		
+		userService.setUserDao(userDaoMock);
+		
+		User actualUser = userService.getUserDataByLoginEmail(validUser.getLogin());
+		
+		assertTrue(validUser.equals(actualUser));
 	}
 	
 }

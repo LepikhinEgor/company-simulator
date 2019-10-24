@@ -17,6 +17,7 @@ import dao.CompanyDao;
 import entities.Company;
 import entities.User;
 import exceptions.DatabaseAccessException;
+import exceptions.employees.UserNotFoundException;
 import services.CompanyService;
 import services.UserService;
 
@@ -239,8 +240,23 @@ public class CompanyServiceTest {
 		companyServiceSpy.setUserService(userServiceMock);
 		
 		CompanyInfoMessage actualCompanyInfo = companyServiceSpy.getCompanyInfo(loginEmail);
-		System.out.println(expectedCompanyInfo);
-		System.out.println(actualCompanyInfo);
+		
+		assertTrue(expectedCompanyInfo.equals(actualCompanyInfo));
+	}
+	
+	@Test(expected = UserNotFoundException.class)
+	public void getCompanyInfoThrowUserNotFoundException() throws DatabaseAccessException {
+		User validUser = getValidUser();
+		Company validCompany = getValidCompany();
+		CompanyInfoMessage expectedCompanyInfo = getValidCompanyInfo();
+		
+		CompanyService companyServiceSpy = spy(CompanyService.class);
+		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenReturn(null);
+		doReturn(validCompany).when(companyServiceSpy).getUserCompany(validUser.getId());
+		
+		companyServiceSpy.setUserService(userServiceMock);
+		
+		CompanyInfoMessage actualCompanyInfo = companyServiceSpy.getCompanyInfo(loginEmail);
 		
 		assertTrue(expectedCompanyInfo.equals(actualCompanyInfo));
 	}
@@ -258,8 +274,6 @@ public class CompanyServiceTest {
 		companyServiceSpy.setUserService(userServiceMock);
 		
 		CompanyInfoMessage actualCompanyInfo = companyServiceSpy.getCompanyInfo(loginEmail);
-		System.out.println(expectedCompanyInfo);
-		System.out.println(actualCompanyInfo);
 		
 		assertTrue(expectedCompanyInfo.equals(actualCompanyInfo));
 	}
@@ -277,8 +291,6 @@ public class CompanyServiceTest {
 		companyServiceSpy.setUserService(userServiceMock);
 		
 		CompanyInfoMessage actualCompanyInfo = companyServiceSpy.getCompanyInfo(loginEmail);
-		System.out.println(expectedCompanyInfo);
-		System.out.println(actualCompanyInfo);
 		
 		assertTrue(expectedCompanyInfo.equals(actualCompanyInfo));
 	}
