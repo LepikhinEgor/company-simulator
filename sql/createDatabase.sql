@@ -49,6 +49,7 @@ ALTER TABLE contracts DROP COLUMN isComplete;
 ALTER TABLE contracts ADD COLUMN status VARCHAR(10) NOT NULL DEFAULT 'Performed';
 ALTER TABLE contracts DROP COLUMN deadline;
 ALTER TABLE contracts ADD COLUMN deadline TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER team_changed_date;
+ALTER TABLE contracts CHANGE COLUMN `status` `status` VARCHAR(20) NOT NULL DEFAULT 'Performed';
 
 CREATE TABLE work_positions (
 position_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,

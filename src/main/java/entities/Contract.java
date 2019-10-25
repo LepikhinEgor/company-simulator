@@ -9,6 +9,8 @@ public class Contract {
 	public static final String PERFORMED = "Performed";
 	public static final String COMPLETED = "Completed";
 	public static final String FAILED = "Failed";
+	public static final String RESOLVED_COMPLETED = "Resolved completed";
+	public static final String RESOLVED_FAILED = "Resolved failed";
 	
 	private long id;
 	private String name;
