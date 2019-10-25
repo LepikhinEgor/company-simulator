@@ -130,8 +130,6 @@ public class ContractsController {
 	@RequestMapping(value="/company/contracts/change-contract-team", method = RequestMethod.POST)
 	@ResponseBody
 	public Message changeContractTeamMessage(@RequestBody ChangeContractTeamData newTeamData) {
-		logger.info(newTeamData.toString());
-		
 		try {
 			contractService.reassignEmployees(newTeamData.getHiredEmployees(), newTeamData.getFreeEmployees(), newTeamData.getContractId());
 		} catch (DoubleEmployeeIdException e) {
@@ -141,6 +139,13 @@ public class ContractsController {
 			logger.error(e.getMessage(),e);
 			return new Message(Message.FAIL, e.getMessage());
 		}
+		
+		return new Message(Message.SUCCESS);
+	}
+	
+	@RequestMapping(value="/company/contracts/resolve-contract", method = RequestMethod.GET)
+	@ResponseBody
+	public Message resolveContract(@RequestParam(value = "contractId") long contractId) {
 		
 		return new Message(Message.SUCCESS);
 	}

@@ -32,6 +32,12 @@ function refreshContractTeamEventHandlers() {
 	$('.make_employee_free').on('click', makeEmployeeFree);
 }
 
+function refreshCompletedContractsEventHandlers() {
+	$('.resolve_contract').off('click');
+	
+	$('.resolve_contract').on('click', resolveContractRequest);
+}
+
 function applyContractTeamChanges() {
 	var newHiredEmployeesId = [];
 	var newFreeEmployeesId = [];
@@ -186,7 +192,7 @@ function addNewContract(newContract) {
 		newContract.perfomance = 0;
 		newContract.expected = 0;
 		
-		addContractToTable(newContract);
+		addPerformedContractToTable(newContract);
 	}
 }
 
@@ -231,10 +237,22 @@ function requestContractsList() {
 							deadline: contracts[contract].deadline,
 							progress: contracts[contract].progress,
 							perfomance: contracts[contract].workSpeed,
-							expected: contracts[contract].expectedCompletionTime
+							expected: contracts[contract].expectedCompletionTime,
+							status:contracts[contract].status
+						}
+						switch(contracts[contract].status) {
+						case "Performed": 
+							addPerformedContractToTable(contractData);
+							break;
+						case "Completed": 
+							addCompletedFailedContractToTable(contractData);
+							break;
+						case "Failed": 
+							addCompletedFailedContractToTable(contractData);
+							break;
 						}
 						
-			    		addContractToTable(contractData);
+						
 					}
 				}
 			}
@@ -338,6 +356,23 @@ function makeEmployeeFree() {
 	refreshContractTeamEventHandlers();
 }
 
+function resolveContractRequest() {
+	var parent = $(this).closest("tr");
+	var contractId = parent.attr("id");
+	var digitId = contractId.substring(9);
+	
+	$.ajax({
+        type: "GET",
+        url: "/company-simulator/company/contracts/resolve-contract?contractId=" + digitId,
+        contentType: 'application/json',
+        success: function(data) {
+        	console.log(data);
+			if (data.status == 0)
+				console.log("uxy");
+		}
+      });
+}
+
 function appendEmployeeToHiredTable(employeeData) {
 	var str = "<tr id='h_emp_" + employeeData.id + "' class = \"contract_emp_tr\">";
 	str += "<td><a class=\"h_emp_name\">" + employeeData.name + "</a></td>";
@@ -358,7 +393,7 @@ function appendEmployeeToFreeTable(employeeData) {
 	placeholder.before(str);
 }
 
-function addContractToTable(contractData) {
+function addPerformedContractToTable(contractData) {
 	var str = "<tr id='contract_" + contractData.id + "'>";
 	str += "<td><a class=\"contract_name\">" + contractData.name + "</a></td>";
 	str += "<td class=\"contract_size\">" + contractData.size + "</td>";
@@ -374,5 +409,19 @@ function addContractToTable(contractData) {
 	tempId++;
 	
 	refreshContractsEventHandlers();
+}
+
+function addCompletedFailedContractToTable(contractData) {
+	var str = "<tr id='contract_" + contractData.id + "'>";
+	str += "<td><a class=\"contract_name\">" + contractData.name + "</a></td>";
+	str += "<td class=\"contract_fee\">" + contractData.fee + "</td>";
+	str += "<td class=\"contract_progress\">" + contractData.status + "</td>";
+	str += "<td class=\"contract_get_fee\"><input type=\"button\" class = \"resolve_contract\" value=\"Get fee\"></td>";
+	str += "</tr>";
+	
+	$('#completed_contracts_table').append(str);
+	tempId++;
+	
+	refreshCompletedContractsEventHandlers();
 }
 
