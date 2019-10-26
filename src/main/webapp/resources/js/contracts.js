@@ -401,7 +401,7 @@ function addPerformedContractToTable(contractData) {
 	str += "<td class=\"contract_progress\">" + contractData.progress + "</td>";
 	str += "<td class=\"contract_perfomance\">" + contractData.perfomance + "</td>";
 	str += "<td class=\"contract_expected\">" + contractData.expected + "</td>";
-	str += "<td class=\"contract_deadline\">" + contractData.deadline + "</td>";
+	str += "<td class=\"contract_deadline\">" + calculateMinutesToContractDeadline(contractData.deadline) + "</td>";
 	str += "<td class=\"contract_team\"><input  type=\"button\" class = \"change_contract_team\" value=\"Change team\"></td>";
 	str += "</tr>";
 	
@@ -409,6 +409,13 @@ function addPerformedContractToTable(contractData) {
 	tempId++;
 	
 	refreshContractsEventHandlers();
+}
+
+function calculateMinutesToContractDeadline(deadlineTime) {
+	var currentTime = Math.floor(Date.now() / 1000);
+	var diffMinutes = Math.ceil((deadlineTime/1000 - currentTime)/60);
+	
+	return diffMinutes;
 }
 
 function addCompletedFailedContractToTable(contractData) {

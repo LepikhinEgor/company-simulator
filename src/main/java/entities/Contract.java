@@ -21,6 +21,7 @@ public class Contract {
 	private Timestamp deadline;
 	private int lastProgress;
 	private String description;
+	private long companyId;
 	private String status;
 	
 	public Contract() {
@@ -51,6 +52,10 @@ public class Contract {
 	
 	public String getActualStatus() {
 		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+		
+		if(status.equals(RESOLVED_COMPLETED) || status.equals(RESOLVED_FAILED))
+			return status;
+		
 		if (deadline.before(currentTime)) {
 			if (calculateProgress() >= perfomanceUnits)
 				return COMPLETED;
@@ -62,6 +67,10 @@ public class Contract {
 			else 
 				return PERFORMED;
 		}
+	}
+	
+	public int calculateFailedFee() {
+		return this.fee / 2;
 	}
 	
 	public String getName() {
@@ -140,17 +149,27 @@ public class Contract {
 		this.status = status;
 	}
 
+	public long getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		this.companyId = companyId;
+	}
+
 	@Override
 	public String toString() {
 		return "Contract [id=" + id + ", name=" + name + ", perfomanceUnits=" + perfomanceUnits + ", fee=" + fee
 				+ ", workSpeed=" + workSpeed + ", teamChangedDate=" + teamChangedDate + ", deadline=" + deadline
-				+ ", lastProgress=" + lastProgress + ", description=" + description + ", status=" + status + "]";
+				+ ", lastProgress=" + lastProgress + ", description=" + description + ", companyId=" + companyId
+				+ ", status=" + status + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + (int) (companyId ^ (companyId >>> 32));
 		result = prime * result + ((deadline == null) ? 0 : deadline.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + fee;
@@ -173,6 +192,8 @@ public class Contract {
 		if (getClass() != obj.getClass())
 			return false;
 		Contract other = (Contract) obj;
+		if (companyId != other.companyId)
+			return false;
 		if (deadline == null) {
 			if (other.deadline != null)
 				return false;

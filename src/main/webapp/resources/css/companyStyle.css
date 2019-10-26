@@ -60,6 +60,7 @@ html, body {
 }
 
 #company_menu {
+	vertical-align:top;
     width:30%;
     background:#CCC5BB;
 }
@@ -130,12 +131,13 @@ html, body {
 
 
 .rectangle {
+	margin-top:15px;
     margin-left: 20px;
-counter-reset: li; 
-list-style: none; 
-font: 14px "Trebuchet MS", "Lucida Sans";
-padding: 0;
-text-shadow: 0 1px 0 rgba(255,255,255,.5);
+	counter-reset: li; 
+	list-style: none; 
+	font: 14px "Trebuchet MS", "Lucida Sans";
+	padding: 0;
+	text-shadow: 0 1px 0 rgba(255,255,255,.5);
 }
 .rectangle a {
 position: relative;

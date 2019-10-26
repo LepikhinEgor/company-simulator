@@ -25,6 +25,37 @@ public class ContractDao {
 	private ConnectionPool connectionPool;
 	
 	@Loggable
+	public void resolveContract(Contract contract) throws SQLException {
+		Connection connection = connectionPool.getConnection();
+		connection.setAutoCommit(false);
+		
+		changeCompanyCash(contract.getFee(), contract.getCompanyId(), connection);
+		changeContractStatus(contract.getId(), contract.getStatus(), connection);
+		
+		connection.commit();
+	}
+	
+	private void changeCompanyCash(int cash, long companyId, Connection connection) throws SQLException {
+		String querry = "UPDATE companies SET cash = ? WHERE company_id = ?";
+		
+		PreparedStatement statement = connection.prepareStatement(querry);
+		statement.setInt(1, cash);
+		statement.setLong(2, companyId);
+		
+		statement.executeUpdate();
+	}
+	
+	private void changeContractStatus(long contractId, String status, Connection connection) throws SQLException {
+		String querry = "UPDATE contracts SET status = ? WHERE contract_Id = ?";
+		
+		PreparedStatement statement = connection.prepareStatement(querry);
+		statement.setString(1, status);
+		statement.setLong(2, contractId);
+		
+		statement.executeUpdate();
+	}
+	
+	@Loggable
 	public Contract getContractById(long contractId) throws SQLException {
 		String querry = "SELECT * FROM contracts WHERE contract_id = ?";
 		
@@ -48,6 +79,7 @@ public class ContractDao {
 				contract.setDeadline(resultSet.getTimestamp(6, calendar));
 				contract.setLastProgress(resultSet.getInt(7));
 				contract.setDescription(resultSet.getString(8));
+				contract.setCompanyId(resultSet.getLong(9));
 				contract.setStatus(resultSet.getString(10));
 			}
 			
@@ -128,6 +160,7 @@ public class ContractDao {
 				contract.setDeadline(resultSet.getTimestamp(6, calendar));
 				contract.setLastProgress(resultSet.getInt(7));
 				contract.setDescription(resultSet.getString(8));
+				contract.setCompanyId(resultSet.getLong(9));
 				contract.setStatus(resultSet.getString(10));
 				
 				contracts.add(contract);

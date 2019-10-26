@@ -147,6 +147,12 @@ public class ContractsController {
 	@ResponseBody
 	public Message resolveContract(@RequestParam(value = "contractId") long contractId) {
 		
+		try {
+			contractService.resolveContract(contractId);
+		} catch (DatabaseAccessException e) {
+			return new Message(Message.FAIL, e.getMessage());
+		}
+		
 		return new Message(Message.SUCCESS);
 	}
 }

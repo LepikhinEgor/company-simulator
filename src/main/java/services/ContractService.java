@@ -48,6 +48,27 @@ public class ContractService {
 	}
 	
 	@Loggable
+	public void resolveContract(long contractId) throws DatabaseAccessException {
+		try {
+			Contract contract = contractDao.getContractById(contractId);
+			
+			switch (contract.getActualStatus()) {
+			case Contract.COMPLETED: 
+				contract.setStatus(Contract.RESOLVED_COMPLETED);
+				break;
+			case Contract.FAILED: 
+				contract.setStatus(Contract.RESOLVED_FAILED);
+				contract.setFee(contract.calculateFailedFee());
+				break;
+			}
+			
+			contractDao.resolveContract(contract);
+		} catch (SQLException e) {
+			throw new DatabaseAccessException("Exception when resolving contract");
+		}
+	}
+	
+	@Loggable
 	public Contract createContract(CreateContractData contractData, String userLogin) throws DatabaseAccessException {
 		Contract newContract = entitiesConventer.trasformToContract(contractData);
 		
