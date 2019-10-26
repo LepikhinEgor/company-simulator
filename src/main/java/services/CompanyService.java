@@ -34,6 +34,18 @@ public class CompanyService {
 		this.companyDao = companyDao;
 	}
 	
+	@Loggable
+	public Company getCompanyById(long companyId) throws DatabaseAccessException {
+		Company company = null;
+		
+		try {
+			company = companyDao.getCompanyById(companyId);
+		} catch (SQLException e) {
+			throw new DatabaseAccessException("Exception when getting comapny by id");
+		}
+		
+		return company;
+	}
 	
 	/**
 	 * @param loginEmail user login or email

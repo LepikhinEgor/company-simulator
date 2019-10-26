@@ -250,8 +250,13 @@ function requestContractsList() {
 						case "Failed": 
 							addCompletedFailedContractToTable(contractData);
 							break;
+						case "Resolved completed": 
+							addResolvedContractToTable(contractData);
+							break;
+						case "Resolved failed": 
+							addResolvedContractToTable(contractData);
+							break;
 						}
-						
 						
 					}
 				}
@@ -424,6 +429,21 @@ function addCompletedFailedContractToTable(contractData) {
 	str += "<td class=\"contract_fee\">" + contractData.fee + "</td>";
 	str += "<td class=\"contract_progress\">" + contractData.status + "</td>";
 	str += "<td class=\"contract_get_fee\"><input type=\"button\" class = \"resolve_contract\" value=\"Get fee\"></td>";
+	str += "</tr>";
+	
+	$('#completed_contracts_table').append(str);
+	tempId++;
+	
+	refreshCompletedContractsEventHandlers();
+}
+
+function addResolvedContractToTable(contractData) {
+	var str = "<tr id='contract_" + contractData.id + "'>";
+	str += "<td><a class=\"contract_name\">" + contractData.name + "</a></td>";
+	str += "<td class=\"contract_fee\">" + contractData.fee + "</td>";
+	var status = contractData.status == "Resolved completed" ? "Completed" : "Failed";
+	str += "<td class=\"contract_progress\">" + status + "</td>";
+	str += "<td class=\"contract_get_fee\">Received</td>";
 	str += "</tr>";
 	
 	$('#completed_contracts_table').append(str);

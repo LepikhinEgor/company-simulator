@@ -51,6 +51,7 @@ public class ContractService {
 	public void resolveContract(long contractId) throws DatabaseAccessException {
 		try {
 			Contract contract = contractDao.getContractById(contractId);
+			Company company = companyService.getCompanyById(contract.getCompanyId());
 			
 			switch (contract.getActualStatus()) {
 			case Contract.COMPLETED: 
@@ -62,7 +63,7 @@ public class ContractService {
 				break;
 			}
 			
-			contractDao.resolveContract(contract);
+			contractDao.resolveContract(contract, company.getCash());
 		} catch (SQLException e) {
 			throw new DatabaseAccessException("Exception when resolving contract");
 		}

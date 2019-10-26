@@ -25,21 +25,21 @@ public class ContractDao {
 	private ConnectionPool connectionPool;
 	
 	@Loggable
-	public void resolveContract(Contract contract) throws SQLException {
+	public void resolveContract(Contract contract, long companyCash) throws SQLException {
 		Connection connection = connectionPool.getConnection();
 		connection.setAutoCommit(false);
 		
-		changeCompanyCash(contract.getFee(), contract.getCompanyId(), connection);
+		changeCompanyCash(companyCash + contract.getFee(), contract.getCompanyId(), connection);
 		changeContractStatus(contract.getId(), contract.getStatus(), connection);
 		
 		connection.commit();
 	}
 	
-	private void changeCompanyCash(int cash, long companyId, Connection connection) throws SQLException {
+	private void changeCompanyCash(long cash, long companyId, Connection connection) throws SQLException {
 		String querry = "UPDATE companies SET cash = ? WHERE company_id = ?";
 		
 		PreparedStatement statement = connection.prepareStatement(querry);
-		statement.setInt(1, cash);
+		statement.setLong(1, cash);
 		statement.setLong(2, companyId);
 		
 		statement.executeUpdate();

@@ -22,6 +22,28 @@ public class CompanyDao {
 	@Autowired
 	private ConnectionPool connectionPool;
 	
+	@Loggable
+	public Company getCompanyById(long companyId) throws SQLException {
+		String querry = "SELECT * FROM companies WHERE company_id = ?";
+		Company company = null;
+		
+		try (Connection connection = connectionPool.getConnection()) {
+			PreparedStatement statement = connection.prepareStatement(querry);
+			statement.setLong(1, companyId);
+			
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				company = new Company();
+				company.setId(rs.getLong(1));
+				company.setName(rs.getString(2));
+				company.setCash(rs.getLong(3));
+				company.setOwnerId(rs.getLong(4));
+			}
+		}
+		
+		return company;
+	}
+	
 	/**
 	 * @param userId Company owner ID
 	 * @return Return user company if it exist, else return null
