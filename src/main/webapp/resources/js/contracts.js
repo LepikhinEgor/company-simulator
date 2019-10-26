@@ -224,6 +224,9 @@ function requestContractsList() {
         success: function(data) {
 			console.log(data);
 			
+			var resolvedContracts = [];
+			var notResolvedContracts = [];
+			
 			for (var key in data) {
 				if (key === "contracts") {
 					var contracts = data[key];
@@ -245,21 +248,28 @@ function requestContractsList() {
 							addPerformedContractToTable(contractData);
 							break;
 						case "Completed": 
-							addCompletedFailedContractToTable(contractData);
+							notResolvedContracts.push(contractData);
 							break;
 						case "Failed": 
-							addCompletedFailedContractToTable(contractData);
+							notResolvedContracts.push(contractData);
 							break;
 						case "Resolved completed": 
-							addResolvedContractToTable(contractData);
+							resolvedContracts.push(contractData);
 							break;
 						case "Resolved failed": 
-							addResolvedContractToTable(contractData);
+							resolvedContracts.push(contractData);
 							break;
 						}
-						
 					}
 				}
+			}
+			for(var contract2 in notResolvedContracts) {
+				console.log(notResolvedContracts[contract2] + "notres");
+				addCompletedFailedContractToTable(notResolvedContracts[contract2]);
+			}
+			for(var contract1 in resolvedContracts) {
+				console.log(resolvedContracts[contract1] + "res");
+				addResolvedContractToTable(resolvedContracts[contract1]);
 			}
 		}
       });
