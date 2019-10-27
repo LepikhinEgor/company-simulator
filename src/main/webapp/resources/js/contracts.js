@@ -191,6 +191,7 @@ function addNewContract(newContract) {
 		newContract.progress = 0;
 		newContract.perfomance = 0;
 		newContract.expected = 0;
+		newContract.deadline = Date.now() + newContract.deadline;
 		
 		addPerformedContractToTable(newContract);
 	}

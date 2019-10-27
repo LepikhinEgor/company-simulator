@@ -68,15 +68,14 @@ public class ContractDao {
 			
 			Contract contract = null;
 			if (resultSet.next()) {
-				Calendar calendar = Calendar.getInstance();
 				
 				contract = new Contract();
 				contract.setId(resultSet.getInt(1));
 				contract.setName(resultSet.getString(2));
 				contract.setPerfomanceUnits(resultSet.getInt(3));
 				contract.setFee(resultSet.getInt(4));
-				contract.setTeamChangedDate(resultSet.getTimestamp(5, calendar));
-				contract.setDeadline(resultSet.getTimestamp(6, calendar));
+				contract.setTeamChangedDate(resultSet.getTimestamp(5));
+				contract.setDeadline(resultSet.getTimestamp(6));
 				contract.setLastProgress(resultSet.getInt(7));
 				contract.setDescription(resultSet.getString(8));
 				contract.setCompanyId(resultSet.getLong(9));
@@ -96,6 +95,7 @@ public class ContractDao {
 		
 		String recordContractQuerry = "INSERT INTO contracts (contract_id, name, performance_units, fee, team_changed_date ,deadline,last_progress, description, company_id) VALUES ("
 				+ "NULL, ?, ?, ?, NOW(), ?, ?, ?, ?);";
+		
 		
 		PreparedStatement recordContractStatement = null;
 		try {
@@ -150,14 +150,13 @@ public class ContractDao {
 			while(resultSet.next()) {
 				Contract contract = new Contract();
 				
-				Calendar calendar = Calendar.getInstance();
 				
 				contract.setId(resultSet.getInt(1));
 				contract.setName(resultSet.getString(2));
 				contract.setPerfomanceUnits(resultSet.getInt(3));
 				contract.setFee(resultSet.getInt(4));
-				contract.setTeamChangedDate(resultSet.getTimestamp(5,calendar));
-				contract.setDeadline(resultSet.getTimestamp(6, calendar));
+				contract.setTeamChangedDate(resultSet.getTimestamp(5));
+				contract.setDeadline(resultSet.getTimestamp(6));
 				contract.setLastProgress(resultSet.getInt(7));
 				contract.setDescription(resultSet.getString(8));
 				contract.setCompanyId(resultSet.getLong(9));
