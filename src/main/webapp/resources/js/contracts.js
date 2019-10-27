@@ -191,7 +191,7 @@ function addNewContract(newContract) {
 		newContract.progress = 0;
 		newContract.perfomance = 0;
 		newContract.expected = 0;
-		newContract.deadline = Date.now() + newContract.deadline;
+		newContract.deadline = Date.now() + Number(newContract.deadline);
 		
 		addPerformedContractToTable(newContract);
 	}
@@ -428,6 +428,7 @@ function addPerformedContractToTable(contractData) {
 }
 
 function calculateMinutesToContractDeadline(deadlineTime) {
+	console.log(deadlineTime);
 	var currentTime = Math.floor(Date.now() / 1000);
 	var diffMinutes = Math.ceil((deadlineTime/1000 - currentTime)/60);
 	
