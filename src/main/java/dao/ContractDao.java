@@ -47,7 +47,7 @@ public class ContractDao {
 	}
 	
 	private void freeAllContractTeam(long contractId , Connection connection) throws SQLException {
-		String querry = "DELETE FROM contracts WHERE contract_id = ?";
+		String querry = "DELETE FROM work_positions WHERE contract_id = ?";
 		
 		try (PreparedStatement statement = connection.prepareStatement(querry)) {
 			statement.setLong(1, contractId);
@@ -79,14 +79,14 @@ public class ContractDao {
 			
 			Contract contract = null;
 			if (resultSet.next()) {
-				
+				Calendar calendar = Calendar.getInstance();
 				contract = new Contract();
 				contract.setId(resultSet.getInt(1));
 				contract.setName(resultSet.getString(2));
 				contract.setPerfomanceUnits(resultSet.getInt(3));
 				contract.setFee(resultSet.getInt(4));
-				contract.setTeamChangedDate(resultSet.getTimestamp(5));
-				contract.setDeadline(resultSet.getTimestamp(6));
+				contract.setTeamChangedDate(resultSet.getTimestamp(5, calendar));
+				contract.setDeadline(resultSet.getTimestamp(6, calendar));
 				contract.setLastProgress(resultSet.getInt(7));
 				contract.setDescription(resultSet.getString(8));
 				contract.setCompanyId(resultSet.getLong(9));
@@ -111,11 +111,12 @@ public class ContractDao {
 		PreparedStatement recordContractStatement = null;
 		try {
 			recordContractStatement = connection.prepareStatement(recordContractQuerry, Statement.RETURN_GENERATED_KEYS);
-						
+			
+			Calendar calendar = Calendar.getInstance();
 			recordContractStatement.setString(1, contract.getName());
 			recordContractStatement.setInt(2, contract.getPerfomanceUnits());
 			recordContractStatement.setInt(3, contract.getFee());
-			recordContractStatement.setTimestamp(4, contract.getDeadline());
+			recordContractStatement.setTimestamp(4, contract.getDeadline(), calendar);
 			recordContractStatement.setInt(5, 0);
 			recordContractStatement.setString(6, contract.getDescription());
 			recordContractStatement.setLong(7, companyId);
@@ -161,13 +162,14 @@ public class ContractDao {
 			while(resultSet.next()) {
 				Contract contract = new Contract();
 				
+				Calendar calendar = Calendar.getInstance();
 				
 				contract.setId(resultSet.getInt(1));
 				contract.setName(resultSet.getString(2));
 				contract.setPerfomanceUnits(resultSet.getInt(3));
 				contract.setFee(resultSet.getInt(4));
-				contract.setTeamChangedDate(resultSet.getTimestamp(5));
-				contract.setDeadline(resultSet.getTimestamp(6));
+				contract.setTeamChangedDate(resultSet.getTimestamp(5, calendar));
+				contract.setDeadline(resultSet.getTimestamp(6,calendar));
 				contract.setLastProgress(resultSet.getInt(7));
 				contract.setDescription(resultSet.getString(8));
 				contract.setCompanyId(resultSet.getLong(9));
