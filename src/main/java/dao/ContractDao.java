@@ -30,6 +30,7 @@ public class ContractDao {
 		connection.setAutoCommit(false);
 		
 		changeCompanyCash(companyCash + contract.getFee(), contract.getCompanyId(), connection);
+		freeAllContractTeam(contract.getId() , connection);
 		changeContractStatus(contract.getId(), contract.getStatus(), connection);
 		
 		connection.commit();
@@ -43,6 +44,16 @@ public class ContractDao {
 		statement.setLong(2, companyId);
 		
 		statement.executeUpdate();
+	}
+	
+	private void freeAllContractTeam(long contractId , Connection connection) throws SQLException {
+		String querry = "DELETE FROM contracts WHERE contract_id = ?";
+		
+		try (PreparedStatement statement = connection.prepareStatement(querry)) {
+			statement.setLong(1, contractId);
+			
+			statement.executeUpdate();
+		}
 	}
 	
 	private void changeContractStatus(long contractId, String status, Connection connection) throws SQLException {
