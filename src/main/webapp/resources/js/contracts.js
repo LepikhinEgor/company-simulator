@@ -1,6 +1,7 @@
 function contractsPageSetup() {
 	refreshContractsEventHandlers();
 	requestContractsList();
+	setInterval(requestUpdateContractsInfo, 60000);
 }
 
 var changedContractId;
@@ -120,6 +121,7 @@ function requestChangeContractTeam(hiredEmployeesId, freeEmployeesId) {
         success: function(data) {
 			console.log(data);
 			status = data.status;
+			requestUpdateContractsInfo();
 		}
       });
 }
@@ -265,15 +267,58 @@ function requestContractsList() {
 				}
 			}
 			for(var contract2 in notResolvedContracts) {
-				console.log(notResolvedContracts[contract2] + "notres");
 				addCompletedFailedContractToTable(notResolvedContracts[contract2]);
 			}
 			for(var contract1 in resolvedContracts) {
-				console.log(resolvedContracts[contract1] + "res");
 				addResolvedContractToTable(resolvedContracts[contract1]);
 			}
 		}
       });
+}
+
+function requestUpdateContractsInfo() {
+	$.ajax({
+		type: "GET",
+        url: "/company-simulator/company/contracts/get-active-contracts?sortOrder=0&pageNum=0",
+        contentType: 'application/json',
+        success: function(data) {
+			console.log(data);
+			
+			for (var key in data) {
+				if (key === "contracts") {
+					var contracts = data[key];
+					for(var contract in contracts) {
+						console.log(contracts[contract]);
+						var contractData = {
+							id: contracts[contract].id,
+							name: contracts[contract].name,
+							size: contracts[contract].size,
+							fee: contracts[contract].fee,
+							deadline: contracts[contract].deadline,
+							progress: contracts[contract].progress,
+							perfomance: contracts[contract].workSpeed,
+							expected: contracts[contract].expectedCompletionTime,
+							status:contracts[contract].status
+						}
+						switch(contracts[contract].status) {
+						case "Performed": 
+							updateContractData(contractData);
+							break;
+						}
+					}
+				}
+			}
+		}
+      });
+}
+
+function updateContractData(contractData) {
+	var contractId = "contract_" + contractData.id;
+	
+	$("#" + contractId).find(".contract_progress").text(contractData.progress);
+	$("#" + contractId).find(".contract_perfomance").text(contractData.perfomance);
+	$("#" + contractId).find(".contract_expected").text(contractData.expected);
+	$("#" + contractId).find(".contract_deadline").text(calculateMinutesToContractDeadline(contractData.deadline));
 }
 
 function requestContractTeamAndFreeEmployees(contractId) {
@@ -428,7 +473,6 @@ function addPerformedContractToTable(contractData) {
 }
 
 function calculateMinutesToContractDeadline(deadlineTime) {
-	console.log(deadlineTime);
 	var currentTime = Math.floor(Date.now() / 1000);
 	var diffMinutes = Math.ceil((deadlineTime/1000 - currentTime)/60);
 	
