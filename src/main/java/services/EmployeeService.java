@@ -3,6 +3,7 @@ package services;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ import exceptions.employees.DoubleEmployeeIdException;
 import exceptions.employees.EmployeesListException;
 import exceptions.employees.IncorrectOrderNumException;
 import exceptions.employees.IncorrectPageNumException;
+import services.utils.EmployeeRandomGenerator;
 import services.utils.EntitiesConventer;
 
 @Service
@@ -38,6 +40,8 @@ public class EmployeeService {
 	UserService userService;
 	
 	EntitiesConventer entitiesConventer;
+	
+	EmployeeRandomGenerator employeeGenerator;
 	
 	@Autowired
 	public void setEmployeeDao(EmployeeDao employeeDao) {
@@ -57,6 +61,20 @@ public class EmployeeService {
 	@Autowired
 	public void setEntitiesConventer(EntitiesConventer conventer) {
 		this.entitiesConventer = conventer;
+	}
+	
+	@Autowired
+	public void setEmployeeGenerator(EmployeeRandomGenerator employeeGenerator) {
+		this.employeeGenerator = employeeGenerator;
+	}
+	
+	public List<Employee> generateNewEmployees(String login) {
+		double companyPopularity = 0.5;
+		double companyRespect = 0.5;
+		
+		List<Employee> employeesList = employeeGenerator.generateEmployeesList(companyPopularity, companyRespect);
+
+		return employeesList;
 	}
 	
 	@Loggable
