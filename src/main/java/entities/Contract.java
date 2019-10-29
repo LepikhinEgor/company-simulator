@@ -43,7 +43,11 @@ public class Contract {
 		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 		Timestamp teamChangeTime = teamChangedDate;
 		
-		int minuteDiff = (int)(currentTime.getTime() - teamChangeTime.getTime()) / (1000 * 60);
+		int minuteDiff = 0;
+		if (currentTime.before(deadline))
+			minuteDiff = (int)(currentTime.getTime() - teamChangeTime.getTime()) / (1000 * 60);
+		else
+			minuteDiff = (int)(deadline.getTime() - teamChangeTime.getTime()) / (1000 * 60);
 		
 		progress = lastProgress + minuteDiff * workSpeed;
 		
