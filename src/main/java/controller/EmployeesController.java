@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +22,7 @@ import controller.input.EmployeeCreateData;
 import controller.messages.EmployeeCreateMessage;
 import controller.input.EmployeeUpdateData;
 import controller.messages.EmployeesListMessage;
+import controller.messages.GeneratedEmployeesMessage;
 import controller.messages.Message;
 import controller.input.EmployeesListQuerryData;
 import entities.Company;
@@ -111,4 +113,16 @@ public class EmployeesController {
 		return new EmployeeCreateMessage(0);
 	}
 	
+	@GetMapping(value = "/company/hr/get-generated-employees")
+	@ResponseBody
+	public GeneratedEmployeesMessage generateEmployees(@CookieValue(value = "signedUser") Cookie cookie) {
+		if (cookie == null) {
+			return new GeneratedEmployeesMessage(Message.FAIL);
+		}
+		String login = cookie.getValue();
+		
+		List<Employee> generatedEmployees = employeeService.generateNewEmployees(login);
+		
+		return new GeneratedEmployeesMessage(Message.SUCCESS, generatedEmployees);
+	}
 }

@@ -10,12 +10,24 @@ var tempId = 4;
 
 function refreshEmpEventHandlers() {
     $('#create_new_employee').off('click');
+    $('#hire_employee').off('click');
     $('#apply_employee_data').off('click');
     $('.employee_name').off('click');
 
     $('#create_new_employee').on('click', newEmployeeOpenModal);
+    $('#hire_employee').on('click', requestGeneratedEmployees);
     $('#apply_employee_data').on('click', applyEmployeeData);
     $('.employee_name').on('click', changeEmployeeOpenModal);
+}
+
+function requestGeneratedEmployees() {
+	$.ajax({
+        type: "GET",
+        url: "/company-simulator/company/hr/get-generated-employees",
+        success: function(data) {
+			console.log(data);
+		}
+     });
 }
 
 function requestEmployeesList() {
