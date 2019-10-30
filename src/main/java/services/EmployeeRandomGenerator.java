@@ -1,4 +1,4 @@
-package services.utils;
+package services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +12,9 @@ import entities.Employee;
 
 @Service
 public class EmployeeRandomGenerator {
-	private final int JUNS_MAX_COUNT = 20;
-//	private final int MIDDLES_MAX_C
+	private final int JUNS_MAX_COUNT = 15;
+	private final int MIDDLES_MAX_COUNT = 10;
+	private final int SENIORS_MAX_COUNT = 5;
 	
 	private final double POPULARITY_COEF = 0.5;
 	private final double RESPECT_COEF = 0.8;
@@ -21,23 +22,38 @@ public class EmployeeRandomGenerator {
 	private final int JUNIOR = 0;
 	private final int MIDDLE = 1;
 	private final int SENIOR = 2;
+	
+	private final double JUNIOR_AGREE_MIN_CHANCE = 0.2;
+	private final double MIDDLE_AGREE_MIN_CHANCE = 0.3;
+	private final double SENIOR_AGREE_MIN_CHANCE = 0.35;
 
 	public List<Employee> generateEmployeesList(double companyPopularity, double companyRespect) {
 		List<Employee> employeesList = new ArrayList<Employee>();
 		
-		int agreeJunsCount = getAgreeJunsCount(companyPopularity, companyRespect);
+		int agreeJunsCount = getAgreeEmployeesCount(companyPopularity, companyRespect, JUNS_MAX_COUNT, JUNIOR_AGREE_MIN_CHANCE);
+		int agreeMiddlesCount = getAgreeEmployeesCount(companyPopularity, companyRespect, MIDDLES_MAX_COUNT, MIDDLE_AGREE_MIN_CHANCE);
+		int agreeSeniorsCount = getAgreeEmployeesCount(companyPopularity, companyRespect, SENIORS_MAX_COUNT, SENIOR_AGREE_MIN_CHANCE);
+		
+		for (int i = 0; i < agreeJunsCount; i++) {
+			employeesList.add(generateEmployee(JUNIOR));
+		}
+		for (int i = 0; i < agreeMiddlesCount; i++) {
+			employeesList.add(generateEmployee(MIDDLE));
+		}
+		for (int i = 0; i < agreeSeniorsCount; i++) {
+			employeesList.add(generateEmployee(SENIOR));
+		}
 		
 		return employeesList;
-		
 	}
 	
-	private int getAgreeJunsCount(double companyPopularity, double companyRespect) {
+	private int getAgreeEmployeesCount(double companyPopularity, double companyRespect, int max, double minChance) {
 		int readyJunsCount = 0;
 		
-		for (int jun = 0; jun < JUNS_MAX_COUNT; jun++) {
+		for (int jun = 0; jun < max; jun++) {
 			double foundChance = Math.random()*(1 - POPULARITY_COEF) +  companyPopularity*POPULARITY_COEF;
 			double agreeChance =  Math.random()*(1-RESPECT_COEF) + companyRespect*RESPECT_COEF;
-			if ((foundChance * agreeChance) > 0.2 )
+			if ((foundChance * agreeChance) > minChance )
 				readyJunsCount++;
 		}
 		
@@ -181,10 +197,5 @@ public class EmployeeRandomGenerator {
 	
 	private String generateSex() {
 		return Math.random() > 0.5? Employee.MALE : Employee.FEMALE;
-	}
-	
-	public static void main(String[] args) {
-		EmployeeRandomGenerator employeeGenerator = new EmployeeRandomGenerator();
-		System.out.println(employeeGenerator.generateEmployee(0));
 	}
 }

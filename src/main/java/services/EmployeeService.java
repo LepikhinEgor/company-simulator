@@ -23,7 +23,6 @@ import exceptions.employees.DoubleEmployeeIdException;
 import exceptions.employees.EmployeesListException;
 import exceptions.employees.IncorrectOrderNumException;
 import exceptions.employees.IncorrectPageNumException;
-import services.utils.EmployeeRandomGenerator;
 import services.utils.EntitiesConventer;
 
 @Service
@@ -68,6 +67,7 @@ public class EmployeeService {
 		this.employeeGenerator = employeeGenerator;
 	}
 	
+	@Loggable
 	public List<Employee> generateNewEmployees(String login) {
 		double companyPopularity = 0.5;
 		double companyRespect = 0.5;

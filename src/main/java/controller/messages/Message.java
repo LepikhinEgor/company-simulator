@@ -23,9 +23,9 @@ public class Message {
 		this.status = status;
 		
 		switch(status) {
-		case SUCCESS: this.message = "Success";
-		case FAIL: this.message = "Fail";
-		default: this.message = "Status undefined";
+		case SUCCESS: this.message = "Success";break;
+		case FAIL: this.message = "Fail";break;
+		default: this.message = "Status undefined";break;
 		}
 	}
 	
