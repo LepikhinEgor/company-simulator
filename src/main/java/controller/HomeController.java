@@ -42,7 +42,6 @@ public class HomeController {
 	
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-//	@ResponseBody
 	public String home() {
 		return "login";
 	}
