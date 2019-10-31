@@ -99,14 +99,11 @@ public class HomeController {
 		} catch (EmailAlreadyExistException e) {
 			return new RegistrationMessage(RegistrationMessage.EMAIL_ALREADY_EXIST);
 		} catch (DatabaseAccessException e) {
-			return new RegistrationMessage(RegistrationMessage.LOGIN_ALREADY_EXIST);
+			return new RegistrationMessage(RegistrationMessage.FAIL);
 		} catch (InvalidEmailRegistrationException e) {
 			return new RegistrationMessage(RegistrationMessage.INCORRECT_EMAIL);
 		} catch (InvalidPasswordRegistrationException e) {
 			return new RegistrationMessage(RegistrationMessage.INCORRECT_PASSWORD);
-		} catch (Exception ex) {
-			logger.error(ex.getMessage(), ex);
-			return new RegistrationMessage(RegistrationMessage.FAIL);
 		}
 		
 	}
@@ -120,6 +117,7 @@ public class HomeController {
 			loginExist = userService.checkUserLoginAlreadyExist(login);
 		} catch (DatabaseAccessException e) {
 			logger.error(e.getMessage(), e);
+			return new RegistrationMessage(RegistrationMessage.FAIL);
 		}
 		
 		if (loginExist) {

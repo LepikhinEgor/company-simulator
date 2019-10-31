@@ -3,16 +3,19 @@ package company_simulator;
 import java.sql.SQLException;
 import static org.mockito.Mockito.*;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Scope;
 
 import dao.CompanyDao;
 import dao.ConnectionPool;
 import dao.ContractDao;
 import dao.EmployeeDao;
 import dao.UserDao;
+import services.UserService;
 
 @Configuration
 @EnableAspectJAutoProxy
@@ -43,4 +46,11 @@ public class TestsDaoBeansConfiguration {
 	public ConnectionPool connectionPool() {
 		return mock(ConnectionPool.class);
 	}
+	
+	@Bean
+	@Qualifier("mockUserService")
+	public UserService userService() {
+		return mock(UserService.class);
+	}
+	
 }
