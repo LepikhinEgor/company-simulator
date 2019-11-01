@@ -26,8 +26,25 @@ function requestGeneratedEmployees() {
         url: "/company-simulator/company/hr/get-generated-employees",
         success: function(data) {
 			console.log(data);
+			generatedEmployeesOpenModal(data.employees);
 		}
      });
+}
+
+function generatedEmployeesOpenModal(employees) {
+	for (var employee in employees) {
+		var newTdStr = "<tr id=" + employees[employee].id + ">" + 
+		 	"<td class='generated_employee_name'>" + employees[employee].name + "</td>" + 
+		 	"<td>" + employees[employee].age + "</td>" +
+		 	"<td>" + employees[employee].perfomance + "</td>" + 
+		 	"<td>" + employees[employee].salary + "</td>" +
+		 	"<td><input  type=\"button\" class = \"hire_generated_employee\" value=\"Hire\"></td>" +
+		"</tr>";
+		var placeholder = $('#generated_employees_table').find(".table_placeholder");
+		placeholder.before(newTdStr);
+		
+		document.location.href = "#generated_employees_modal_window";
+	}
 }
 
 function requestEmployeesList() {

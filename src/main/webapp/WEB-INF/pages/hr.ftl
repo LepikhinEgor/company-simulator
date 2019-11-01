@@ -43,3 +43,30 @@
     <a href="#" class="close_modal_employee">Закрыть окно</a>
   </div>
 </div>
+<div id="generated_employees_modal_window">
+  <div id="generated_employees_window">
+    <div id="generated_employees_window_content">
+    	<p><h3>Employees wants job</h3></p>
+    	<div id="generated_employees_change_block">
+	    	<table id="generated_employees_table">
+				<tr>
+				  <th class='generated_employee_name'>Name</th>
+				  <th>Age</th>
+				  <th>Perfomance</th>
+				  <th>Salary</th>
+				  <th>Hire</th>
+				</tr>
+				<tr class="table_placeholder">
+				  <td></td>
+				  <td></td>
+				  <td></td>
+				  <td></td>
+				  <td></td>
+				</tr>
+			</table>
+		</div>
+    </div>
+    <a href="#" class="close_modal_generated_employees">Отмена</a>
+    <a href="#" class="close_modal_generated_employees_apply">Принять</a>
+  </div>
+</div>
