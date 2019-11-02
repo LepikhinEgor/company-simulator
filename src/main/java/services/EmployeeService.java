@@ -68,11 +68,12 @@ public class EmployeeService {
 	}
 	
 	@Loggable
-	public List<Employee> generateNewEmployees(String login) {
+	public List<Employee> generateNewEmployees(String login) throws DatabaseAccessException {
 		double companyPopularity = 0.5;
 		double companyRespect = 0.5;
 		
-		List<Employee> employeesList = employeeGenerator.generateEmployeesList(companyPopularity, companyRespect);
+		Company company = companyService.getUserCompany(login);
+		List<Employee> employeesList = employeeGenerator.generateEmployeesList(companyPopularity, companyRespect, company.getId());
 
 		return employeesList;
 	}

@@ -7,6 +7,7 @@ function employeesPageSetup() {
 
 var changedEmployeeID = 0;
 var tempId = 4;
+var generatedEmployeesId = [];
 
 function refreshEmpEventHandlers() {
     $('#create_new_employee').off('click');
@@ -33,7 +34,8 @@ function requestGeneratedEmployees() {
 
 function generatedEmployeesOpenModal(employees) {
 	for (var employee in employees) {
-		var newTdStr = "<tr id=" + employees[employee].id + ">" + 
+		generatedEmployeesId.push(employees[employee].id);
+		var newTdStr = "<tr id=\"gen_emp_" + employees[employee].id + "\">" + 
 		 	"<td class='generated_employee_name'>" + employees[employee].name + "</td>" + 
 		 	"<td>" + employees[employee].age + "</td>" +
 		 	"<td>" + employees[employee].perfomance + "</td>" + 

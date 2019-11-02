@@ -1,17 +1,29 @@
 package services;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dao.GeneratedEmployeesDao;
 import entities.Employee;
+import exceptions.DatabaseAccessException;
 
 @Service
 public class EmployeeRandomGenerator {
+	
+	private static final Logger logger = LoggerFactory.getLogger(EmployeeRandomGenerator.class);
+	
 	private final int JUNS_MAX_COUNT = 15;
 	private final int MIDDLES_MAX_COUNT = 10;
 	private final int SENIORS_MAX_COUNT = 5;
@@ -26,8 +38,22 @@ public class EmployeeRandomGenerator {
 	private final double JUNIOR_AGREE_MIN_CHANCE = 0.2;
 	private final double MIDDLE_AGREE_MIN_CHANCE = 0.3;
 	private final double SENIOR_AGREE_MIN_CHANCE = 0.35;
+	
+	private GeneratedEmployeesDao generatedEmployeesDao;
+	
+	@Autowired
+	public void setGeneratedEmployeesDao(GeneratedEmployeesDao dao) {
+		this.generatedEmployeesDao = dao;
+	}
+	
+	private long getCurrentGenerateEmployeesTiming(TimeZone timeZone) {
+		Calendar calendar = new GregorianCalendar(timeZone);
+		
+		logger.info(calendar.toString());
+		return calendar.getTimeInMillis();
+	}
 
-	public List<Employee> generateEmployeesList(double companyPopularity, double companyRespect) {
+	public List<Employee> generateEmployeesList(double companyPopularity, double companyRespect, long companyId) throws DatabaseAccessException {
 		List<Employee> employeesList = new ArrayList<Employee>();
 		
 		int agreeJunsCount = getAgreeEmployeesCount(companyPopularity, companyRespect, JUNS_MAX_COUNT, JUNIOR_AGREE_MIN_CHANCE);
@@ -42,6 +68,13 @@ public class EmployeeRandomGenerator {
 		}
 		for (int i = 0; i < agreeSeniorsCount; i++) {
 			employeesList.add(generateEmployee(SENIOR));
+		}
+		
+//		getCurrentGenerateEmployeesTiming()
+		try {
+			generatedEmployeesDao.recordGeneratedEmployees(employeesList, companyId, 0);
+		} catch (SQLException e) {
+			throw new DatabaseAccessException(e);
 		}
 		
 		return employeesList;

@@ -17,6 +17,7 @@ public class Employee {
 	private int perfomance;
 	private int salary;
 	private String description;
+	private long companyId;
 	
 	public Employee() {
 	}
@@ -86,10 +87,18 @@ public class Employee {
 		this.id = id;
 	}
 
+	public long getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		this.companyId = companyId;
+	}
+
 	@Override
 	public String toString() {
 		return "Employee [id=" + id + ", name=" + name + ", age=" + age + ", sex=" + sex + ", perfomance=" + perfomance
-				+ ", salary=" + salary + ", description=" + description + "]";
+				+ ", salary=" + salary + ", description=" + description + ", companyId=" + companyId + "]";
 	}
 
 	@Override
@@ -97,6 +106,7 @@ public class Employee {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + age;
+		result = prime * result + (int) (companyId ^ (companyId >>> 32));
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -116,6 +126,8 @@ public class Employee {
 			return false;
 		Employee other = (Employee) obj;
 		if (age != other.age)
+			return false;
+		if (companyId != other.companyId)
 			return false;
 		if (description == null) {
 			if (other.description != null)

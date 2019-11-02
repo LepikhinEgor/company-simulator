@@ -121,7 +121,12 @@ public class EmployeesController {
 		}
 		String login = cookie.getValue();
 		
-		List<Employee> generatedEmployees = employeeService.generateNewEmployees(login);
+		List<Employee> generatedEmployees;
+		try {
+			generatedEmployees = employeeService.generateNewEmployees(login);
+		} catch (DatabaseAccessException e) {
+			return new GeneratedEmployeesMessage(Message.FAIL);
+		}
 		
 		return new GeneratedEmployeesMessage(Message.SUCCESS, generatedEmployees);
 	}
