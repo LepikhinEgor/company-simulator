@@ -2,6 +2,7 @@ package controller;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.servlet.http.Cookie;
 
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.LocaleContextResolver;
+import org.springframework.web.servlet.LocaleResolver;
 
 import controller.input.EmployeeCreateData;
 import controller.messages.EmployeeCreateMessage;
@@ -115,7 +118,7 @@ public class EmployeesController {
 	
 	@GetMapping(value = "/company/hr/get-generated-employees")
 	@ResponseBody
-	public GeneratedEmployeesMessage generateEmployees(@CookieValue(value = "signedUser") Cookie cookie) {
+	public GeneratedEmployeesMessage generateEmployees(@CookieValue(value = "signedUser") Cookie cookie, TimeZone timezone) {
 		if (cookie == null) {
 			return new GeneratedEmployeesMessage(Message.FAIL);
 		}
@@ -123,7 +126,7 @@ public class EmployeesController {
 		
 		List<Employee> generatedEmployees;
 		try {
-			generatedEmployees = employeeService.generateNewEmployees(login);
+			generatedEmployees = employeeService.generateNewEmployees(login, timezone);
 		} catch (DatabaseAccessException e) {
 			return new GeneratedEmployeesMessage(Message.FAIL);
 		}

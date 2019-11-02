@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
+import java.util.TimeZone;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,12 +69,12 @@ public class EmployeeService {
 	}
 	
 	@Loggable
-	public List<Employee> generateNewEmployees(String login) throws DatabaseAccessException {
+	public List<Employee> generateNewEmployees(String login, TimeZone timezone) throws DatabaseAccessException {
 		double companyPopularity = 0.5;
 		double companyRespect = 0.5;
 		
 		Company company = companyService.getUserCompany(login);
-		List<Employee> employeesList = employeeGenerator.generateEmployeesList(companyPopularity, companyRespect, company.getId());
+		List<Employee> employeesList = employeeGenerator.getGeneratedEmployees(companyPopularity, companyRespect, company.getId(), timezone);
 
 		return employeesList;
 	}

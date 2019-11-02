@@ -47,13 +47,58 @@ public class EmployeeRandomGenerator {
 	}
 	
 	private long getCurrentGenerateEmployeesTiming(TimeZone timeZone) {
-		Calendar calendar = new GregorianCalendar(timeZone);
+		long timing = 0;
 		
-		logger.info(calendar.toString());
-		return calendar.getTimeInMillis();
+		Calendar calendar = new GregorianCalendar(timeZone);
+		long timestamp = calendar.getTimeInMillis();
+
+		timing = timestamp / (1000*60* 60 * 4); //4 hour
+		
+		return timing;
+	}
+	
+	private long getEmployeesRecordTiming(long companyId) throws DatabaseAccessException {
+		long oldTiming = 0;
+		
+		try {
+			oldTiming = generatedEmployeesDao.getEmployeesRecordTiming(companyId);
+		} catch (SQLException e) {
+			logger.info(e.getMessage(), e);
+			throw new DatabaseAccessException("Exception getting last employees record timing");
+		}
+		
+		return oldTiming;
+	}
+	
+	private List<Employee> getOldGeneratedEmployees(long companyId) throws DatabaseAccessException {
+		List<Employee> employees = null;
+		
+		try {
+			employees = generatedEmployeesDao.getOldGeneratedEmployees(companyId);
+		} catch (SQLException e) {
+			logger.info(e.getMessage(), e);
+			throw new DatabaseAccessException("Error getting old generated employees");
+		}
+		
+		return employees;
+	}
+	
+	public List<Employee> getGeneratedEmployees(double companyPopularity, double companyRespect, long companyId, TimeZone timezone) throws DatabaseAccessException {
+		List<Employee> employees = null;
+		
+		long curTiming = getCurrentGenerateEmployeesTiming(timezone);
+		long oldTiming = getEmployeesRecordTiming(companyId);
+		
+		if (curTiming != oldTiming) {
+			employees = generateEmployeesList(companyPopularity, companyRespect, companyId, curTiming);
+		} else {
+			employees = getOldGeneratedEmployees(companyId);
+		}
+		
+		return employees;
 	}
 
-	public List<Employee> generateEmployeesList(double companyPopularity, double companyRespect, long companyId) throws DatabaseAccessException {
+	public List<Employee> generateEmployeesList(double companyPopularity, double companyRespect, long companyId, long timing) throws DatabaseAccessException {
 		List<Employee> employeesList = new ArrayList<Employee>();
 		
 		int agreeJunsCount = getAgreeEmployeesCount(companyPopularity, companyRespect, JUNS_MAX_COUNT, JUNIOR_AGREE_MIN_CHANCE);
@@ -70,14 +115,18 @@ public class EmployeeRandomGenerator {
 			employeesList.add(generateEmployee(SENIOR));
 		}
 		
-//		getCurrentGenerateEmployeesTiming()
-		try {
-			generatedEmployeesDao.recordGeneratedEmployees(employeesList, companyId, 0);
-		} catch (SQLException e) {
-			throw new DatabaseAccessException(e);
-		}
+		recordGeneratedEmployees(employeesList, companyId, timing);
 		
 		return employeesList;
+	}
+	
+	private void recordGeneratedEmployees(List<Employee> employees, long companyId, long timing) throws DatabaseAccessException {
+		try {
+			generatedEmployeesDao.recordGeneratedEmployees(employees, companyId, timing);
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+			throw new DatabaseAccessException("Error recording new generated employees");
+		}
 	}
 	
 	private int getAgreeEmployeesCount(double companyPopularity, double companyRespect, int max, double minChance) {
