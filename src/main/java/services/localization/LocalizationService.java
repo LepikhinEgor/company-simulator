@@ -1,4 +1,4 @@
-package services;
+package services.localization;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +18,11 @@ public class LocalizationService {
 	public List<Employee> localizeEmployees(List<Employee> employees, Locale locale) {
 		List<Employee> locEmployees = new ArrayList<Employee>();
 		
-		ResourceBundle bundle = ResourceBundle.getBundle("locale/employees/employees",  locale);
+		LocalizationResources locResources = LocalizationResources.getLocalizationClass(locale);
+		ResourceBundle employeesBundle = locResources.getEmployeesBundle();
 		
 		for (Employee employee: employees) {
-			locEmployees.add(localizeEmployee(employee, bundle));
+			locEmployees.add(localizeEmployee(employee, employeesBundle));
 		}
 		
 		return locEmployees;

@@ -129,7 +129,7 @@ public class EmployeesController {
 		
 		List<Employee> generatedEmployees;
 		try {
-			generatedEmployees = employeeService.generateNewEmployees(login, timezone, locale);
+			generatedEmployees = employeeService.generateNewEmployees(login, timezone,  locale);
 		} catch (DatabaseAccessException e) {
 			return new GeneratedEmployeesMessage(Message.FAIL);
 		}

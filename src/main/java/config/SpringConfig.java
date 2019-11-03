@@ -1,6 +1,7 @@
 package config;
 
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.springframework.context.annotation.Bean;
@@ -48,5 +49,11 @@ public class SpringConfig {
 	@Bean
 	public GeneratedEmployeesDao generatedEmployeesDao() {
 		return new GeneratedEmployeesDao();
+	}
+	
+	@Bean
+	public Object setDefaultLocale() {
+		Locale.setDefault(Locale.ENGLISH);
+		return null;
 	}
 }
