@@ -3,6 +3,7 @@ package services;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.TimeZone;
 
@@ -43,6 +44,13 @@ public class EmployeeService {
 	
 	EmployeeRandomGenerator employeeGenerator;
 	
+	LocalizationService localizationService;
+	
+	@Autowired
+	public void setLocalizationService(LocalizationService service) {
+		this.localizationService = service;
+	}
+	
 	@Autowired
 	public void setEmployeeDao(EmployeeDao employeeDao) {
 		this.employeeDao = employeeDao;
@@ -69,14 +77,15 @@ public class EmployeeService {
 	}
 	
 	@Loggable
-	public List<Employee> generateNewEmployees(String login, TimeZone timezone) throws DatabaseAccessException {
+	public List<Employee> generateNewEmployees(String login, TimeZone timezone, Locale locale) throws DatabaseAccessException {
 		double companyPopularity = 0.5;
 		double companyRespect = 0.5;
 		
 		Company company = companyService.getUserCompany(login);
 		List<Employee> employeesList = employeeGenerator.getGeneratedEmployees(companyPopularity, companyRespect, company.getId(), timezone);
-
-		return employeesList;
+		
+		List<Employee> locEmployees = localizationService.localizeEmployees(employeesList, locale);
+		return locEmployees;
 	}
 	
 	@Loggable

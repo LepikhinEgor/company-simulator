@@ -118,7 +118,10 @@ public class EmployeesController {
 	
 	@GetMapping(value = "/company/hr/get-generated-employees")
 	@ResponseBody
-	public GeneratedEmployeesMessage generateEmployees(@CookieValue(value = "signedUser") Cookie cookie, TimeZone timezone) {
+	public GeneratedEmployeesMessage generateEmployees(
+			@CookieValue(value = "signedUser") Cookie cookie,
+			TimeZone timezone,
+			Locale locale) {
 		if (cookie == null) {
 			return new GeneratedEmployeesMessage(Message.FAIL);
 		}
@@ -126,7 +129,7 @@ public class EmployeesController {
 		
 		List<Employee> generatedEmployees;
 		try {
-			generatedEmployees = employeeService.generateNewEmployees(login, timezone);
+			generatedEmployees = employeeService.generateNewEmployees(login, timezone, locale);
 		} catch (DatabaseAccessException e) {
 			return new GeneratedEmployeesMessage(Message.FAIL);
 		}

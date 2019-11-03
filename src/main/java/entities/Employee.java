@@ -22,13 +22,15 @@ public class Employee {
 	public Employee() {
 	}
 	
-	public Employee(String name, int age, String sex, int perfomanse, int salary, String description) {
-		this.name = name;
-		this.age = age;
-		this.sex = sex;
-		this.perfomance = perfomanse;
-		this.salary = salary;
-		this.description = description;
+	public Employee(Employee employee) {
+		this.name = employee.getName();
+		this.description = employee.getDescription();
+		this.age = employee.getAge();
+		this.companyId = employee.getCompanyId();
+		this.perfomance = employee.getPerfomance();
+		this.id = employee.getId();
+		this.salary = employee.getSalary();
+		this.sex = employee.getSex();
 	}
 	
 	public String getSex() {

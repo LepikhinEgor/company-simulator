@@ -1,6 +1,7 @@
 package config;
 
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

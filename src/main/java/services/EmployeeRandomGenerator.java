@@ -241,40 +241,31 @@ public class EmployeeRandomGenerator {
 		String nameKey = "";
 		String surnameKey = "";
 		switch(sex) {
-		case Employee.MALE: nameKey = "male.name_"; surnameKey = "male.surname_";break;
-		case Employee.FEMALE: nameKey = "female.name_"; surnameKey = "female.surname_";break;
+		case Employee.MALE: nameKey = "name_"; surnameKey = "surname_";break;
+		case Employee.FEMALE: nameKey = "name_"; surnameKey = "surname_";break;
 		}
 		int nameNum = random.nextInt(50) + 1;
 		nameKey += nameNum;
 		int surnameNum = random.nextInt(50) + 1;
 		surnameKey += surnameNum;
 		
-		ResourceBundle bundle = ResourceBundle.getBundle("locale/employees/employees",  new Locale("ru", "RU"));
-		String name = bundle.getString(nameKey);
-		String surname = bundle.getString(surnameKey);
-		
-		fullname = name + " " + surname;
+		fullname = nameKey + " " + surnameKey;
 		
 		return fullname;
 	}
 	
 	private String generateDescription(String sex) {
-		String description = "";
-		
 		Random random = new Random();
 		
 		String descriptionKey = "";
 		switch(sex) {
-		case Employee.MALE: descriptionKey = "male.description_";break;
-		case Employee.FEMALE: descriptionKey = "female.description_";break;
+		case Employee.MALE: descriptionKey = "description_";break;
+		case Employee.FEMALE: descriptionKey = "description_";break;
 		}
 		int descriptionNum = random.nextInt(10) + 1;
 		descriptionKey += descriptionNum;
 		
-		ResourceBundle bundle = ResourceBundle.getBundle("locale/employees/employees",  new Locale("ru", "RU"));
-		description = bundle.getString(descriptionKey);
-		
-		return description;
+		return descriptionKey;
 	}
 	
 	private String generateSex() {
