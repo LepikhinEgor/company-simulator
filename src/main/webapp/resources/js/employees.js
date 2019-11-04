@@ -8,17 +8,24 @@ function employeesPageSetup() {
 var changedEmployeeID = 0;
 var tempId = 4;
 var generatedEmployeesId = [];
+var hiredGeneratedEmployeesId = [];
 
 function refreshEmpEventHandlers() {
     $('#create_new_employee').off('click');
     $('#hire_employee').off('click');
     $('#apply_employee_data').off('click');
     $('.employee_name').off('click');
+    $('.close_modal_generated_employees').off('click');
+    $('.hire_generated_employee').off('click');
+    $('.close_modal_generated_employees_apply').off('click');
 
     $('#create_new_employee').on('click', newEmployeeOpenModal);
     $('#hire_employee').on('click', requestGeneratedEmployees);
     $('#apply_employee_data').on('click', applyEmployeeData);
     $('.employee_name').on('click', changeEmployeeOpenModal);
+    $('.close_modal_generated_employees').on('click', clearGeneratedEmployeesTable);
+    $('.hire_generated_employee').on('click', hireGeneratedEmployee);
+    $('.close_modal_generated_employees_apply').on('click', requestHireGeneratedEmployees);
 }
 
 function requestGeneratedEmployees() {
@@ -40,10 +47,12 @@ function generatedEmployeesOpenModal(employees) {
 		 	"<td>" + employees[employee].age + "</td>" +
 		 	"<td>" + employees[employee].perfomance + "</td>" + 
 		 	"<td>" + employees[employee].salary + "</td>" +
-		 	"<td><input  type=\"button\" class = \"hire_generated_employee\" value=\"Hire\"></td>" +
+		 	"<td class='hire_gen_employee_td'><input  type=\"button\" class = \"hire_generated_employee\" value=\"Hire\"></td>" +
 		"</tr>";
 		var placeholder = $('#generated_employees_table').find(".table_placeholder");
 		placeholder.before(newTdStr);
+		
+		refreshEmpEventHandlers();
 		
 		document.location.href = "#generated_employees_modal_window";
 	}
@@ -192,6 +201,41 @@ function changeEnployeeData(employeeData) {
     $(empSelector).find(".employee_perf").text(employeeData.perfomance);
     $(empSelector).find(".employee_salary").text(employeeData.salary);
     $(empSelector).find(".employee_sex").text(employeeData.sex);
+}
+
+function clearGeneratedEmployeesTable() {
+	$('#generated_employees_table tr[id]').remove();
+	generatedEmployeesId = [];
+	hiredGeneratedEmployeesId = [];
+	
+	document.location.href = "#";
+}
+
+function requestHireGeneratedEmployees() {
+	$.ajax({
+        type: "POST",
+        url: "/company-simulator/company/hr/hire-generated-employees",
+        contentType: 'application/json',
+        data: JSON.stringify(hiredGeneratedEmployeesId),
+        success: function(data) {
+			console.log(data);
+			
+			if (data.status == 0) {
+				document.location.href = "#";
+				clearGeneratedEmployeesTable(); 
+			}
+		}
+      });
+}
+
+function hireGeneratedEmployee() {
+	console.log('hire');
+	var parent = $(this).closest("tr");
+    changedEmployeeID = parent.attr("id");
+    var digitId = changedEmployeeID.substring(9);
+    
+    hiredGeneratedEmployeesId.push(digitId);
+    parent.find('.hire_gen_employee_td').html('Hired');
 }
 
 function getCookie(name) {

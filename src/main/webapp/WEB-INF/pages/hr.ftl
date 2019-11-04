@@ -66,7 +66,7 @@
 			</table>
 		</div>
     </div>
-    <a href="#" class="close_modal_generated_employees">Отмена</a>
-    <a href="#" class="close_modal_generated_employees_apply">Принять</a>
+    <a class="close_modal_generated_employees">Отмена</a>
+    <a class="close_modal_generated_employees_apply">Принять</a>
   </div>
 </div>
