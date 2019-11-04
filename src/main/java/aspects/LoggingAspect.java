@@ -30,7 +30,7 @@ public class LoggingAspect {
 		try {
 			methodReturn = joinPoint.proceed();
 		} catch (Throwable e) {
-			logger.error("Method " + methodName + "throws exception", e);
+			logger.error("Method " + methodName + " throws exception", e);
 			throw e;
 		}
 		
