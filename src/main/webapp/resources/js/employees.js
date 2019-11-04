@@ -232,7 +232,7 @@ function hireGeneratedEmployee() {
 	console.log('hire');
 	var parent = $(this).closest("tr");
     changedEmployeeID = parent.attr("id");
-    var digitId = changedEmployeeID.substring(9);
+    var digitId = changedEmployeeID.substring(8);
     
     hiredGeneratedEmployeesId.push(digitId);
     parent.find('.hire_gen_employee_td').html('Hired');

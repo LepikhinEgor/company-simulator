@@ -180,4 +180,26 @@ public class EmployeeService {
 		
 		return freeEmployees;
 	}
+	
+	@Loggable
+	public void hireGeneratedEmployees(long[] employeesId) throws DatabaseAccessException {
+		if(!checkUniquenessId(employeesId))
+			throw new IllegalArgumentException("Non unique employees id received");
+		
+		try {
+			employeeDao.hireGeneratedEmployees(employeesId);
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+			throw new DatabaseAccessException("Error trying hire employee");
+		}
+	}
+	
+	private boolean checkUniquenessId(long[] employeesId) {
+		for (int i = 0; i < employeesId.length; i++) 
+			for (int j = i + 1; j < employeesId.length; j++)
+				if (employeesId[i] == employeesId[j])
+					return false;
+		
+		return true;
+	}
 }

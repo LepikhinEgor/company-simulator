@@ -1,14 +1,17 @@
 package dao;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 
 import aspects.annotations.Loggable;
 import entities.Employee;
@@ -50,6 +53,7 @@ public class EmployeeDao {
 				employee.setSalary(foundEmployees.getInt(5));
 				employee.setPerfomance(foundEmployees.getInt(6));
 				employee.setDescription(foundEmployees.getString(7));
+				employee.setCompanyId(foundEmployees.getLong(8));
 				
 				employees.add(employee);
 			}
@@ -82,7 +86,7 @@ public class EmployeeDao {
 			if (employeesInsert == 1)
 				return getGeneratedId(recordEmployeeStatement);
 			else
-				throw new SQLException("Incorrect number of created companies. Required 1");
+				throw new SQLException("Incorrect number of created employees. Required 1");
 		} finally {
 			if (recordEmployeeStatement != null)
 				recordEmployeeStatement.close();
@@ -114,7 +118,7 @@ public class EmployeeDao {
 			if (employeesInsert == 1)
 				return getGeneratedId(recordEmployeeStatement);
 			else
-				throw new SQLException("Incorrect number of created companies. Required 1");
+				throw new SQLException("Incorrect number of created employees. Required 1");
 		}
 	}
 	
@@ -140,6 +144,7 @@ public class EmployeeDao {
 				employee.setSalary(rs.getInt(5));
 				employee.setPerfomance(rs.getInt(6));
 				employee.setDescription(rs.getString(7));
+				employee.setCompanyId(rs.getLong(8));
 				
 				contractEmployees.add(employee);
 			}
@@ -170,12 +175,97 @@ public class EmployeeDao {
 				employee.setSalary(rs.getInt(5));
 				employee.setPerfomance(rs.getInt(6));
 				employee.setDescription(rs.getString(7));
+				employee.setCompanyId(rs.getLong(8));
 				
 				contractEmployees.add(employee);
 			}
 		}
 		
 		return contractEmployees;
+	}
+	
+	@Loggable
+	public void hireGeneratedEmployees(long[] employeesId) throws SQLException {
+		try(Connection connection = connectionPool.getConnection()) {
+			connection.setAutoCommit(false);
+			
+			List<Employee> employees = getHiredGeneratedEmployees(employeesId, connection);
+			deleteHiredGeneratedEmployees(employeesId, connection);		
+			recordHiredEmployees(employees, connection);
+			
+			connection.commit();
+		}
+	}
+	
+	private List<Employee> getHiredGeneratedEmployees(long[] employeesId, Connection connection) throws SQLException {
+		List<Employee> employees = new ArrayList<Employee>();
+		
+		String querry = "SELECT * FROM generated_employees WHERE employee_id IN " + employeesIdToString(employeesId);
+		
+		try(PreparedStatement statement = connection.prepareStatement(querry)) {
+			
+			ResultSet rs = statement.executeQuery();
+			
+			while(rs.next()) {
+				Employee employee = new Employee();
+				
+				employee.setId(rs.getLong(1));
+				employee.setName(rs.getString(2));
+				employee.setAge(rs.getInt(3));
+				employee.setSex(rs.getString(4));
+				employee.setSalary(rs.getInt(5));
+				employee.setPerfomance(rs.getInt(6));
+				employee.setDescription(rs.getString(7));
+				employee.setCompanyId(rs.getLong(8));
+				
+				employees.add(employee);
+			}
+		}
+		
+		return employees;
+	}
+	
+	private void deleteHiredGeneratedEmployees(long[] employeesId, Connection connection) throws SQLException {
+		String querry = "DELETE FROM generated_employees WHERE employee_id IN " + employeesIdToString(employeesId);
+		
+		try(PreparedStatement statement = connection.prepareStatement(querry)) {
+			statement.executeUpdate();
+		}
+	}
+	
+	private String employeesIdToString(long[] employeesId) {
+		StringBuilder result = new StringBuilder("");
+		result.append("(");
+		for(int i = 0; i < employeesId.length; i++) {
+			result.append(employeesId[i]);
+			if (i != employeesId.length - 1)
+				result.append(", ");
+		}
+		result.append(")");
+		
+		return result.toString();
+	}
+	
+	private void recordHiredEmployees(List<Employee> employees, Connection connection) throws SQLException {
+		
+		String recordEmployeeQuerry = "INSERT INTO employees (employee_id, name, age, sex, salary, performance, description, company_id) VALUES ("
+				+ "NULL, ?, ?, ?, ?, ?, ?, ?);";
+		
+		try(PreparedStatement statement = connection.prepareStatement(recordEmployeeQuerry)) {
+			
+			for (Employee employee : employees) {
+				statement.setString(1, employee.getName());
+				statement.setInt(2, employee.getAge());
+				statement.setString(3, employee.getSex());
+				statement.setInt(4, employee.getSalary());
+				statement.setInt(5, employee.getPerfomance());
+				statement.setString(6, employee.getDescription());
+				statement.setLong(7, employee.getCompanyId());
+				
+				statement.executeUpdate();
+			}
+			
+		} 
 	}
 	
 	private long getGeneratedId(PreparedStatement statement) throws SQLException {

@@ -26,14 +26,15 @@ public class ContractDao {
 	
 	@Loggable
 	public void resolveContract(Contract contract, long companyCash) throws SQLException {
-		Connection connection = connectionPool.getConnection();
-		connection.setAutoCommit(false);
-		
-		changeCompanyCash(companyCash + contract.getFee(), contract.getCompanyId(), connection);
-		freeAllContractTeam(contract.getId() , connection);
-		changeContractStatus(contract.getId(), contract.getStatus(), connection);
-		
-		connection.commit();
+		try(Connection connection = connectionPool.getConnection()) {;
+			connection.setAutoCommit(false);
+			
+			changeCompanyCash(companyCash + contract.getFee(), contract.getCompanyId(), connection);
+			freeAllContractTeam(contract.getId() , connection);
+			changeContractStatus(contract.getId(), contract.getStatus(), connection);
+			
+			connection.commit();
+		}
 	}
 	
 	private void changeCompanyCash(long cash, long companyId, Connection connection) throws SQLException {

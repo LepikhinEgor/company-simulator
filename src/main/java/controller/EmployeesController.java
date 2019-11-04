@@ -142,6 +142,12 @@ public class EmployeesController {
 	@PostMapping("/company/hr/hire-generated-employees")
 	@ResponseBody
 	public HireEmployeesMessage hireGeneratedEmployees(@RequestBody long[] employeesId) {
-		return new HireEmployeesMessage(Message.FAIL);
+		
+		try {
+			employeeService.hireGeneratedEmployees(employeesId);
+		} catch (DatabaseAccessException e) {
+			return new HireEmployeesMessage(Message.FAIL);
+		}
+		return new HireEmployeesMessage(Message.SUCCESS);
 	}
 }
