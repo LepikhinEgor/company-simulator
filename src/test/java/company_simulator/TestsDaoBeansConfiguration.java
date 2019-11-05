@@ -16,6 +16,7 @@ import dao.ContractDao;
 import dao.EmployeeDao;
 import dao.GeneratedEmployeesDao;
 import dao.UserDao;
+import services.CompanyService;
 import services.UserService;
 
 @Configuration
@@ -57,6 +58,12 @@ public class TestsDaoBeansConfiguration {
 	@Qualifier("mockUserService")
 	public UserService userService() {
 		return mock(UserService.class);
+	}
+	
+	@Bean
+	@Qualifier("mockCompanyService")
+	public CompanyService companyService() {
+		return mock(CompanyService.class);
 	}
 	
 }

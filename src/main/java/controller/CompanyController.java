@@ -60,6 +60,7 @@ public class CompanyController {
 			userLogin = user.getLogin();
 		} catch (DatabaseAccessException e) {
 			logger.info("User company not founded", e);
+			return "redirect:company";
 		}
 		
 		model.addAttribute("company", companyName);
