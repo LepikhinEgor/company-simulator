@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 
 import dao.CompanyDao;
@@ -17,6 +18,7 @@ import dao.EmployeeDao;
 import dao.GeneratedEmployeesDao;
 import dao.UserDao;
 import services.CompanyService;
+import services.EmployeeService;
 import services.UserService;
 
 @Configuration
@@ -64,6 +66,12 @@ public class TestsDaoBeansConfiguration {
 	@Qualifier("mockCompanyService")
 	public CompanyService companyService() {
 		return mock(CompanyService.class);
+	}
+	
+	@Bean
+	@Primary
+	public EmployeeService employeesService() {
+		return mock(EmployeeService.class);
 	}
 	
 }

@@ -64,7 +64,7 @@ public class EmployeesController {
 	@RequestMapping(value = "/company/hr/get-employees", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
 	public EmployeesListMessage getEmployees(
-			@CookieValue(value = "signedUser", required = false) Cookie cookie, 
+			@CookieValue(value = "signedUser", required = true) Cookie cookie, 
 			@RequestBody EmployeesListQuerryData requestData) {
 		
 		List<Employee> employees = null;
@@ -84,7 +84,7 @@ public class EmployeesController {
 	@RequestMapping(value = "/company/hr/create-employee", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
 	public EmployeeCreateMessage createEmployee(
-			@CookieValue(value = "signedUser", required = false) Cookie cookie,
+			@CookieValue(value = "signedUser", required = true) Cookie cookie,
 			@RequestBody EmployeeCreateData employeeData) {
 		
 		String userLogin = cookie.getValue();
@@ -103,7 +103,7 @@ public class EmployeesController {
 	@RequestMapping(value = "/company/hr/update-employee", method = RequestMethod.POST, consumes = "application/json")
 	@ResponseBody
 	public EmployeeCreateMessage updateEmployee(
-			@CookieValue(value = "signedUser", required = false) Cookie cookie,
+			@CookieValue(value = "signedUser", required = true) Cookie cookie,
 			@RequestBody EmployeeUpdateData employeeData) {
 		
 		String loginEmail = cookie.getValue();
