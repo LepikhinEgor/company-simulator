@@ -96,7 +96,7 @@ public class UserService {
 			return id;
 		} catch (SQLException e) {
 			logger.error("User not recorded", e);
-			throw new DatabaseAccessException();
+			throw new DatabaseAccessException("");
 		}
 	}
 	
@@ -131,7 +131,7 @@ public class UserService {
 		try {
 			loginExist = userDao.checkEmailAlreadyExist(userEmail);
 		} catch(SQLException sqlex) {
-			throw new DatabaseAccessException();
+			throw new DatabaseAccessException("");
 		}
 		
 		return loginExist;

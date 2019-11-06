@@ -157,7 +157,7 @@ public class EmployeeServiceTest {
 		Employee expectedEmployee = getValidEmployee();
 		expectedEmployee.setId(1);
 		
-		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
+		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException(""));
 		when(employeeDaoMock.updateEmployee(expectedEmployee, goodCompany.getId())).thenReturn(expectedEmployee.getId());
 		when(entitiesConventerMock.transformToEmployee(employeeData)).thenReturn(getValidEmployee());
 		
@@ -217,7 +217,7 @@ public class EmployeeServiceTest {
 		ArrayList<Employee> employees = getEmployeesList();
 		Company goodCompany = getGoodCompany();
 		
-		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
+		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException(""));
 		when(employeeDaoMock.getEmployeesList(goodCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), PAGE_LIMIT)).
 		thenReturn(employees);
 		
@@ -257,7 +257,7 @@ public class EmployeeServiceTest {
 		querryData.setPageNum(-1);
 		querryData.setOrderNum(0);
 		
-		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
+		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException(""));
 		when(employeeDaoMock.getEmployeesList(goodCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), PAGE_LIMIT)).
 		thenThrow(new SQLException());
 		
@@ -278,7 +278,7 @@ public class EmployeeServiceTest {
 		querryData.setPageNum(0);
 		querryData.setOrderNum(12);
 		
-		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
+		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException(""));
 		when(employeeDaoMock.getEmployeesList(goodCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), PAGE_LIMIT)).
 		thenThrow(new SQLException());
 		
@@ -316,7 +316,7 @@ public class EmployeeServiceTest {
 		
 		Employee expectedEmployee = getValidEmployee();
 		
-		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
+		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException(""));
 		when(employeeDaoMock.createEmployee(expectedEmployee, goodCompany.getId())).thenReturn(1L);
 		when(entitiesConventerMock.transformToEmployee(createData)).thenReturn(getValidEmployee());
 		
@@ -395,7 +395,7 @@ public class EmployeeServiceTest {
 		Company company = getGoodCompany();
 		List<Employee> expectedEmployees = Arrays.asList(new Employee(), new Employee(), new Employee(), new Employee());
 		
-		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
+		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException(""));
 		when(employeeDaoMock.getFreeEmployees(company.getId())).thenReturn(expectedEmployees);
 		
 		injectDependensies();

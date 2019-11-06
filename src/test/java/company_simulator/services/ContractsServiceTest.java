@@ -111,7 +111,7 @@ public class ContractsServiceTest {
 		Contract expectedContract = getValidContract();
 		long returnedId = 1;
 		
-		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
+		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException(""));
 		when(contractDaoMock.recordContract(expectedContract, company.getId())).thenReturn(returnedId);
 		
 		injectDependensies();
@@ -172,7 +172,7 @@ public class ContractsServiceTest {
 		Company validCompany = getValidCompany();
 		List<Contract> contracts = Arrays.asList(new Contract(), new Contract(), new Contract());
 		
-		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException());
+		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException(""));
 		when(contractDaoMock.getContractsList(sortOrder, pageNum, pageLimit, validCompany.getId())).thenReturn(contracts);
 		when(entitiesConventerMock.transformToContractRestData(new Contract())).thenReturn(new ContractRestData());
 		

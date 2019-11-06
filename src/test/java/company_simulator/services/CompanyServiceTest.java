@@ -149,7 +149,7 @@ public class CompanyServiceTest {
 		Company expectedNewCompany = new Company();
 		expectedNewCompany.setOwnerId(1);
 		
-		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenThrow(new DatabaseAccessException());
+		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenThrow(new DatabaseAccessException(""));
 		when(companyDaoMock.getUserCompany(loginEmail)).thenReturn(null);
 		when(companyDaoMock.recordCompany(expectedNewCompany)).thenReturn(1L);
 		
@@ -268,7 +268,7 @@ public class CompanyServiceTest {
 		CompanyInfoMessage expectedCompanyInfo = getValidCompanyInfo();
 		
 		CompanyService companyServiceSpy = spy(CompanyService.class);
-		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenThrow(new DatabaseAccessException());
+		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenThrow(new DatabaseAccessException(""));
 		doReturn(validCompany).when(companyServiceSpy).getUserCompany(validUser.getId());
 		
 		companyServiceSpy.setUserService(userServiceMock);
@@ -286,7 +286,7 @@ public class CompanyServiceTest {
 		
 		CompanyService companyServiceSpy = spy(CompanyService.class);
 		when(userServiceMock.getUserDataByLoginEmail(loginEmail)).thenReturn(validUser);
-		doThrow(new DatabaseAccessException()).when(companyServiceSpy).getUserCompany(validUser.getId());
+		doThrow(new DatabaseAccessException("")).when(companyServiceSpy).getUserCompany(validUser.getId());
 		
 		companyServiceSpy.setUserService(userServiceMock);
 		
