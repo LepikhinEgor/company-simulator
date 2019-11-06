@@ -1,7 +1,7 @@
 package company_simulator.controllers;
 
 import static org.mockito.Mockito.reset;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import javax.servlet.http.Cookie;
@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import static org.mockito.Mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.AnnotationConfigWebContextLoader;
@@ -24,6 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import company_simulator.TestsDaoBeansConfiguration;
 import config.WebConfig;
+import controller.messages.CompanyInfoMessage;
 import entities.Company;
 import entities.User;
 import exceptions.DatabaseAccessException;
@@ -75,6 +77,22 @@ public class CompanyControllerTest {
 		return validUser;
 	}
 	
+	private CompanyInfoMessage getCompanyInfo() {
+		CompanyInfoMessage companyInfo = new CompanyInfoMessage();
+		
+		companyInfo.setId(1);
+		companyInfo.setCash(100);
+		companyInfo.setContractsCompleted(3);
+		companyInfo.setContractsExecuting(2);
+		companyInfo.setContractsFailed(5);
+		companyInfo.setDefaultCash(1000000);
+		companyInfo.setEmployeesCount(0);
+		companyInfo.setName("New company");
+		companyInfo.setOwnerName("admin");
+		
+		return companyInfo;
+	}
+	
 	@Before
 	public void init() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webContext).build();
@@ -106,7 +124,7 @@ public class CompanyControllerTest {
 		Company validCompany = getValidCompany();
 		
 		when(companyServiceMock.getUserCompany(validUser.getLogin())).thenReturn(validCompany);
-		when(userServiceMock.getUserDataByLoginEmail(validUser.getLogin())).thenThrow(new DatabaseAccessException());
+		when(userServiceMock.getUserDataByLoginEmail(validUser.getLogin())).thenThrow(new DatabaseAccessException(""));
 		
 		mockMvc.perform(
 				 get("/company").cookie(getLoginCookie()))
@@ -120,7 +138,7 @@ public class CompanyControllerTest {
 	public void getHomePage_ErrorGettingUser() throws Exception {
 		User validUser  = getValidUser();
 		
-		when(companyServiceMock.getUserCompany(validUser.getLogin())).thenThrow(new DatabaseAccessException());
+		when(companyServiceMock.getUserCompany(validUser.getLogin())).thenThrow(new DatabaseAccessException(""));
 		when(userServiceMock.getUserDataByLoginEmail(validUser.getLogin())).thenReturn(validUser);
 		
 		mockMvc.perform(
@@ -161,6 +179,64 @@ public class CompanyControllerTest {
 //				.andDo(MockMvcResultHandlers.print())
 				.andExpect(status().is3xxRedirection())
 		        .andExpect(MockMvcResultMatchers.redirectedUrl("company"))
+		        .andReturn();
+	}
+	
+	@Test
+	public void getCompanyInfoPage_success() throws Exception {
+		mockMvc.perform(
+				 get("/company/info")
+				 )
+//				.andDo(MockMvcResultHandlers.print())
+				.andExpect(view().name("info"))
+		        .andExpect(status().is(200))
+		        .andReturn();
+	}
+	
+	@Test
+	public void getCompanyInfoPage_failByPostRequest() throws Exception {
+		mockMvc.perform(
+				 post("/company/info")
+				 )
+//				.andDo(MockMvcResultHandlers.print())
+		        .andExpect(status().is(405))
+		        .andReturn();
+	}
+	
+	@Test
+	public void getCompanyStats_successReturnCompanyInfo() throws Exception {
+		CompanyInfoMessage expectedCompanyInfo = getCompanyInfo();
+		
+		when(companyServiceMock.getCompanyInfo("admin")).thenReturn(expectedCompanyInfo);
+		
+		mockMvc.perform(
+				get("/company/info/get-company-stats")
+				.cookie(getLoginCookie())
+				)
+		        .andExpect(status().is(200))
+		        .andExpect(jsonPath("$.status").value(0))
+		        .andExpect(jsonPath("$.id").value(expectedCompanyInfo.getId()))
+		        .andExpect(jsonPath("$.name").value(expectedCompanyInfo.getName()))
+		        .andExpect(jsonPath("$.cash").value(expectedCompanyInfo.getCash()))
+		        .andExpect(jsonPath("$.defaultCash").value(expectedCompanyInfo.getDefaultCash()))
+		        .andExpect(jsonPath("$.ownerName").value(expectedCompanyInfo.getOwnerName()))
+		        .andExpect(jsonPath("$.employeesCount").value(expectedCompanyInfo.getEmployeesCount()))
+		        .andExpect(jsonPath("$.contractsExecuting").value(expectedCompanyInfo.getContractsExecuting()))
+		        .andExpect(jsonPath("$.contractsCompleted").value(expectedCompanyInfo.getContractsCompleted()))
+		        .andExpect(jsonPath("$.contractsFailed").value(expectedCompanyInfo.getContractsFailed()))
+		        .andReturn();
+	}
+	
+	@Test
+	public void getCompanyStats_failFromDatabase() throws Exception {
+		when(companyServiceMock.getCompanyInfo("admin")).thenThrow(new DatabaseAccessException(""));
+		
+		mockMvc.perform(
+				get("/company/info/get-company-stats")
+				.cookie(getLoginCookie())
+				)
+		        .andExpect(status().is(200))
+		        .andExpect(jsonPath("$.status").value(1))
 		        .andReturn();
 	}
 }
