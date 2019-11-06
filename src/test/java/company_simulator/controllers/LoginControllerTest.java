@@ -36,13 +36,17 @@ import org.hamcrest.core.Is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import controller.HomeController;
 import controller.input.NewUserData;
+import controller.input.SignInData;
 import controller.messages.Message;
 import controller.messages.RegistrationMessage;
+import entities.User;
 import exceptions.DatabaseAccessException;
 import exceptions.EmailAlreadyExistException;
 import exceptions.InvalidEmailRegistrationException;
 import exceptions.InvalidLoginRegistrationException;
 import exceptions.InvalidPasswordRegistrationException;
+import exceptions.InvalidSignInLoginEmail;
+import exceptions.InvalidSignInPasswordException;
 import exceptions.LoginAlreadyExistException;
 import services.UserService;
 
@@ -77,6 +81,26 @@ public class LoginControllerTest {
 		
 		userData.setEmail("admin@mail.ru");
 		userData.setLogin("login");
+		userData.setPassword("qwerty");
+		
+		return userData;
+	}
+	
+	private User getValidUser() {
+		User validUser = new User();
+		
+		validUser.setEmail("admin@mail.ru");
+		validUser.setId(1);
+		validUser.setLogin("admin");
+		validUser.setPassword("qwerty");
+		
+		return validUser;
+	}
+	
+	private SignInData getSignInData() {
+		SignInData userData = new SignInData();
+		
+		userData.setLoginEmail("admin");
 		userData.setPassword("qwerty");
 		
 		return userData;
@@ -125,7 +149,7 @@ public class LoginControllerTest {
 	
 	@Test
 	public void checkLoginExist_returnLoginReturnFail() throws Exception {
-		doThrow(new DatabaseAccessException()).when(userServiceMock).checkUserLoginAlreadyExist("admin");
+		doThrow(new DatabaseAccessException("")).when(userServiceMock).checkUserLoginAlreadyExist("admin");
 		mockMvc.perform(
 				get("/checkLoginExist?login=admin"))
 				.andExpect(jsonPath("$.status").value(1))
@@ -230,12 +254,96 @@ public class LoginControllerTest {
 	@Test
 	public void receiveNewUser_returnFailByDatabase() throws JsonGenerationException, JsonMappingException, IOException, Exception {
 		NewUserData userData = getUserData();
-		when(userServiceMock.createNewUser(userData)).thenThrow(new DatabaseAccessException());
+		when(userServiceMock.createNewUser(userData)).thenThrow(new DatabaseAccessException(""));
 		mockMvc.perform(
 				post("/receiveNewUser")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(toJson(userData))
 				)
+				.andExpect(jsonPath("$.status").value(1))
+				.andExpect(status().is(200))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andReturn();
+	}
+	
+	@Test
+	public void userSignIn_successReturnUserSignIn() throws JsonGenerationException, JsonMappingException, IOException, Exception  {
+		SignInData signInData = getSignInData();
+		when(userServiceMock.userSignIn(signInData)).thenReturn(getValidUser());
+		
+		mockMvc.perform(
+				post("/sign-in")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(toJson(signInData))
+				)
+				.andExpect(jsonPath("$.status").value(0))
+				.andExpect(jsonPath("$.login").value("admin"))
+				.andExpect(status().is(200))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andReturn();
+	}
+	
+	@Test
+	public void userSignIn_failReturnIncorrectLoginOrPassword() throws JsonGenerationException, JsonMappingException, IOException, Exception  {
+		SignInData signInData = getSignInData();
+		when(userServiceMock.userSignIn(signInData)).thenReturn(null);
+		
+		mockMvc.perform(
+				post("/sign-in")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(toJson(signInData))
+				)
+//		.andDo(MockMvcResultHandlers.print())
+				.andExpect(jsonPath("$.status").value(4))
+				.andExpect(status().is(200))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andReturn();
+	}
+	
+	@Test
+	public void userSignIn_failInvalidPasswordException() throws JsonGenerationException, JsonMappingException, IOException, Exception  {
+		SignInData signInData = getSignInData();
+		when(userServiceMock.userSignIn(signInData)).thenThrow(new InvalidSignInPasswordException());
+		
+		mockMvc.perform(
+				post("/sign-in")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(toJson(signInData))
+				)
+				.andExpect(jsonPath("$.status").value(3))
+				.andExpect(status().is(200))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andReturn();
+	}
+	
+	@Test
+	public void userSignIn_failInvalidLoginException() throws JsonGenerationException, JsonMappingException, IOException, Exception  {
+		SignInData signInData = getSignInData();
+		when(userServiceMock.userSignIn(signInData)).thenThrow(new InvalidSignInLoginEmail());
+		
+		mockMvc.perform(
+				post("/sign-in")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(toJson(signInData))
+				)
+		.andDo(MockMvcResultHandlers.print())
+				.andExpect(jsonPath("$.status").value(2))
+				.andExpect(status().is(200))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andReturn();
+	}
+	
+	@Test
+	public void userSignIn_failByDatabaseException() throws JsonGenerationException, JsonMappingException, IOException, Exception  {
+		SignInData signInData = getSignInData();
+		when(userServiceMock.userSignIn(signInData)).thenThrow(new DatabaseAccessException(""));
+		
+		mockMvc.perform(
+				post("/sign-in")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(toJson(signInData))
+				)
+		.andDo(MockMvcResultHandlers.print())
 				.andExpect(jsonPath("$.status").value(1))
 				.andExpect(status().is(200))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
