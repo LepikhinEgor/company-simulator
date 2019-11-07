@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.servlet.http.Cookie;
 
@@ -35,6 +37,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import company_simulator.TestsDaoBeansConfiguration;
 import config.WebConfig;
+import controller.input.EmployeeCreateData;
 import controller.input.EmployeesListQuerryData;
 import entities.Employee;
 import exceptions.DatabaseAccessException;
@@ -175,7 +178,6 @@ public class EmployeesControllerTest {
 		        .andExpect(status().is(200))
 		        .andExpect(jsonPath("$.status").value(1))
 		        .andReturn();
-		
 	}
 	
 	@Test
@@ -228,4 +230,89 @@ public class EmployeesControllerTest {
 		
 	}
 	
+	@Test
+	public void generateEmployees_successReturnEmployees() throws Exception {
+		TimeZone zone = TimeZone.getDefault();
+		Locale locale = Locale.ENGLISH;
+		List<Employee> employees = Arrays.asList(new Employee(), new Employee(), new Employee());
+		
+		when(employeeServiceMock.generateNewEmployees(getLoginCookie().getValue(), zone, locale)).thenReturn(employees);
+		mockMvc.perform(
+				get("/company/hr/get-generated-employees")
+				.locale(locale)
+				.cookie(getLoginCookie())
+				.contentType(MediaType.APPLICATION_JSON)
+				)
+//		.andDo(MockMvcResultHandlers.print())
+		        .andExpect(status().is(200))
+		        .andExpect(jsonPath("$.status").value(0))
+		        .andReturn();
+	}
+	
+	@Test
+	public void generateEmployees_failByNullCookie() throws Exception {
+		TimeZone zone = TimeZone.getDefault();
+		Locale locale = Locale.ENGLISH;
+		List<Employee> employees = Arrays.asList(new Employee(), new Employee(), new Employee());
+		
+		when(employeeServiceMock.generateNewEmployees(getLoginCookie().getValue(), zone, locale)).thenReturn(employees);
+		mockMvc.perform(
+				get("/company/hr/get-generated-employees")
+				.locale(locale)
+				.contentType(MediaType.APPLICATION_JSON)
+				)
+		        .andExpect(status().is(400))
+		        .andReturn();
+	}
+	
+	@Test
+	public void generateEmployees_failFromDB() throws Exception {
+		TimeZone zone = TimeZone.getDefault();
+		Locale locale = Locale.ENGLISH;
+		
+		when(employeeServiceMock.generateNewEmployees(getLoginCookie().getValue(), zone, locale)).thenThrow(new DatabaseAccessException(""));
+		mockMvc.perform(
+				get("/company/hr/get-generated-employees")
+				.locale(locale)
+				.cookie(getLoginCookie())
+				.contentType(MediaType.APPLICATION_JSON)
+				)
+		        .andExpect(status().is(200))
+		        .andExpect(jsonPath("$.status").value(1))
+		        .andReturn();
+	}
+	
+	@Test
+	public void hireGeneratedEmployees_success() throws Exception {
+		long[] employeesId = {1, 2, 3, 4};
+		
+		doNothing().when(employeeServiceMock).hireGeneratedEmployees(employeesId);
+		
+		mockMvc.perform(
+				post("/company/hr/hire-generated-employees")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(toJson(employeesId)
+				))
+		.andDo(MockMvcResultHandlers.print())
+		        .andExpect(status().is(200))
+		        .andExpect(jsonPath("$.status").value(0))
+		        .andReturn();
+	}
+	
+	@Test
+	public void hireGeneratedEmployees_failByDBException() throws Exception {
+		long[] employeesId = {1, 2, 3, 4};
+		
+		doThrow(new DatabaseAccessException("")).when(employeeServiceMock).hireGeneratedEmployees(employeesId);
+		
+		mockMvc.perform(
+				post("/company/hr/hire-generated-employees")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(toJson(employeesId)
+				))
+		.andDo(MockMvcResultHandlers.print())
+		        .andExpect(status().is(200))
+		        .andExpect(jsonPath("$.status").value(1))
+		        .andReturn();
+	}
 }

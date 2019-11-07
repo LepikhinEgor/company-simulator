@@ -97,7 +97,7 @@ public class EmployeesController {
 			return new EmployeeCreateMessage(Message.FAIL);
 		}
 		
-		return new EmployeeCreateMessage(0);
+		return new EmployeeCreateMessage(Message.SUCCESS);
 	}
 	
 	@RequestMapping(value = "/company/hr/update-employee", method = RequestMethod.POST, consumes = "application/json")
@@ -124,9 +124,7 @@ public class EmployeesController {
 			@CookieValue(value = "signedUser") Cookie cookie,
 			TimeZone timezone,
 			Locale locale) {
-		if (cookie == null) {
-			return new GeneratedEmployeesMessage(Message.FAIL);
-		}
+
 		String login = cookie.getValue();
 		
 		List<Employee> generatedEmployees;
