@@ -49,7 +49,7 @@ public class ContractsController {
 	}
 	
 	@RequestMapping(value = "/company/contracts", method = RequestMethod.GET)
-	public String getHrPage(@CookieValue(value = "signedUser", required = false) Cookie cookie) {
+	public String getContractsPage(@CookieValue(value = "signedUser", required = false) Cookie cookie) {
 		
 		if (cookie == null) {
 			return "login";
@@ -104,7 +104,7 @@ public class ContractsController {
 	
 	@RequestMapping(value="/company/contracts/get-contract-team", method = RequestMethod.GET)
 	@ResponseBody
-	public ContractTeamMessage getContractTeamMessage(@RequestParam(value = "contractId") long contractId,
+	public ContractTeamMessage getContractTeam(@RequestParam(value = "contractId") long contractId,
 			@CookieValue(value="signedUser", required = false) Cookie cookie) {
 		String login;
 		if (cookie != null) 
