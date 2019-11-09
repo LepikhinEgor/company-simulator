@@ -3,6 +3,7 @@ package services;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
@@ -47,7 +48,11 @@ public class ContractRandomGenerator {
 	
 	private Contract generateContract(double companyPopularity, double companyRespect, long companyId) {
 		Contract contract = new Contract();
+		Random random = new Random();
+		int nameNum = random.nextInt(13) + 1;
 		
+		String name = "name_" + nameNum;
+		String description = "description_" + nameNum;
 		int contractSize = generateContractSize(MIN_CONTRACT_SIZE, MAX_CONTRACT_SIZE);
 		double urgencyChance = generateDeadlineUrgencyChance();
 		Timestamp deadline = new Timestamp(generateDeadlineTimeInMinutes(contractSize, urgencyChance));
@@ -58,6 +63,8 @@ public class ContractRandomGenerator {
 		contract.setDeadline(deadline);
 		contract.setFee(fee);
 		contract.setCompanyId(companyId);
+		contract.setName(name);
+		contract.setDescription(description);
 		
 		return contract;
 	}
