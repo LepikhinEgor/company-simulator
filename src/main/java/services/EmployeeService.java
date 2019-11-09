@@ -90,7 +90,7 @@ public class EmployeeService {
 	}
 	
 	@Loggable
-	public List<Employee> getEmployeesList(EmployeesListQuerryData querryData, String loginEmail) throws DatabaseAccessException, EmployeesListException, IncorrectOrderNumException, IncorrectPageNumException {
+	public List<Employee> getEmployeesList(EmployeesListQuerryData querryData, String loginEmail, Locale locale) throws DatabaseAccessException, EmployeesListException, IncorrectOrderNumException, IncorrectPageNumException {
 		
 		if (!isOrderNumCorrect(querryData.getOrderNum()))
 			throw new IncorrectOrderNumException("Number of sort order is over bounds");
@@ -101,7 +101,10 @@ public class EmployeeService {
 		Company userCompany = companyService.getUserCompany(loginEmail);
 		
 		try {
-			return employeeDao.getEmployeesList(userCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), EMPLOYEES_PAGE_LIMIT);
+			List<Employee> employees = employeeDao.getEmployeesList(userCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), EMPLOYEES_PAGE_LIMIT);
+			List<Employee> localizedEmployees = localizationService.localizeEmployees(employees, locale);
+			
+			return localizedEmployees;
 		} catch (SQLException e) {
 			throw new DatabaseAccessException("Error trying to get employees list");
 		}

@@ -65,12 +65,13 @@ public class EmployeesController {
 	@ResponseBody
 	public EmployeesListMessage getEmployees(
 			@CookieValue(value = "signedUser", required = true) Cookie cookie, 
-			@RequestBody EmployeesListQuerryData requestData) {
+			@RequestBody EmployeesListQuerryData requestData,
+			Locale locale) {
 		
 		List<Employee> employees = null;
 		
 		try {
-			employees = employeeService.getEmployeesList(requestData, cookie.getValue());
+			employees = employeeService.getEmployeesList(requestData, cookie.getValue(), locale);
 		} catch (DatabaseAccessException | 
 				EmployeesListException | 
 				IncorrectOrderNumException |
