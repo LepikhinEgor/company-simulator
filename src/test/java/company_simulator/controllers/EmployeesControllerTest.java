@@ -112,7 +112,7 @@ public class EmployeesControllerTest {
 		
 		List<Employee> employees = Arrays.asList(new Employee(), new Employee(), new Employee(), new Employee());
 		
-		when(employeeServiceMock.getEmployeesList(querryData, "admin")).thenReturn(employees);
+		when(employeeServiceMock.getEmployeesList(querryData, "admin", Locale.ENGLISH)).thenReturn(employees);
 		
 		mockMvc.perform(
 				post("/company/hr/get-employees")
@@ -131,7 +131,7 @@ public class EmployeesControllerTest {
 	public void getEmployees_failByDatabaseAcessException() throws Exception {
 		EmployeesListQuerryData querryData = getEmployeesListQuerryData();
 		
-		when(employeeServiceMock.getEmployeesList(querryData, "admin")).thenThrow(new DatabaseAccessException(""));
+		when(employeeServiceMock.getEmployeesList(querryData, "admin",Locale.ENGLISH)).thenThrow(new DatabaseAccessException(""));
 		
 		mockMvc.perform(
 				post("/company/hr/get-employees")
@@ -139,6 +139,7 @@ public class EmployeesControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(toJson(querryData)
 				))
+				.andDo(MockMvcResultHandlers.print())
 		        .andExpect(status().is(200))
 		        .andExpect(jsonPath("$.status").value(1))
 		        .andReturn();
@@ -149,7 +150,7 @@ public class EmployeesControllerTest {
 	public void getEmployees_failByEmployeesListException() throws Exception {
 		EmployeesListQuerryData querryData = getEmployeesListQuerryData();
 		
-		when(employeeServiceMock.getEmployeesList(querryData, "admin")).thenThrow(new EmployeesListException(""));
+		when(employeeServiceMock.getEmployeesList(querryData, "admin", Locale.ENGLISH)).thenThrow(new EmployeesListException(""));
 		
 		mockMvc.perform(
 				post("/company/hr/get-employees")
@@ -167,7 +168,7 @@ public class EmployeesControllerTest {
 	public void getEmployees_failByIncorrectOrderNumException() throws Exception {
 		EmployeesListQuerryData querryData = getEmployeesListQuerryData();
 		
-		when(employeeServiceMock.getEmployeesList(querryData, "admin")).thenThrow(new IncorrectOrderNumException(""));
+		when(employeeServiceMock.getEmployeesList(querryData, "admin", Locale.ENGLISH)).thenThrow(new IncorrectOrderNumException(""));
 		
 		mockMvc.perform(
 				post("/company/hr/get-employees")
@@ -184,7 +185,7 @@ public class EmployeesControllerTest {
 	public void getEmployees_failByIncorrectPageNumException() throws Exception {
 		EmployeesListQuerryData querryData = getEmployeesListQuerryData();
 		
-		when(employeeServiceMock.getEmployeesList(querryData, "admin")).thenThrow(new IncorrectPageNumException(""));
+		when(employeeServiceMock.getEmployeesList(querryData, "admin", Locale.ENGLISH)).thenThrow(new IncorrectPageNumException(""));
 		
 		mockMvc.perform(
 				post("/company/hr/get-employees")
@@ -202,7 +203,7 @@ public class EmployeesControllerTest {
 	public void getEmployees_failBecauseCookieIsNull() throws Exception {
 		EmployeesListQuerryData querryData = getEmployeesListQuerryData();
 		
-		when(employeeServiceMock.getEmployeesList(querryData, "admin")).thenThrow(new IncorrectPageNumException(""));
+		when(employeeServiceMock.getEmployeesList(querryData, "admin", Locale.getDefault())).thenThrow(new IncorrectPageNumException(""));
 		
 		mockMvc.perform(
 				post("/company/hr/get-employees")
@@ -219,7 +220,7 @@ public class EmployeesControllerTest {
 	public void getEmployees_failBecauseRequestBodeIsNull() throws Exception {
 		EmployeesListQuerryData querryData = getEmployeesListQuerryData();
 		
-		when(employeeServiceMock.getEmployeesList(querryData, "admin")).thenThrow(new IncorrectPageNumException(""));
+		when(employeeServiceMock.getEmployeesList(querryData, "admin", Locale.getDefault())).thenThrow(new IncorrectPageNumException(""));
 		
 		mockMvc.perform(
 				post("/company/hr/get-employees")

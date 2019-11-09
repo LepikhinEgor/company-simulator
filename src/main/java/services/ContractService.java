@@ -30,6 +30,8 @@ public class ContractService {
 	
 	ContractDao contractDao;
 	
+	ContractRandomGenerator contractGenerator;
+	
 	private final int PAGE_LIMIT = 10; 
 	
 	@Autowired
@@ -45,6 +47,25 @@ public class ContractService {
 	@Autowired
 	public void setEntitiesConventer(EntitiesConventer conventer) {
 		this.entitiesConventer = conventer;
+	}
+	
+	@Autowired
+	public void setContractRandomGenerator(ContractRandomGenerator contractGenerator) {
+		this.contractGenerator = contractGenerator;
+	}
+	
+	
+	public List<Contract> generateContracts(String login) {
+		double companyPopularity = 0.5;
+		double companyRespect = 0.5;
+		
+		Company company = null;
+		try {
+			company = companyService.getUserCompany(login);
+		} catch (DatabaseAccessException e) {
+		}
+		
+		return contractGenerator.generateNewContracts(companyPopularity, companyRespect, company.getId());
 	}
 	
 	@Loggable

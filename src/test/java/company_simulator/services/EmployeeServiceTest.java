@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import dao.EmployeeDao;
 import entities.Company;
@@ -28,6 +29,7 @@ import exceptions.employees.IncorrectPageNumException;
 import services.CompanyService;
 import services.EmployeeService;
 import services.UserService;
+import services.localization.LocalizationService;
 import services.utils.EntitiesConventer;
 
 public class EmployeeServiceTest {
@@ -35,6 +37,7 @@ public class EmployeeServiceTest {
 	private EmployeeService employeeService;
 	private CompanyService companyServiceMock;
 	private UserService userServiceMock;
+	private LocalizationService localizationServiceMock;
 	
 	private EmployeeDao employeeDaoMock;
 	
@@ -49,6 +52,7 @@ public class EmployeeServiceTest {
 		employeeService.setEmployeeDao(employeeDaoMock);
 		employeeService.setCompanyService(companyServiceMock);
 		employeeService.setEntitiesConventer(entitiesConventerMock);
+		employeeService.setLocalizationService(localizationServiceMock);
 	}
 	
 	
@@ -61,6 +65,7 @@ public class EmployeeServiceTest {
 		employeeDaoMock = mock(EmployeeDao.class);
 		
 		entitiesConventerMock = mock(EntitiesConventer.class);
+		localizationServiceMock = mock(LocalizationService.class);
 		
 		loginEmail = "admin";
 		
@@ -201,10 +206,11 @@ public class EmployeeServiceTest {
 		when(companyServiceMock.getUserCompany(loginEmail)).thenReturn(goodCompany);
 		when(employeeDaoMock.getEmployeesList(goodCompany.getId(), querryData.getOrderNum(), querryData.getPageNum(), PAGE_LIMIT)).
 		thenReturn(employees);
+		when(localizationServiceMock.localizeEmployees(employees, Locale.ENGLISH)).thenReturn(employees);
 		
 		injectDependensies();
 		
-		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail);
+		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail, Locale.ENGLISH);
 		
 		assertTrue(employees.equals(actualEmployees));
 	}
@@ -223,7 +229,7 @@ public class EmployeeServiceTest {
 		
 		injectDependensies();
 		
-		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail);
+		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail, Locale.getDefault());
 		
 		assertTrue(employees.equals(actualEmployees));
 	}
@@ -242,7 +248,7 @@ public class EmployeeServiceTest {
 		
 		injectDependensies();
 		
-		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail);
+		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail, Locale.getDefault());
 		
 		assertTrue(employees.equals(actualEmployees));
 	}
@@ -263,7 +269,7 @@ public class EmployeeServiceTest {
 		
 		injectDependensies();
 		
-		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail);
+		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail, Locale.getDefault());
 		
 		assertTrue(employees.equals(actualEmployees));
 	}
@@ -284,7 +290,7 @@ public class EmployeeServiceTest {
 		
 		injectDependensies();
 		
-		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail);
+		List<Employee> actualEmployees = employeeService.getEmployeesList(querryData, loginEmail, Locale.getDefault());
 		
 		assertTrue(employees.equals(actualEmployees));
 	}
