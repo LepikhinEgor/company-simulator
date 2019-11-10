@@ -2,8 +2,13 @@ package services;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.springframework.stereotype.Service;
 
@@ -54,8 +59,45 @@ public class ContractRandomGenerator {
 		for (int i = 0; i < MAX_LARGE_CONTRACTS; i++)
 			contracts.add(generateContract(popularity, respect, companyId, LARGE_CONTRACT));
 		
+		contracts = checkContractUnic(contracts);
+		
 		return contracts;
 	}
+	
+	private List<Contract> checkContractUnic(List<Contract> contracts) {
+		Set<Contract> unicContracts = new HashSet<Contract>();
+		Set<Contract> filteredContracts = new HashSet<Contract>();
+		
+		for (Contract contractI : contracts) {
+			for (Contract contractJ : contracts) {
+				if (contractI.equals(contractJ))
+					continue;
+				if (contractI.getName().equals(contractJ.getName())) {
+					if (contractI.getDeadline().getTime() > contractJ.getDeadline().getTime())
+						filteredContracts.add(contractI);
+					else
+						filteredContracts.add(contractJ);
+				} 
+			}
+		}
+		
+		for (Contract contract : contracts) {
+			boolean defaultUnic = true;
+			for (Contract filterContract: filteredContracts) {
+				if (contract.getName().equals(filterContract.getName()))
+					defaultUnic = false;
+			}
+			if (defaultUnic)
+				unicContracts.add(contract);
+		}
+		
+		unicContracts.addAll(filteredContracts);
+		
+		return new ArrayList<Contract>(unicContracts);
+		
+		
+	}
+	
 	
 	private int generateContractsCount(double companyPopularity, double companyRespect, int max) {
 		int readyJunsCount = 0;
@@ -180,7 +222,7 @@ public class ContractRandomGenerator {
 	public static void main(String[] args) {
 		ContractRandomGenerator contractRandom = new ContractRandomGenerator();
 		for (Contract contrract :contractRandom.generateNewContracts(0.2, 0.2, 1)) {
-			System.out.println(contrract);
+			System.out.println("final " + contrract);
 		};
 	}
 }
