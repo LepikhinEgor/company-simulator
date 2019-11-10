@@ -10,9 +10,11 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import aspects.annotations.Loggable;
+import dao.GeneratedContractsDao;
 import entities.Contract;
 
 @Service
@@ -42,6 +44,13 @@ public class ContractRandomGenerator {
 	
 	private static final int AVERAGE_TEAM_PERFOMANCE = 150;
 	private static final int AVERAGE_SALARY = 60;
+	
+	private GeneratedContractsDao generatedContractsDao;
+	
+	@Autowired
+	public void setGeneratedContractsDao(GeneratedContractsDao generatedContractsDao) {
+		this.generatedContractsDao = generatedContractsDao;
+	}
 	
 	@Loggable
 	public List<Contract> generateNewContracts(double popularity, double respect, long companyId) {
@@ -217,12 +226,5 @@ public class ContractRandomGenerator {
 		coef = (1 + (1-urgencyChance));
 		
 		return coef;
-	}
-	
-	public static void main(String[] args) {
-		ContractRandomGenerator contractRandom = new ContractRandomGenerator();
-		for (Contract contrract :contractRandom.generateNewContracts(0.2, 0.2, 1)) {
-			System.out.println("final " + contrract);
-		};
 	}
 }

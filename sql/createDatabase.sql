@@ -77,3 +77,14 @@ employees_generate_timing INT,
 contracts_generate_timing INT,
 FOREIGN KEY(company_id) REFERENCES companies(company_id) ON DELETE CASCADE);
 
+CREATE TABLE generated_contracts (
+id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(30) NOT NULL,
+performance_units INT NOT NULL,
+fee INT NOT NULL,
+deadline INT NOT NULL,
+description VARCHAR(30),
+company_id INT NOT NULL,
+FOREIGN KEY(company_id) REFERENCES companies(company_id) ON DELETE CASCADE
+)
+
