@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +21,7 @@ import controller.input.CreateContractData;
 import controller.messages.ContractTeamMessage;
 import controller.messages.ContractsListMessage;
 import controller.messages.CreateContractMessage;
+import controller.messages.GeneratedContractsMessage;
 import controller.messages.Message;
 import controller.messages.entities.ContractRestData;
 import entities.Contract;
@@ -154,5 +156,18 @@ public class ContractsController {
 		}
 		
 		return new Message(Message.SUCCESS);
+	}
+	
+	@GetMapping("/company/contracts/get-generated-contracts")
+	@ResponseBody
+	public GeneratedContractsMessage getGeneratedContracts(
+			@CookieValue(value="signedUser", required = true) Cookie cookie) {
+		try {
+			contractService.getGeneratedContracts(cookie.getValue());
+		} catch (DatabaseAccessException e) {
+			return new GeneratedContractsMessage(Message.SUCCESS);
+		}
+		
+		return new GeneratedContractsMessage(Message.FAIL);
 	}
 }

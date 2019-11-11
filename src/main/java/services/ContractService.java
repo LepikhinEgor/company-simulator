@@ -55,15 +55,11 @@ public class ContractService {
 	}
 	
 	
-	public List<Contract> generateContracts(String login) {
+	public List<Contract> getGeneratedContracts(String login) throws DatabaseAccessException {
 		double companyPopularity = 0.5;
 		double companyRespect = 0.5;
 		
-		Company company = null;
-		try {
-			company = companyService.getUserCompany(login);
-		} catch (DatabaseAccessException e) {
-		}
+		Company company = companyService.getUserCompany(login);
 		
 		return contractGenerator.generateNewContracts(companyPopularity, companyRespect, company.getId());
 	}

@@ -13,6 +13,7 @@ import dao.CompanyDao;
 import dao.ConnectionPool;
 import dao.ContractDao;
 import dao.EmployeeDao;
+import dao.GeneratedContractsDao;
 import dao.GeneratedEmployeesDao;
 import dao.UserDao;
 
@@ -55,5 +56,10 @@ public class SpringConfig {
 	public Object setDefaultLocale() {
 		Locale.setDefault(Locale.ENGLISH);
 		return null;
+	}
+	
+	@Bean
+	public GeneratedContractsDao generatedContractsDao() {
+		return new GeneratedContractsDao();
 	}
 }
