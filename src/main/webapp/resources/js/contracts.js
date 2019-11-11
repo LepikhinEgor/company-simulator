@@ -16,6 +16,7 @@ function refreshContractsEventHandlers() {
     $('.change_contract_team').off('click');
     $('.close_modal_contract_team_apply').off('click');
     $(".close_modal_contract_team").off('click');
+    $("#get_generated_contracts").off('click');
 
     $('#create_new_contract').on('click', newContractOpenModal);
     $('#apply_contract_data').on('click', applyContractData);
@@ -23,6 +24,7 @@ function refreshContractsEventHandlers() {
     $('.change_contract_team').on('click', changeContractTeamOpenModal);
     $(".close_modal_contract_team_apply").on('click', applyContractTeamChanges);
     $(".close_modal_contract_team").on('click', clearContractEmployeesData);
+    $("#get_generated_contracts").on('click', getGeneratedContracts);
 }
 
 function refreshContractTeamEventHandlers() {
@@ -37,6 +39,17 @@ function refreshCompletedContractsEventHandlers() {
 	$('.resolve_contract').off('click');
 	
 	$('.resolve_contract').on('click', resolveContractRequest);
+}
+
+function getGeneratedContracts() {
+	$.ajax({
+        type: "GET",
+        url: "/company-simulator/company/contracts/get-generated-contracts",
+        contentType: 'application/json',
+        success: function(data) {
+			console.log(data);
+		}
+      });
 }
 
 function applyContractTeamChanges() {

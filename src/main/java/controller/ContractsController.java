@@ -163,11 +163,15 @@ public class ContractsController {
 	public GeneratedContractsMessage getGeneratedContracts(
 			@CookieValue(value="signedUser", required = true) Cookie cookie) {
 		try {
-			contractService.getGeneratedContracts(cookie.getValue());
+			logger.info("1");
+			List<ContractRestData> generatedContracts = contractService.getGeneratedContracts(cookie.getValue());
+			logger.info("2");
+			return new GeneratedContractsMessage(Message.SUCCESS, generatedContracts);
 		} catch (DatabaseAccessException e) {
-			return new GeneratedContractsMessage(Message.SUCCESS);
+			return new GeneratedContractsMessage(Message.FAIL);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
-		
 		return new GeneratedContractsMessage(Message.FAIL);
 	}
 }

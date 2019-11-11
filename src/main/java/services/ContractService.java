@@ -54,14 +54,20 @@ public class ContractService {
 		this.contractGenerator = contractGenerator;
 	}
 	
-	
-	public List<Contract> getGeneratedContracts(String login) throws DatabaseAccessException {
+	@Loggable
+	public List<ContractRestData> getGeneratedContracts(String login) throws DatabaseAccessException {
 		double companyPopularity = 0.5;
 		double companyRespect = 0.5;
 		
 		Company company = companyService.getUserCompany(login);
 		
-		return contractGenerator.generateNewContracts(companyPopularity, companyRespect, company.getId());
+		List<Contract> generatedContracts = contractGenerator.generateNewContracts(companyPopularity, companyRespect, company.getId());
+		
+		List<ContractRestData> restContracts = new ArrayList<ContractRestData>();
+		for (Contract contract : generatedContracts)
+			restContracts.add(entitiesConventer.transformToContractRestData(contract));
+		
+		return restContracts;
 	}
 	
 	@Loggable

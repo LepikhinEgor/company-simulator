@@ -141,6 +141,7 @@ public class ContractRandomGenerator {
 		contract.setCompanyId(companyId);
 		contract.setName(name);
 		contract.setDescription(description);
+		contract.setStatus("1");
 		
 		return contract;
 	}

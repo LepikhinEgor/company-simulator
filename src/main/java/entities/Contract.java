@@ -37,7 +37,10 @@ public class Contract {
 		return minutes;
 	}
 	
-	public int calculateProgress() {//todo calculate by deadline
+	public int calculateProgress() {
+		if (teamChangedDate == null) 
+			return 0;
+		
 		int progress = 0;
 		
 		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
