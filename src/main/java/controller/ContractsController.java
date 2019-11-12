@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 
@@ -161,10 +162,11 @@ public class ContractsController {
 	@GetMapping("/company/contracts/get-generated-contracts")
 	@ResponseBody
 	public GeneratedContractsMessage getGeneratedContracts(
-			@CookieValue(value="signedUser", required = true) Cookie cookie) {
+			@CookieValue(value="signedUser", required = true) Cookie cookie,
+			Locale locale) {
 		try {
 			logger.info("1");
-			List<ContractRestData> generatedContracts = contractService.getGeneratedContracts(cookie.getValue());
+			List<ContractRestData> generatedContracts = contractService.getGeneratedContracts(cookie.getValue(), locale);
 			logger.info("2");
 			return new GeneratedContractsMessage(Message.SUCCESS, generatedContracts);
 		} catch (DatabaseAccessException e) {

@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 public abstract class LocalizationResources {
 	protected final String EMPLOYEES_BUNDLE_PATH = "locale/employees/employees";
+	protected final String CONTRACTS_BUNDLE_PATH = "locale/contracts/contracts";
 	
 	public abstract ResourceBundle getEmployeesBundle();
 	public abstract ResourceBundle getContractsBundle();

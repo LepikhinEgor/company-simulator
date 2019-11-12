@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import entities.Company;
 import entities.Contract;
 import exceptions.DatabaseAccessException;
 import exceptions.employees.DoubleEmployeeIdException;
+import services.localization.LocalizationService;
 import services.utils.EntitiesConventer;
 
 @Service
@@ -31,6 +33,8 @@ public class ContractService {
 	ContractDao contractDao;
 	
 	ContractRandomGenerator contractGenerator;
+	
+	LocalizationService localizationService;
 	
 	private final int PAGE_LIMIT = 10; 
 	
@@ -50,21 +54,27 @@ public class ContractService {
 	}
 	
 	@Autowired
-	public void setContractRandomGenerator(ContractRandomGenerator contractGenerator) {
+	public void setContractGenerator(ContractRandomGenerator contractGenerator) {
 		this.contractGenerator = contractGenerator;
 	}
 	
+	@Autowired
+	public void setLocalizationService(LocalizationService localizationService) {
+		this.localizationService = localizationService;
+	}
+	
 	@Loggable
-	public List<ContractRestData> getGeneratedContracts(String login) throws DatabaseAccessException {
+	public List<ContractRestData> getGeneratedContracts(String login, Locale locale) throws DatabaseAccessException {
 		double companyPopularity = 0.5;
 		double companyRespect = 0.5;
 		
 		Company company = companyService.getUserCompany(login);
 		
 		List<Contract> generatedContracts = contractGenerator.generateNewContracts(companyPopularity, companyRespect, company.getId());
+		List<Contract> localizedContracts = localizationService.localizeContracts(generatedContracts, locale);
 		
 		List<ContractRestData> restContracts = new ArrayList<ContractRestData>();
-		for (Contract contract : generatedContracts)
+		for (Contract contract : localizedContracts)
 			restContracts.add(entitiesConventer.transformToContractRestData(contract));
 		
 		return restContracts;

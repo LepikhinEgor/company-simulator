@@ -12,7 +12,7 @@ public class RussianLocalization extends LocalizationResources{
 
 	@Override
 	public ResourceBundle getContractsBundle() {
-		return null;
+		return ResourceBundle.getBundle(CONTRACTS_BUNDLE_PATH, new Locale("ru", "RU"));
 	}
 	
 }

@@ -28,6 +28,20 @@ public class Contract {
 		super();
 	}
 	
+	public Contract(Contract contract) {
+		this.companyId = contract.getCompanyId();
+		this.deadline = contract.deadline;
+		this.description = contract.getDescription();
+		this.fee = contract.getFee();
+		this.id = contract.getId();
+		this.lastProgress = contract.getLastProgress();
+		this.name = contract.getName();
+		this.perfomanceUnits = contract.getPerfomanceUnits();
+		this.status = contract.getStatus();
+		this.teamChangedDate = contract.getTeamChangedDate();
+		this.workSpeed = contract.getWorkSpeed();
+	}
+	
 	public int getTimeBeforeCompletion() {
 		if (workSpeed == 0)
 			return -1;
