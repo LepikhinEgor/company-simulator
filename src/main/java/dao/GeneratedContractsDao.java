@@ -39,7 +39,7 @@ public class GeneratedContractsDao {
 	}
 	
 	private void recordGeneratedContracts(List<Contract> contracts, long companyId, Connection connection) throws SQLException {
-		String querry = "INSERT INTO generated_contracts VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
+		String querry = "INSERT INTO generated_contracts VALUES (NULL, ?, ?, ?, ?, ?, ?)";
 		
 		try(PreparedStatement statement = connection.prepareStatement(querry)) {
 			

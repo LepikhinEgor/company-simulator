@@ -37,7 +37,7 @@ public class Contract {
 		this.lastProgress = contract.getLastProgress();
 		this.name = contract.getName();
 		this.perfomanceUnits = contract.getPerfomanceUnits();
-		this.status = contract.getStatus();
+		this.status = contract.status;
 		this.teamChangedDate = contract.getTeamChangedDate();
 		this.workSpeed = contract.getWorkSpeed();
 	}
@@ -74,7 +74,7 @@ public class Contract {
 	public String getActualStatus() {
 		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 		
-		if(status.equals(RESOLVED_COMPLETED) || status.equals(RESOLVED_FAILED))
+		if( status == null ||status.equals(RESOLVED_COMPLETED) || status.equals(RESOLVED_FAILED))
 			return status;
 		
 		if (deadline.before(currentTime)) {

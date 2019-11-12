@@ -1,5 +1,6 @@
 package services;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import aspects.annotations.Loggable;
 import dao.GeneratedContractsDao;
 import entities.Contract;
+import exceptions.DatabaseAccessException;
 
 @Service
 public class ContractRandomGenerator {
@@ -53,7 +55,7 @@ public class ContractRandomGenerator {
 	}
 	
 	@Loggable
-	public List<Contract> generateNewContracts(double popularity, double respect, long companyId) {
+	public List<Contract> generateNewContracts(double popularity, double respect, long companyId) throws DatabaseAccessException {
 		List<Contract> contracts = new ArrayList<Contract>();
 		
 		int smallContractsCount = generateContractsCount(popularity, respect, MAX_SMALL_CONTRACTS);
@@ -70,7 +72,21 @@ public class ContractRandomGenerator {
 		
 		contracts = checkContractUnic(contracts);
 		
+		contracts = recordGeneratedContracts(contracts, companyId);
+		
 		return contracts;
+	}
+	
+	private List<Contract> recordGeneratedContracts(List<Contract> contracts, long companyId) throws DatabaseAccessException {
+		List<Contract> recordedContracts;
+		try {
+			recordedContracts = generatedContractsDao.recordGeneratedContracts(contracts, companyId);
+		} catch (SQLException e) {
+			throw new DatabaseAccessException("Error recording generatedContracts to database");
+		}
+	
+		
+		return recordedContracts;
 	}
 	
 	private List<Contract> checkContractUnic(List<Contract> contracts) {
@@ -81,6 +97,10 @@ public class ContractRandomGenerator {
 			for (Contract contractJ : contracts) {
 				if (contractI.equals(contractJ))
 					continue;
+				for (Contract filteredContract : filteredContracts)
+					if (contractI.getName().equals(filteredContract.getName()))
+						continue;
+					
 				if (contractI.getName().equals(contractJ.getName())) {
 					if (contractI.getDeadline().getTime() > contractJ.getDeadline().getTime())
 						filteredContracts.add(contractI);
