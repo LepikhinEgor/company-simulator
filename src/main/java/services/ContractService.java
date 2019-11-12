@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,13 +65,13 @@ public class ContractService {
 	}
 	
 	@Loggable
-	public List<ContractRestData> getGeneratedContracts(String login, Locale locale) throws DatabaseAccessException {
+	public List<ContractRestData> getGeneratedContracts(String login, Locale locale, TimeZone timezone) throws DatabaseAccessException {
 		double companyPopularity = 0.5;
 		double companyRespect = 0.5;
 		
 		Company company = companyService.getUserCompany(login);
 		
-		List<Contract> generatedContracts = contractGenerator.generateNewContracts(companyPopularity, companyRespect, company.getId());
+		List<Contract> generatedContracts = contractGenerator.getGeneratedContracts(companyPopularity, companyRespect, company.getId(), timezone);
 		List<Contract> localizedContracts = localizationService.localizeContracts(generatedContracts, locale);
 		
 		List<ContractRestData> restContracts = new ArrayList<ContractRestData>();

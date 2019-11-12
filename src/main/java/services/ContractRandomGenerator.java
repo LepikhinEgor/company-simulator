@@ -3,14 +3,19 @@ package services;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.TreeSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +26,8 @@ import exceptions.DatabaseAccessException;
 
 @Service
 public class ContractRandomGenerator {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ContractRandomGenerator.class);
 
 	private static final double POPULARITY_COEF= 0.5;
 	private static final double RESPECT_COEF= 0.5;
@@ -55,7 +62,22 @@ public class ContractRandomGenerator {
 	}
 	
 	@Loggable
-	public List<Contract> generateNewContracts(double popularity, double respect, long companyId) throws DatabaseAccessException {
+	public List<Contract> getGeneratedContracts(double popularity, double respect, long companyId, TimeZone timezone) throws DatabaseAccessException {
+		List<Contract> generatedContracts = null;
+		
+		long curTiming = getCurrentContractsGenerationTiming(timezone);
+		long oldTiming = getOldContractsGenerationTiming(companyId);
+		
+		if (oldTiming < curTiming)
+			generatedContracts = generateNewContracts(popularity, respect, companyId, timezone);
+		else
+			generatedContracts = getOldGeneratedContracts(companyId);
+		
+		return generatedContracts;
+	}
+	
+	@Loggable
+	private List<Contract> generateNewContracts(double popularity, double respect, long companyId, TimeZone timezone) throws DatabaseAccessException {
 		List<Contract> contracts = new ArrayList<Contract>();
 		
 		int smallContractsCount = generateContractsCount(popularity, respect, MAX_SMALL_CONTRACTS);
@@ -72,15 +94,51 @@ public class ContractRandomGenerator {
 		
 		contracts = checkContractUnic(contracts);
 		
-		contracts = recordGeneratedContracts(contracts, companyId);
+		long generationTiming = getCurrentContractsGenerationTiming(timezone);
+		contracts = recordGeneratedContracts(contracts, companyId, generationTiming);
 		
 		return contracts;
 	}
 	
-	private List<Contract> recordGeneratedContracts(List<Contract> contracts, long companyId) throws DatabaseAccessException {
+	private List<Contract> getOldGeneratedContracts(long companyId) throws DatabaseAccessException {
+		List<Contract> contracts = null;
+		
+		try {
+			contracts = generatedContractsDao.getGeneratedContracts(companyId);
+		} catch (SQLException e) {
+			throw new DatabaseAccessException("Error getting old generated contracts");
+		}
+		
+		return contracts;
+	}
+	
+	private long getCurrentContractsGenerationTiming(TimeZone timeZone) {
+		long timing = 0;
+		
+		Calendar calendar = new GregorianCalendar(timeZone);
+		long timestamp = calendar.getTimeInMillis();
+
+		timing = timestamp / (1000*60* 60 * 4); //4 hour
+		
+		return timing;
+	}
+	
+	private long getOldContractsGenerationTiming(long companyId) throws DatabaseAccessException {
+		long oldTiming = 0;
+		
+		try {
+			oldTiming = generatedContractsDao.getContractGenerationTiming(companyId);
+		} catch (SQLException e) {
+			throw new DatabaseAccessException("Error getting contracts generation timing");
+		}
+		
+		return oldTiming;
+	}
+	
+	private List<Contract> recordGeneratedContracts(List<Contract> contracts, long companyId, long generationTiming) throws DatabaseAccessException {
 		List<Contract> recordedContracts;
 		try {
-			recordedContracts = generatedContractsDao.recordGeneratedContracts(contracts, companyId);
+			recordedContracts = generatedContractsDao.recordGeneratedContracts(contracts, companyId, generationTiming);
 		} catch (SQLException e) {
 			throw new DatabaseAccessException("Error recording generatedContracts to database");
 		}

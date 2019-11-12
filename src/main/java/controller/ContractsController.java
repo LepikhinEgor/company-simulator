@@ -2,6 +2,7 @@ package controller;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.servlet.http.Cookie;
 
@@ -163,11 +164,10 @@ public class ContractsController {
 	@ResponseBody
 	public GeneratedContractsMessage getGeneratedContracts(
 			@CookieValue(value="signedUser", required = true) Cookie cookie,
-			Locale locale) {
+			Locale locale,
+			TimeZone timezone) {
 		try {
-			logger.info("1");
-			List<ContractRestData> generatedContracts = contractService.getGeneratedContracts(cookie.getValue(), locale);
-			logger.info("2");
+			List<ContractRestData> generatedContracts = contractService.getGeneratedContracts(cookie.getValue(), locale, timezone);
 			return new GeneratedContractsMessage(Message.SUCCESS, generatedContracts);
 		} catch (DatabaseAccessException e) {
 			return new GeneratedContractsMessage(Message.FAIL);
