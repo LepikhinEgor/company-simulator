@@ -133,7 +133,7 @@ public class ContractsController {
 	
 	@RequestMapping(value="/company/contracts/change-contract-team", method = RequestMethod.POST)
 	@ResponseBody
-	public Message changeContractTeamMessage(@RequestBody ChangeContractTeamData newTeamData) {
+	public Message changeContractTeam(@RequestBody ChangeContractTeamData newTeamData) {
 		try {
 			contractService.reassignEmployees(newTeamData.getHiredEmployees(), newTeamData.getFreeEmployees(), newTeamData.getContractId());
 		} catch (DoubleEmployeeIdException e) {
@@ -166,14 +166,12 @@ public class ContractsController {
 			@CookieValue(value="signedUser", required = true) Cookie cookie,
 			Locale locale,
 			TimeZone timezone) {
+		List<ContractRestData> generatedContracts = null;
 		try {
-			List<ContractRestData> generatedContracts = contractService.getGeneratedContracts(cookie.getValue(), locale, timezone);
-			return new GeneratedContractsMessage(Message.SUCCESS, generatedContracts);
+			generatedContracts = contractService.getGeneratedContracts(cookie.getValue(), locale, timezone);
 		} catch (DatabaseAccessException e) {
 			return new GeneratedContractsMessage(Message.FAIL);
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
 		}
-		return new GeneratedContractsMessage(Message.FAIL);
+		return new GeneratedContractsMessage(Message.SUCCESS, generatedContracts);
 	}
 }

@@ -15,6 +15,7 @@ import dao.CompanyDao;
 import dao.ConnectionPool;
 import dao.ContractDao;
 import dao.EmployeeDao;
+import dao.GeneratedContractsDao;
 import dao.GeneratedEmployeesDao;
 import dao.UserDao;
 import services.CompanyService;
@@ -55,6 +56,11 @@ public class TestsDaoBeansConfiguration {
 	@Bean
 	public GeneratedEmployeesDao generatedEmployeesDao() {
 		return new GeneratedEmployeesDao();
+	}
+	
+	@Bean
+	GeneratedContractsDao generatedContractsDao() {
+		return mock(GeneratedContractsDao.class);
 	}
 	
 	@Bean
