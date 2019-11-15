@@ -87,3 +87,26 @@
     <a href="#" class="close_modal_contract_team_apply">Принять</a>
   </div>
 </div>
+<div id="generated_contracts_modal_window">
+  <div id="generated_contracts_window">
+    <div id="generated_contracts_window_content">
+    	<p><h3>Hired employees</h3></p>
+    	<div id="generated_contracts_change_block">
+	    	<table id="contract_hired_employees_table">
+				<tr>
+				  <th>Name</th>
+				  <th>Perfomance</th>
+				  <th>Remove</th>
+				</tr>
+				<tr class="table_placeholder">
+				  <td></td>
+				  <td></td>
+				  <td></td>
+				</tr>
+			</table>
+		</div>
+    </div>
+    <a href="#" class="close_modal_generated_contracts">Отмена</a>
+    <a href="#" class="close_modal_generated_contracts_apply">Принять</a>
+  </div>
+</div>

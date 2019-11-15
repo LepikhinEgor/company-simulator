@@ -48,6 +48,7 @@ function getGeneratedContracts() {
         contentType: 'application/json',
         success: function(data) {
 			console.log(data);
+			document.location.href = "#generated_contracts_modal_window";
 		}
       });
 }
