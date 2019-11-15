@@ -44,6 +44,7 @@ public class GeneratedContractsDao {
 		try (Connection connection = connectionPool.getConnection()) {
 			connection.setAutoCommit(false);
 
+			deleteOldGeneratedContracts(companyId, connection);
 			recordGeneratedContracts(contracts, companyId, connection);
 			recordContractsGenerationTiming(generationTiming, connection);
 			generatedEmployees = getGeneratedContract(companyId, connection);
@@ -71,6 +72,16 @@ public class GeneratedContractsDao {
 		}
 		
 		return timing;
+	}
+	
+	private void deleteOldGeneratedContracts(long companyId, Connection connection) throws SQLException {
+		String sql = "DELETE FROM generated_contracts WHERE company_id = ?";
+		
+		try(PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setLong(1, companyId);
+			
+			statement.execute();
+		}
 	}
 
 	private void recordContractsGenerationTiming(long timing, Connection connection) throws SQLException {
