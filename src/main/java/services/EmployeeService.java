@@ -186,6 +186,10 @@ public class EmployeeService {
 	
 	@Loggable
 	public void hireGeneratedEmployees(long[] employeesId) throws DatabaseAccessException {
+		if (employeesId == null || employeesId.length == 0) {
+			return;
+		}
+		
 		if(!checkUniquenessId(employeesId))
 			throw new IllegalArgumentException("Non unique employees id received");
 		

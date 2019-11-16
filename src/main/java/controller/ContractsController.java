@@ -88,7 +88,8 @@ public class ContractsController {
 	@ResponseBody
 	public ContractsListMessage getContractsList(@RequestParam(value = "sortOrder") int sortOrder,
 			@RequestParam(value = "pageNum") int pageNum,
-			@CookieValue(value="signedUser", required = false) Cookie cookie) {
+			@CookieValue(value="signedUser", required = false) Cookie cookie,
+			Locale locale) {
 		String login;
 		if (cookie != null) 
 			login = cookie.getValue();
@@ -98,7 +99,7 @@ public class ContractsController {
 		List<ContractRestData> contracts = null;
 		
 		try {
-			contracts = contractService.getUserActiveContracts(sortOrder, pageNum, login);
+			contracts = contractService.getUserActiveContracts(sortOrder, pageNum, login, locale);
 		} catch (DatabaseAccessException e) {
 			return new ContractsListMessage(Message.FAIL, e.getMessage());
 		}

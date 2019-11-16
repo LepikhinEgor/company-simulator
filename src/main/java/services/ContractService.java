@@ -121,14 +121,15 @@ public class ContractService {
 	}
 	
 	@Loggable
-	public List<ContractRestData> getUserActiveContracts(int sortOrder, int pageNum, String login) throws DatabaseAccessException {
+	public List<ContractRestData> getUserActiveContracts(int sortOrder, int pageNum, String login, Locale locale) throws DatabaseAccessException {
 		
 		Company userCompany = companyService.getUserCompany(login);
 		
 		List<Contract> contracts = null;
-		List<ContractRestData> contractsRest=  new ArrayList<ContractRestData>();
+		List<ContractRestData> contractsRest = new ArrayList<ContractRestData>();
 		try {
 			contracts = contractDao.getContractsList(sortOrder, pageNum, PAGE_LIMIT, userCompany.getId());
+			contracts = localizationService.localizeContracts(contracts, locale);
 			
 			for (Contract contract: contracts) {
 				contractsRest.add(entitiesConventer.transformToContractRestData(contract));

@@ -219,7 +219,7 @@ th {
 	margin-left:auto;
 	margin-right:auto;
 	width:90%;
-	overflow-y:scroll;
+	overflow-y:auto;
 }
 #contract_employees_change_block {
 	height:170px;
@@ -246,7 +246,8 @@ th {
 	table-layout: fixed;
 }
 
-#generated_employees_table {
+#generated_employees_table,
+#generated_contracts_table {
 	table-layout: auto;
 }
 
