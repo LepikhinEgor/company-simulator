@@ -17,6 +17,7 @@ function refreshContractsEventHandlers() {
     $('.close_modal_contract_team_apply').off('click');
     $(".close_modal_contract_team").off('click');
     $("#get_generated_contracts").off('click');
+    $('.close_modal_generated_contracts').off('click');
 
     $('#create_new_contract').on('click', newContractOpenModal);
     $('#apply_contract_data').on('click', applyContractData);
@@ -25,6 +26,7 @@ function refreshContractsEventHandlers() {
     $(".close_modal_contract_team_apply").on('click', applyContractTeamChanges);
     $(".close_modal_contract_team").on('click', clearContractEmployeesData);
     $("#get_generated_contracts").on('click', getGeneratedContracts);
+    $('.close_modal_generated_contracts').on('click', clearGeneratedContractsTable);
 }
 
 function refreshContractTeamEventHandlers() {
@@ -48,9 +50,35 @@ function getGeneratedContracts() {
         contentType: 'application/json',
         success: function(data) {
 			console.log(data);
+			
+			for (var key in data) {
+				if (key === "contracts") {
+					var contracts = data[key];
+					for(var contract in contracts) {
+						addGeneratedContractToTable(contracts[contract]);
+					}
+				}
+			}
+			
 			document.location.href = "#generated_contracts_modal_window";
 		}
       });
+}
+
+function clearGeneratedContractsTable() {
+	$('#generated_contracts_table tr[id]').remove();
+}
+
+function addGeneratedContractToTable(generatedContract) {
+	var str = "<tr id=\"gen_contract_" + generatedContract.id + "\" class = \"generated_contract\">";
+	str += "<td><a class=\"gen_contract_name\">" + generatedContract.name + "</a></td>";
+	str += "<td class=\"gen_contract_size\">" + generatedContract.size + "</td>";
+	str += "<td class=\"gen_contract_fee\">" + generatedContract.fee + "</td>";
+	str += "<td class=\"gen_contract_deadline\">" + generatedContract.deadline + "</td>";
+	str += "<td \"><input  type=\"button\" class = \"make_employee_free\" value=\"Get\"></td>";
+
+	var placeholder = $('#generated_contracts_table').find(".table_placeholder");
+	placeholder.before(str);
 }
 
 function applyContractTeamChanges() {

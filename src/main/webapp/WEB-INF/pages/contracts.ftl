@@ -92,16 +92,19 @@
     <div id="generated_contracts_window_content">
     	<p><h3>Hired employees</h3></p>
     	<div id="generated_contracts_change_block">
-	    	<table id="contract_hired_employees_table">
+	    	<table id="generated_contracts_table">
 				<tr>
 				  <th>Name</th>
-				  <th>Perfomance</th>
-				  <th>Remove</th>
+				  <th>Size</th>
+				  <th>Fee</th>
+				  <th>Deadline</th>
+			  	  <th>Get</th>
 				</tr>
 				<tr class="table_placeholder">
 				  <td></td>
 				  <td></td>
 				  <td></td>
+  				  <td></td>
 				</tr>
 			</table>
 		</div>
