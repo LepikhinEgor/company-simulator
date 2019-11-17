@@ -110,6 +110,6 @@
 		</div>
     </div>
     <a href="#" class="close_modal_generated_contracts">Отмена</a>
-    <a href="#" class="close_modal_generated_contracts_apply">Принять</a>
+    <a class="close_modal_generated_contracts_apply">Принять</a>
   </div>
 </div>

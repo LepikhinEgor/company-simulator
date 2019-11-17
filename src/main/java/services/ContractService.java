@@ -74,6 +74,7 @@ public class ContractService {
 		try {
 			contractDao.selectGeneratedContracts(contractsId, company.getId());
 		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
 			throw new DatabaseAccessException("Error recording new contract from generated contracts");
 		}
 	}

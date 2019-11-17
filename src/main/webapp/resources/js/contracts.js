@@ -9,6 +9,8 @@ var changedContractId;
 var oldFreeEmployeesId = [];
 var oldHiredEmployeesId = [];
 
+var selectedContractsId = [];
+
 function refreshContractsEventHandlers() {
     $('#create_new_contract').off('click');
     $('#apply_contract_data').off('click');
@@ -18,6 +20,7 @@ function refreshContractsEventHandlers() {
     $(".close_modal_contract_team").off('click');
     $("#get_generated_contracts").off('click');
     $('.close_modal_generated_contracts').off('click');
+    $(".close_modal_generated_contracts_apply").off("click");
 
     $('#create_new_contract').on('click', newContractOpenModal);
     $('#apply_contract_data').on('click', applyContractData);
@@ -27,6 +30,7 @@ function refreshContractsEventHandlers() {
     $(".close_modal_contract_team").on('click', clearContractEmployeesData);
     $("#get_generated_contracts").on('click', getGeneratedContracts);
     $('.close_modal_generated_contracts').on('click', clearGeneratedContractsTable);
+    $(".close_modal_generated_contracts_apply").on("click", requestAddSelectedContracts);
 }
 
 function refreshContractTeamEventHandlers() {
@@ -41,6 +45,36 @@ function refreshCompletedContractsEventHandlers() {
 	$('.resolve_contract').off('click');
 	
 	$('.resolve_contract').on('click', resolveContractRequest);
+}
+
+function refreshGeneratedContractHandlers() {
+	$(".select_contract").off("click");
+	
+	$(".select_contract").on("click", selectContract);
+}
+
+function selectContract() {
+	var parent = $(this).closest("tr");
+	changedContractId = parent.attr("id");
+	
+	var idNum = changedContractId.substring(13);
+	
+	selectedContractsId.push(idNum);
+	console.log('seect' + selectedContractsId);
+}
+
+function requestAddSelectedContracts() {
+	$.ajax({
+        type: "POST",
+        url: "/company-simulator/company/contracts/select-generated-contracts",
+        contentType: 'application/json',
+        data: JSON.stringify(selectedContractsId),
+        success: function(data) {
+			console.log(data);
+		
+			document.location.href = "#";
+		}
+      });
 }
 
 function getGeneratedContracts() {
@@ -75,10 +109,12 @@ function addGeneratedContractToTable(generatedContract) {
 	str += "<td class=\"gen_contract_size\">" + generatedContract.size + "</td>";
 	str += "<td class=\"gen_contract_fee\">" + generatedContract.fee + "</td>";
 	str += "<td class=\"gen_contract_deadline\">" + generatedContract.deadline + "</td>";
-	str += "<td \"><input  type=\"button\" class = \"make_employee_free\" value=\"Get\"></td>";
+	str += "<td \"><input  type=\"button\" class = \"select_contract\" value=\"Get\"></td>";
 
 	var placeholder = $('#generated_contracts_table').find(".table_placeholder");
 	placeholder.before(str);
+	
+	refreshGeneratedContractHandlers();
 }
 
 function applyContractTeamChanges() {

@@ -25,7 +25,6 @@ public class ContractDao {
 	@Autowired
 	private ConnectionPool connectionPool;
 	
-	@Loggable
 	public void selectGeneratedContracts(long[] contractsId, long companyId) throws SQLException {
 		try (Connection connection = connectionPool.getConnection()) {
 			connection.setAutoCommit(false);
@@ -38,7 +37,6 @@ public class ContractDao {
 		}
 	}
 	
-	@Loggable
 	public void resolveContract(Contract contract, long companyCash) throws SQLException {
 		try(Connection connection = connectionPool.getConnection()) {;
 			connection.setAutoCommit(false);
@@ -52,7 +50,7 @@ public class ContractDao {
 	}
 	
 	private void recordSelectedContractsAsActive(List<Contract> contracts, long companyId, Connection connection) throws SQLException {
-		String sql = "INSERT INTO contracts SET VALUES (NULL, ?, ?, ?, NOW(), ?, ?, ?, ?)";
+		String sql = "INSERT INTO contracts VALUES (NULL, ?, ?, ?, NOW(), ?, ?, ?, ?, ?)";
 		
 		try (PreparedStatement statement = connection.prepareStatement(sql)) {
 			
@@ -66,6 +64,7 @@ public class ContractDao {
 				statement.setInt(5, 0);
 				statement.setString(6, contract.getDescription());
 				statement.setLong(7, companyId); 
+				statement.setString(8, contract.getStatus());
 				
 				statement.addBatch();
 			}
@@ -98,6 +97,7 @@ public class ContractDao {
 				contract.setDeadline(new Timestamp(System.currentTimeMillis() + rs.getLong(5)));
 				contract.setDescription(rs.getString(6));
 				contract.setCompanyId(rs.getLong(7));
+				contract.setStatus(Contract.PERFORMED);
 				contracts.add(contract);
 			}
 		}
