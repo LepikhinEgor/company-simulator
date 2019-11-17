@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,7 +30,7 @@ import controller.messages.entities.ContractRestData;
 import entities.Contract;
 import entities.Employee;
 import exceptions.DatabaseAccessException;
-import exceptions.employees.DoubleEmployeeIdException;
+import exceptions.employees.DoubleIdException;
 import services.ContractService;
 import services.EmployeeService;
 
@@ -137,7 +138,7 @@ public class ContractsController {
 	public Message changeContractTeam(@RequestBody ChangeContractTeamData newTeamData) {
 		try {
 			contractService.reassignEmployees(newTeamData.getHiredEmployees(), newTeamData.getFreeEmployees(), newTeamData.getContractId());
-		} catch (DoubleEmployeeIdException e) {
+		} catch (DoubleIdException e) {
 			logger.error(e.getMessage(),e);
 			return new Message(Message.FAIL, e.getMessage());
 		} catch (DatabaseAccessException e) {
@@ -174,5 +175,20 @@ public class ContractsController {
 			return new GeneratedContractsMessage(Message.FAIL);
 		}
 		return new GeneratedContractsMessage(Message.SUCCESS, generatedContracts);
+	}
+	
+	@PostMapping("/company/contracts/select-generated-contracts")
+	@ResponseBody
+	public Message selectGeneratedContracts(@RequestBody long[] contractsId,
+			@CookieValue(value="signedUser", required = true) Cookie cookie) {
+		String login = cookie.getValue();
+		
+		try {
+			contractService.selectGeneratedContracts(contractsId, login);
+		} catch (DoubleIdException | DatabaseAccessException e) {
+			return new Message(Message.FAIL, e.getMessage());
+		}
+		
+		return new Message(Message.SUCCESS);
 	}
 }

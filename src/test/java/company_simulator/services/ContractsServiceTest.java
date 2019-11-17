@@ -20,7 +20,7 @@ import dao.ContractDao;
 import entities.Company;
 import entities.Contract;
 import exceptions.DatabaseAccessException;
-import exceptions.employees.DoubleEmployeeIdException;
+import exceptions.employees.DoubleIdException;
 import services.CompanyService;
 import services.ContractService;
 import services.utils.EntitiesConventer;
@@ -211,7 +211,7 @@ public class ContractsServiceTest {
 	}
 	
 	@Test(expected = RuntimeException.class)
-	public void reassignEmployeesSuccessCallReasignDaoMethod() throws SQLException, DoubleEmployeeIdException, DatabaseAccessException {
+	public void reassignEmployeesSuccessCallReasignDaoMethod() throws SQLException, DoubleIdException, DatabaseAccessException {
 		long[] hiredEmployees = {1,2,3,4,5}; 
 		long[] freeEmployees = {6,7,8,9};
 		long contractId = 1;
@@ -227,7 +227,7 @@ public class ContractsServiceTest {
 	}
 	
 	@Test
-	public void reassignEmployeesSuccessGetArgsForReassignDaoMethod() throws SQLException, DoubleEmployeeIdException, DatabaseAccessException {
+	public void reassignEmployeesSuccessGetArgsForReassignDaoMethod() throws SQLException, DoubleIdException, DatabaseAccessException {
 		long[] hiredEmployees = {1,2,3,4,5}; 
 		long[] freeEmployees = {6,7,8,9};
 		long contractId = 1;
@@ -256,8 +256,8 @@ public class ContractsServiceTest {
 		contractService.reassignEmployees(hiredEmployees, freeEmployees, contractId);
 	}
 	
-	@Test(expected = DoubleEmployeeIdException.class)
-	public void reassignEmployeesThrowDoubleIdExceptionFromHiredEmployeees() throws SQLException, DoubleEmployeeIdException, DatabaseAccessException {
+	@Test(expected = DoubleIdException.class)
+	public void reassignEmployeesThrowDoubleIdExceptionFromHiredEmployeees() throws SQLException, DoubleIdException, DatabaseAccessException {
 		long[] hiredEmployees = {1,2,2}; 
 		long[] freeEmployees = {6,7,8,9};
 		long contractId = 1;
@@ -272,8 +272,8 @@ public class ContractsServiceTest {
 		contractService.reassignEmployees(hiredEmployees, freeEmployees, contractId);
 	}
 	
-	@Test(expected = DoubleEmployeeIdException.class)
-	public void reassignEmployeesThrowDoubleIdExceptionFromFreeEmployees() throws SQLException, DoubleEmployeeIdException, DatabaseAccessException {
+	@Test(expected = DoubleIdException.class)
+	public void reassignEmployeesThrowDoubleIdExceptionFromFreeEmployees() throws SQLException, DoubleIdException, DatabaseAccessException {
 		long[] hiredEmployees = {1,2,3}; 
 		long[] freeEmployees = {6,6, 7};
 		long contractId = 1;
@@ -288,8 +288,8 @@ public class ContractsServiceTest {
 		contractService.reassignEmployees(hiredEmployees, freeEmployees, contractId);
 	}
 	
-	@Test(expected = DoubleEmployeeIdException.class)
-	public void reassignEmployeesThrowDoubleIdExceptionBySameFreeAndHiredEmployeesId() throws SQLException, DoubleEmployeeIdException, DatabaseAccessException {
+	@Test(expected = DoubleIdException.class)
+	public void reassignEmployeesThrowDoubleIdExceptionBySameFreeAndHiredEmployeesId() throws SQLException, DoubleIdException, DatabaseAccessException {
 		long[] hiredEmployees = {1,2,3}; 
 		long[] freeEmployees = {1, 6, 7};
 		long contractId = 1;
@@ -305,7 +305,7 @@ public class ContractsServiceTest {
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void reassignEmployeesThrowIllegalArgsExceptionByNullHiredEmployees() throws SQLException, DoubleEmployeeIdException, DatabaseAccessException {
+	public void reassignEmployeesThrowIllegalArgsExceptionByNullHiredEmployees() throws SQLException, DoubleIdException, DatabaseAccessException {
 		long[] hiredEmployees = null; 
 		long[] freeEmployees = {1, 6, 7};
 		long contractId = 1;
@@ -321,7 +321,7 @@ public class ContractsServiceTest {
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void reassignEmployeesThrowIllegalArgsExceptionByNullFreeEmployees() throws SQLException, DoubleEmployeeIdException, DatabaseAccessException {
+	public void reassignEmployeesThrowIllegalArgsExceptionByNullFreeEmployees() throws SQLException, DoubleIdException, DatabaseAccessException {
 		long[] hiredEmployees = {1,2,3}; 
 		long[] freeEmployees = null;
 		long contractId = 1;
@@ -337,7 +337,7 @@ public class ContractsServiceTest {
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void reassignEmployeesThrowIllegalArgsExceptionByEmptyFreeAndHiredEmployees() throws SQLException, DoubleEmployeeIdException, DatabaseAccessException {
+	public void reassignEmployeesThrowIllegalArgsExceptionByEmptyFreeAndHiredEmployees() throws SQLException, DoubleIdException, DatabaseAccessException {
 		long[] hiredEmployees = {}; 
 		long[] freeEmployees = {};
 		long contractId = 1;
@@ -353,7 +353,7 @@ public class ContractsServiceTest {
 	}
 	
 	@Test(expected = DatabaseAccessException.class)
-	public void reassignEmployeesThrowSQLExceptionGettingContractById() throws SQLException, DoubleEmployeeIdException, DatabaseAccessException {
+	public void reassignEmployeesThrowSQLExceptionGettingContractById() throws SQLException, DoubleIdException, DatabaseAccessException {
 		long[] hiredEmployees = {1,2,3}; 
 		long[] freeEmployees = {5,6,7};
 		long contractId = 1;
@@ -369,7 +369,7 @@ public class ContractsServiceTest {
 	}
 	
 	@Test(expected = DatabaseAccessException.class)
-	public void reassignEmployeesThrowSQLExceptionReassigningEmployees() throws SQLException, DoubleEmployeeIdException, DatabaseAccessException {
+	public void reassignEmployeesThrowSQLExceptionReassigningEmployees() throws SQLException, DoubleIdException, DatabaseAccessException {
 		long[] hiredEmployees = {1,2,3}; 
 		long[] freeEmployees = {5,6,7};
 		long contractId = 1;

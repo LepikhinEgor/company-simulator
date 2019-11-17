@@ -21,7 +21,7 @@ import entities.Company;
 import entities.Employee;
 import entities.User;
 import exceptions.DatabaseAccessException;
-import exceptions.employees.DoubleEmployeeIdException;
+import exceptions.employees.DoubleIdException;
 import exceptions.employees.EmployeesListException;
 import exceptions.employees.IncorrectOrderNumException;
 import exceptions.employees.IncorrectPageNumException;

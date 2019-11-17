@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,6 +26,19 @@ public class ContractDao {
 	private ConnectionPool connectionPool;
 	
 	@Loggable
+	public void selectGeneratedContracts(long[] contractsId, long companyId) throws SQLException {
+		try (Connection connection = connectionPool.getConnection()) {
+			connection.setAutoCommit(false);
+			
+			List<Contract> selectedContracts = getSelectedGeneratedContracts(contractsId, connection);
+			deleteSelectedGeneratedContracts(contractsId, connection);
+			recordSelectedContractsAsActive(selectedContracts, companyId, connection);
+			
+			connection.commit();
+		}
+	}
+	
+	@Loggable
 	public void resolveContract(Contract contract, long companyCash) throws SQLException {
 		try(Connection connection = connectionPool.getConnection()) {;
 			connection.setAutoCommit(false);
@@ -35,6 +49,60 @@ public class ContractDao {
 			
 			connection.commit();
 		}
+	}
+	
+	private void recordSelectedContractsAsActive(List<Contract> contracts, long companyId, Connection connection) throws SQLException {
+		String sql = "INSERT INTO contracts SET VALUES (NULL, ?, ?, ?, NOW(), ?, ?, ?, ?)";
+		
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			
+			for (Contract contract : contracts) {
+				Calendar calendar = Calendar.getInstance();
+				
+				statement.setString(1, contract.getName());
+				statement.setInt(2, contract.getPerfomanceUnits());
+				statement.setInt(3, contract.getFee());
+				statement.setTimestamp(4, contract.getDeadline(), calendar);
+				statement.setInt(5, 0);
+				statement.setString(6, contract.getDescription());
+				statement.setLong(7, companyId); 
+				
+				statement.addBatch();
+			}
+			statement.executeBatch();
+		}
+	}
+	
+	private void deleteSelectedGeneratedContracts(long[] contractsId, Connection connection) throws SQLException {
+		String sql = "DELETE FROM generated_contracts WHERE id IN " + idListToString(contractsId);
+		
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.execute();
+		}
+	}
+	
+	private List<Contract> getSelectedGeneratedContracts(long[] contractsId, Connection connection) throws SQLException {
+		List<Contract> contracts = new ArrayList<Contract>();
+		
+		String sql = "SELECT * FROM generated_contracts WHERE id IN " + idListToString(contractsId);
+		
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet rs = statement.executeQuery();
+			
+			while(rs.next()) {
+				Contract contract = new Contract();
+				contract.setId(rs.getLong(1));
+				contract.setName(rs.getString(2));
+				contract.setPerfomanceUnits(rs.getInt(3));
+				contract.setFee(rs.getInt(4));
+				contract.setDeadline(new Timestamp(System.currentTimeMillis() + rs.getLong(5)));
+				contract.setDescription(rs.getString(6));
+				contract.setCompanyId(rs.getLong(7));
+				contracts.add(contract);
+			}
+		}
+		
+		return contracts;
 	}
 	
 	private void changeCompanyCash(long cash, long companyId, Connection connection) throws SQLException {
@@ -300,6 +368,20 @@ public class ContractDao {
 			statement.executeUpdate();
 		}
 	}
+	
+	private String idListToString(long[] employeesId) {
+		StringBuilder result = new StringBuilder("");
+		result.append("(");
+		for(int i = 0; i < employeesId.length; i++) {
+			result.append(employeesId[i]);
+			if (i != employeesId.length - 1)
+				result.append(", ");
+		}
+		result.append(")");
+		
+		return result.toString();
+	}
+	
 	
 	private long getGeneratedId(PreparedStatement statement) throws SQLException {
 		try (ResultSet generatedKeys = statement.getGeneratedKeys()) {

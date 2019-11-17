@@ -40,7 +40,7 @@ import controller.input.ChangeContractTeamData;
 import controller.messages.entities.ContractRestData;
 import entities.Contract;
 import exceptions.DatabaseAccessException;
-import exceptions.employees.DoubleEmployeeIdException;
+import exceptions.employees.DoubleIdException;
 import services.CompanyService;
 import services.ContractService;
 import services.UserService;
@@ -246,7 +246,7 @@ private MockMvc mockMvc;
 	@Test
 	public void changeContractTeam_failByDoubleIdException() throws JsonGenerationException, JsonMappingException, IOException, Exception {
 		ChangeContractTeamData changeData = getChangeContractTeamData();
-		doThrow(new DoubleEmployeeIdException("")).when(contractServiceMock).reassignEmployees(
+		doThrow(new DoubleIdException("")).when(contractServiceMock).reassignEmployees(
 				changeData.getHiredEmployees(),
 				changeData.getFreeEmployees(),
 				changeData.getContractId());

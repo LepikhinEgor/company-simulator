@@ -19,7 +19,7 @@ import dao.ContractDao;
 import entities.Company;
 import entities.Contract;
 import exceptions.DatabaseAccessException;
-import exceptions.employees.DoubleEmployeeIdException;
+import exceptions.employees.DoubleIdException;
 import services.localization.LocalizationService;
 import services.utils.EntitiesConventer;
 
@@ -62,6 +62,20 @@ public class ContractService {
 	@Autowired
 	public void setLocalizationService(LocalizationService localizationService) {
 		this.localizationService = localizationService;
+	}
+	
+	@Loggable
+	public void selectGeneratedContracts(long[] contractsId, String login) throws DoubleIdException, DatabaseAccessException {
+		if (containsDoubleId(contractsId))
+			throw new DoubleIdException("not allowed double contracts id");
+		
+		Company company = companyService.getUserCompany(login);
+		
+		try {
+			contractDao.selectGeneratedContracts(contractsId, company.getId());
+		} catch (SQLException e) {
+			throw new DatabaseAccessException("Error recording new contract from generated contracts");
+		}
 	}
 	
 	@Loggable
@@ -143,17 +157,17 @@ public class ContractService {
 	}
 	
 	@Loggable
-	public void reassignEmployees(long[] newHiredEmployees, long[] newFreeEmployeees, long contractId) throws DoubleEmployeeIdException, DatabaseAccessException {
+	public void reassignEmployees(long[] newHiredEmployees, long[] newFreeEmployeees, long contractId) throws DoubleIdException, DatabaseAccessException {
 		if (newHiredEmployees != null && newFreeEmployeees != null) {
 			if (newHiredEmployees.length == 0 && newFreeEmployeees.length == 0)
 				throw new IllegalArgumentException("Senselessly method call. Free and hired employees must be changed in same time");
 			if (containsSameId(newHiredEmployees, newFreeEmployeees)) {
-				throw new DoubleEmployeeIdException("Employee can't be free and hired at the same time");
+				throw new DoubleIdException("Employee can't be free and hired at the same time");
 			}
 			if (containsDoubleId(newHiredEmployees))
-				throw new DoubleEmployeeIdException("Hired employees can't contains double ids");
+				throw new DoubleIdException("Hired employees can't contains double ids");
 			if (containsDoubleId(newFreeEmployeees))
-				throw new DoubleEmployeeIdException("Hired employees can't contains double ids");
+				throw new DoubleIdException("Hired employees can't contains double ids");
 		} else
 			throw new IllegalArgumentException("Senselessly method call. Free and hired employees must be changed in same time");
 		
