@@ -3,6 +3,7 @@ package entities;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import aspects.annotations.Loggable;
 import controller.input.CreateContractData;
 
 public class Contract {
@@ -42,12 +43,13 @@ public class Contract {
 		this.workSpeed = contract.getWorkSpeed();
 	}
 	
+	@Loggable
 	public int getTimeBeforeCompletion() {
 		if (workSpeed == 0)
 			return -1;
+		double exactTime = (double)(perfomanceUnits - calculateProgress()) / workSpeed;
 		
-		int minutes = (int)Math.ceil((perfomanceUnits - calculateProgress()) / workSpeed);
-		
+		int minutes = (int)Math.ceil(exactTime);
 		return minutes;
 	}
 	
