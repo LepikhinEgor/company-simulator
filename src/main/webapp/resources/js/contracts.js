@@ -1,7 +1,7 @@
 function contractsPageSetup() {
 	refreshContractsEventHandlers();
 	requestContractsList();
-	setInterval(requestUpdateContractsInfo, 60000);
+	setInterval(requestContractsList, 60000);
 }
 
 var changedContractId;
@@ -72,7 +72,10 @@ function requestAddSelectedContracts() {
         success: function(data) {
 			console.log(data);
 		
+			clearGeneratedContractsTable();
+			
 			document.location.href = "#";
+			requestContractsList();
 		}
       });
 }
@@ -101,6 +104,7 @@ function getGeneratedContracts() {
 
 function clearGeneratedContractsTable() {
 	$('#generated_contracts_table tr[id]').remove();
+	selectedContractsId = [];
 }
 
 function addGeneratedContractToTable(generatedContract) {
@@ -308,6 +312,9 @@ function requestContractsList() {
 			var resolvedContracts = [];
 			var notResolvedContracts = [];
 			
+			$("#contracts_table tr[id]").remove();
+			$("#completed_contracts_table tr[id]").remove();
+			
 			for (var key in data) {
 				if (key === "contracts") {
 					var contracts = data[key];
@@ -354,41 +361,6 @@ function requestContractsList() {
       });
 }
 
-function requestUpdateContractsInfo() {
-	$.ajax({
-		type: "GET",
-        url: "/company-simulator/company/contracts/get-active-contracts?sortOrder=0&pageNum=0",
-        contentType: 'application/json',
-        success: function(data) {
-			console.log(data);
-			
-			for (var key in data) {
-				if (key === "contracts") {
-					var contracts = data[key];
-					for(var contract in contracts) {
-						console.log(contracts[contract]);
-						var contractData = {
-							id: contracts[contract].id,
-							name: contracts[contract].name,
-							size: contracts[contract].size,
-							fee: contracts[contract].fee,
-							deadline: contracts[contract].deadline,
-							progress: contracts[contract].progress,
-							perfomance: contracts[contract].workSpeed,
-							expected: contracts[contract].expectedCompletionTime,
-							status:contracts[contract].status
-						}
-						switch(contracts[contract].status) {
-						case "Performed": 
-							updateContractData(contractData);
-							break;
-						}
-					}
-				}
-			}
-		}
-      });
-}
 
 function updateContractData(contractData) {
 	var contractId = "contract_" + contractData.id;
