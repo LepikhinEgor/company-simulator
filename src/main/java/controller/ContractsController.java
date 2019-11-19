@@ -111,7 +111,8 @@ public class ContractsController {
 	@RequestMapping(value="/company/contracts/get-contract-team", method = RequestMethod.GET)
 	@ResponseBody
 	public ContractTeamMessage getContractTeam(@RequestParam(value = "contractId") long contractId,
-			@CookieValue(value="signedUser", required = false) Cookie cookie) {
+			@CookieValue(value="signedUser", required = false) Cookie cookie,
+			Locale locale) {
 		String login;
 		if (cookie != null) 
 			login = cookie.getValue();
@@ -122,8 +123,8 @@ public class ContractsController {
 		List<Employee> freeEmployees;
 		
 		try {
-			contractTeam = employeeService.getContractTeam(login, contractId);
-			freeEmployees = employeeService.getFreeEmployees(login);
+			contractTeam = employeeService.getContractTeam(login, contractId, locale);
+			freeEmployees = employeeService.getFreeEmployees(login, locale);
 		} catch (DatabaseAccessException e) {
 			logger.error(e.getMessage(), e);
 			return new ContractTeamMessage(Message.FAIL, e.getMessage());

@@ -155,11 +155,12 @@ public class EmployeeService {
 	}
 	
 	@Loggable
-	public List<Employee> getContractTeam(String login, long contractId) throws DatabaseAccessException {
+	public List<Employee> getContractTeam(String login, long contractId, Locale locale) throws DatabaseAccessException {
 		List<Employee> contractTeam = null;
 		
 		try {
 			contractTeam = employeeDao.getContractEmployees(contractId);
+			contractTeam = localizationService.localizeEmployees(contractTeam, locale);
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DatabaseAccessException(e.getMessage());
@@ -169,13 +170,14 @@ public class EmployeeService {
 	}
 	
 	@Loggable
-	public List<Employee> getFreeEmployees(String login) throws DatabaseAccessException {
+	public List<Employee> getFreeEmployees(String login, Locale locale) throws DatabaseAccessException {
 		List<Employee> freeEmployees = null;
 		
 		Company company = companyService.getUserCompany(login);
 		
 		try {
 			freeEmployees = employeeDao.getFreeEmployees(company.getId());
+			freeEmployees = localizationService.localizeEmployees(freeEmployees, locale);
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 			throw new DatabaseAccessException(e.getMessage());
