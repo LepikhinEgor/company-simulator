@@ -8,8 +8,7 @@
 	</tr>
 </table>
 <form id="employees_control">
-	<input type="button" id="hire_employee" value="Hire employee">
-	<input type="button" id="create_new_employee" value="Create new employee">
+	<center><input type="button" id="hire_employee" value="Hire employee"></center>
 </form>
 <div id="employee_modal_window">
   <div id="employee_window">

@@ -11,8 +11,7 @@
 	</tr>
 </table>
 <form id="contracts_control">
-	<input type="button" id="get_generated_contracts" value="Get contract">
-	<input type="button" id="create_new_contract" value="Create new contract">
+	<center><input type="button" id="get_generated_contracts" value="Get contract"></center>
 </form>
 <table id="completed_contracts_table">
 	<tr>

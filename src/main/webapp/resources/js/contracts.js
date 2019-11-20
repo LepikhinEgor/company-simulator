@@ -57,10 +57,11 @@ function selectContract() {
 	var parent = $(this).closest("tr");
 	changedContractId = parent.attr("id");
 	
+	parent.find(".gen_contract_get").html("Selected");
+	
 	var idNum = changedContractId.substring(13);
 	
 	selectedContractsId.push(idNum);
-	console.log('seect' + selectedContractsId);
 }
 
 function requestAddSelectedContracts() {
@@ -113,7 +114,7 @@ function addGeneratedContractToTable(generatedContract) {
 	str += "<td class=\"gen_contract_size\">" + generatedContract.size + "</td>";
 	str += "<td class=\"gen_contract_fee\">" + generatedContract.fee + "</td>";
 	str += "<td class=\"gen_contract_deadline\">" + generatedContract.deadline + "</td>";
-	str += "<td \"><input  type=\"button\" class = \"select_contract\" value=\"Get\"></td>";
+	str += "<td class=\"gen_contract_get\"\"><input  type=\"button\" class = \"select_contract\" value=\"Get\"></td>";
 
 	var placeholder = $('#generated_contracts_table').find(".table_placeholder");
 	placeholder.before(str);
@@ -203,7 +204,7 @@ function requestChangeContractTeam(hiredEmployeesId, freeEmployeesId) {
         success: function(data) {
 			console.log(data);
 			status = data.status;
-			requestUpdateContractsInfo();
+			requestContractsList();
 		}
       });
 }
@@ -478,6 +479,7 @@ function resolveContractRequest() {
         contentType: 'application/json',
         success: function(data) {
         	console.log(data);
+        	parent.find(".contract_get_fee").html("Received");
 			if (data.status == 0)
 				console.log("uxy");
 		}
