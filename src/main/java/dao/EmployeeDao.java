@@ -24,6 +24,36 @@ public class EmployeeDao {
 	@Autowired
 	ConnectionPool connectionPool;
 	
+	public List<Employee> getCompanyEmployees(long companyId) throws SQLException {
+		List<Employee> employees = new ArrayList<Employee>();
+		
+		String sql = "SELECT * FROM  employees WHERE company_id = ?";
+		
+		try (Connection connection = connectionPool.getConnection()) {
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setLong(1, companyId);
+			
+			ResultSet rs = statement.executeQuery();
+			
+			while (rs.next()) {
+				Employee employee = new Employee();
+				
+				employee.setId(rs.getLong(1));
+				employee.setName(rs.getString(2));
+				employee.setAge(rs.getInt(3));
+				employee.setSex(rs.getString(4));
+				employee.setSalary(rs.getInt(5));
+				employee.setPerfomance(rs.getInt(6));
+				employee.setDescription(rs.getString(7));
+				employee.setCompanyId(rs.getLong(8));
+				
+				employees.add(employee);
+			}
+		}
+		
+		return employees;
+	}
+	
 	@Loggable
 	public List<Employee> getEmployeesList(long companyId, int orderNum, int pageNum, int pageLimit) throws SQLException {
 		

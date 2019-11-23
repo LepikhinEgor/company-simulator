@@ -16,6 +16,8 @@ cash INT NOT NULL,
 owner_id INT NOT NULL,
 FOREIGN KEY(owner_id) REFERENCES users(user_id) ON DELETE CASCADE);
 
+ALTER TABLE companies ADD COLUMN cash_update_time TIMESTAMP;
+
 CREATE TABLE employees (
 employee_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 name VARCHAR(30) NOT NULL,

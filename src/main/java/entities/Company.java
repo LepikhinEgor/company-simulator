@@ -1,5 +1,6 @@
 package entities;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class Company {
@@ -13,15 +14,22 @@ public class Company {
 	private long ownerId;
 	private CompanyTeam team;
 	private long cash;
-	private ArrayList<Contract> contracts;
+	private Timestamp cashUpdatedTiming;
 	
 	public Company() {
 		this.name = DEFAULT_NAME;
 		this.cash = DEFAULT_CASH;
 		this.team = new CompanyTeam();
-		this.contracts = new ArrayList<Contract>();
 	}
 	
+	public Timestamp getCashUpdatedTiming() {
+		return cashUpdatedTiming;
+	}
+
+	public void setCashUpdatedTiming(Timestamp cashUpdatedTiming) {
+		this.cashUpdatedTiming = cashUpdatedTiming;
+	}
+
 	public Company(long userId) {
 	}
 
@@ -49,14 +57,6 @@ public class Company {
 		this.team = team;
 	}
 	
-	public ArrayList<Contract> getContracts() {
-		return contracts;
-	}
-	
-	public void setContracts(ArrayList<Contract> contracts) {
-		this.contracts = contracts;
-	}
-	
 	public void setCash(long cash) {
 		this.cash = cash;
 	}
@@ -82,18 +82,23 @@ public class Company {
 
 	@Override
 	public String toString() {
-		return "Company [id=" + id + ", name=" + name + ", ownerId=" + ownerId + ", cash=" + cash + "]";
+		return "Company [DEFAULT_CASH=" + DEFAULT_CASH + ", DEFAULT_NAME=" + DEFAULT_NAME + ", id=" + id + ", name="
+				+ name + ", ownerId=" + ownerId + ", team=" + team + ", cash=" + cash + ", cashUpdatedTiming="
+				+ cashUpdatedTiming + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + (int) (DEFAULT_CASH ^ (DEFAULT_CASH >>> 32));
+		result = prime * result + ((DEFAULT_NAME == null) ? 0 : DEFAULT_NAME.hashCode());
 		result = prime * result + (int) (cash ^ (cash >>> 32));
-		result = prime * result + ((contracts == null) ? 0 : contracts.hashCode());
+		result = prime * result + ((cashUpdatedTiming == null) ? 0 : cashUpdatedTiming.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + (int) (ownerId ^ (ownerId >>> 32));
+		result = prime * result + ((team == null) ? 0 : team.hashCode());
 		return result;
 	}
 
@@ -106,12 +111,19 @@ public class Company {
 		if (getClass() != obj.getClass())
 			return false;
 		Company other = (Company) obj;
+		if (DEFAULT_CASH != other.DEFAULT_CASH)
+			return false;
+		if (DEFAULT_NAME == null) {
+			if (other.DEFAULT_NAME != null)
+				return false;
+		} else if (!DEFAULT_NAME.equals(other.DEFAULT_NAME))
+			return false;
 		if (cash != other.cash)
 			return false;
-		if (contracts == null) {
-			if (other.contracts != null)
+		if (cashUpdatedTiming == null) {
+			if (other.cashUpdatedTiming != null)
 				return false;
-		} else if (!contracts.equals(other.contracts))
+		} else if (!cashUpdatedTiming.equals(other.cashUpdatedTiming))
 			return false;
 		if (id != other.id)
 			return false;
@@ -121,6 +133,11 @@ public class Company {
 		} else if (!name.equals(other.name))
 			return false;
 		if (ownerId != other.ownerId)
+			return false;
+		if (team == null) {
+			if (other.team != null)
+				return false;
+		} else if (!team.equals(other.team))
 			return false;
 		return true;
 	}

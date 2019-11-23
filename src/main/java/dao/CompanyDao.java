@@ -6,7 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
+import org.aspectj.weaver.ArrayAnnotationValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import aspects.annotations.Loggable;
 import entities.User;
 import entities.Company;
+import entities.Employee;
 
 public class CompanyDao {
 	
@@ -21,6 +26,26 @@ public class CompanyDao {
 	
 	@Autowired
 	private ConnectionPool connectionPool;
+	
+	private Calendar calendar;
+	
+	public CompanyDao() {
+		calendar = Calendar.getInstance();
+	}
+	
+	
+	public void updateCompanyCash(long cash, long companyId) throws SQLException {
+		String sql = "UPDATE companies SET cash = ?, cash_update_time = NOW() WHERE company_id = ?";
+		
+		try (Connection connection = connectionPool.getConnection()) {
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setLong(1, cash);
+			statement.setLong(2, companyId);
+			
+			statement.executeUpdate();
+		}
+	}
+	
 	
 	@Loggable
 	public Company getCompanyById(long companyId) throws SQLException {
@@ -38,6 +63,7 @@ public class CompanyDao {
 				company.setName(rs.getString(2));
 				company.setCash(rs.getLong(3));
 				company.setOwnerId(rs.getLong(4));
+				company.setCashUpdatedTiming(rs.getTimestamp(5, calendar));
 			}
 		}
 		
@@ -67,6 +93,7 @@ public class CompanyDao {
 			foundCompany.setName(foundCompaniesSet.getString(2));
 			foundCompany.setCash(foundCompaniesSet.getLong(3));
 			foundCompany.setOwnerId(foundCompaniesSet.getLong(4));
+			foundCompany.setCashUpdatedTiming(foundCompaniesSet.getTimestamp(5, calendar));
 			
 			foundCompaniesSet.next();
 			
@@ -83,7 +110,9 @@ public class CompanyDao {
 	 */
 	@Loggable
 	public Company getUserCompany(String loginEmail) throws SQLException {
-		String getCompanyQuerry = "SELECT c.company_id, c.name, c.cash, c.owner_id FROM companies c INNER JOIN users u ON u.user_id = c.owner_id WHERE u.login = ? OR u.email = ?";
+		String getCompanyQuerry = "SELECT c.company_id, c.name, c.cash, c.owner_id, c.cash_update_time"
+				+ " FROM companies c INNER JOIN users u ON u.user_id = c.owner_id "
+				+ " WHERE u.login = ? OR u.email = ?";
 		
 		try(Connection connection = connectionPool.getConnection()) {
 			PreparedStatement getCompanyStatement = connection.prepareStatement(getCompanyQuerry);
@@ -103,6 +132,7 @@ public class CompanyDao {
 			foundCompany.setName(foundCompaniesSet.getString(2));
 			foundCompany.setCash(foundCompaniesSet.getLong(3));
 			foundCompany.setOwnerId(foundCompaniesSet.getLong(4));
+			foundCompany.setCashUpdatedTiming(foundCompaniesSet.getTimestamp(5, calendar));
 			
 			foundCompaniesSet.next();
 			
@@ -115,7 +145,7 @@ public class CompanyDao {
 		Connection connection = connectionPool.getConnection();
 		
 		String recordCompanyQuerry = "INSERT INTO companies (company_id, name, cash, owner_id) VALUES ("
-				+ "NULL, ?, ?, ?);";
+				+ "NULL, ?, ?, ?, NOW());";
 		
 		PreparedStatement createCompanyStatement = null;
 		try {
