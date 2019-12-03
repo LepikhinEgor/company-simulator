@@ -357,13 +357,15 @@ public class EmployeeServiceTest {
 	@Test
 	public void getContractTeamSuccess() throws SQLException, DatabaseAccessException {
 		int contractId = 1;
+		Locale defLocale = Locale.getDefault();
 		List<Employee> expectedTeam = Arrays.asList(new Employee(), new Employee(), new Employee(), new Employee());
 		
 		when(employeeDaoMock.getContractEmployees(contractId)).thenReturn(expectedTeam);
+		when(localizationServiceMock.localizeEmployees(expectedTeam, defLocale)).thenReturn(expectedTeam);
 		
 		injectDependensies();
 		
-		List<Employee> actualTeam = employeeService.getContractTeam(loginEmail, contractId);
+		List<Employee> actualTeam = employeeService.getContractTeam(loginEmail, contractId, defLocale);
 		
 		assertTrue(expectedTeam.equals(actualTeam));
 	}
@@ -371,12 +373,14 @@ public class EmployeeServiceTest {
 	@Test(expected = DatabaseAccessException.class)
 	public void getContractTeamThrowDBExceptionFromEmployeeDao() throws SQLException, DatabaseAccessException {
 		int contractId = 1;
+		Locale defLocale = Locale.getDefault();
 		List<Employee> expectedTeam = Arrays.asList(new Employee(), new Employee(), new Employee(), new Employee());
 		
 		when(employeeDaoMock.getContractEmployees(contractId)).thenThrow(new SQLException());
+		when(localizationServiceMock.localizeEmployees(expectedTeam, defLocale)).thenReturn(expectedTeam);
 		
 		injectDependensies();
-		List<Employee> actualTeam = employeeService.getContractTeam(loginEmail, contractId);
+		List<Employee> actualTeam = employeeService.getContractTeam(loginEmail, contractId, defLocale);
 	
 		assertTrue(expectedTeam.equals(actualTeam));
 	}
@@ -384,14 +388,16 @@ public class EmployeeServiceTest {
 	@Test
 	public void getFreeEmployeesSuccess() throws DatabaseAccessException, SQLException {
 		Company company = getGoodCompany();
+		Locale defLocale = Locale.getDefault();
 		List<Employee> expectedEmployees = Arrays.asList(new Employee(), new Employee(), new Employee(), new Employee());
 		
 		when(companyServiceMock.getUserCompany(loginEmail)).thenReturn(company);
 		when(employeeDaoMock.getFreeEmployees(company.getId())).thenReturn(expectedEmployees);
+		when(localizationServiceMock.localizeEmployees(expectedEmployees, defLocale)).thenReturn(expectedEmployees);
 		
 		injectDependensies();
 		
-		List<Employee> actualEmployees = employeeService.getFreeEmployees(loginEmail);
+		List<Employee> actualEmployees = employeeService.getFreeEmployees(loginEmail, defLocale);
 		
 		assertTrue(expectedEmployees.equals(actualEmployees));
 	}
@@ -399,14 +405,16 @@ public class EmployeeServiceTest {
 	@Test(expected = DatabaseAccessException.class)
 	public void getFreeEmployeesThrowDBExceptionFromCompanyService() throws DatabaseAccessException, SQLException {
 		Company company = getGoodCompany();
+		Locale defLocale = Locale.getDefault();
 		List<Employee> expectedEmployees = Arrays.asList(new Employee(), new Employee(), new Employee(), new Employee());
 		
 		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException(""));
 		when(employeeDaoMock.getFreeEmployees(company.getId())).thenReturn(expectedEmployees);
+		when(localizationServiceMock.localizeEmployees(expectedEmployees, defLocale)).thenReturn(expectedEmployees);
 		
 		injectDependensies();
 		
-		List<Employee> actualEmployees = employeeService.getFreeEmployees(loginEmail);
+		List<Employee> actualEmployees = employeeService.getFreeEmployees(loginEmail, defLocale);
 		
 		assertTrue(expectedEmployees.equals(actualEmployees));
 	}
@@ -415,13 +423,15 @@ public class EmployeeServiceTest {
 	public void getFreeEmployeesThrowSQLExceptionFromEmployeeDao() throws DatabaseAccessException, SQLException {
 		Company company = getGoodCompany();
 		List<Employee> expectedEmployees = Arrays.asList(new Employee(), new Employee(), new Employee(), new Employee());
+		Locale defLocale = Locale.getDefault();
 		
 		when(companyServiceMock.getUserCompany(loginEmail)).thenReturn(company);
 		when(employeeDaoMock.getFreeEmployees(company.getId())).thenThrow(new SQLException());
+		when(localizationServiceMock.localizeEmployees(expectedEmployees, defLocale)).thenReturn(expectedEmployees);
 		
 		injectDependensies();
 		
-		List<Employee> actualEmployees = employeeService.getFreeEmployees(loginEmail);
+		List<Employee> actualEmployees = employeeService.getFreeEmployees(loginEmail, defLocale);
 		
 		assertTrue(expectedEmployees.equals(actualEmployees));
 	}

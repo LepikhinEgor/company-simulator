@@ -10,10 +10,12 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import javax.management.RuntimeErrorException;
 
 import dao.CompanyDao;
+import dao.EmployeeDao;
 import entities.Company;
 import entities.User;
 import exceptions.DatabaseAccessException;
@@ -27,6 +29,7 @@ public class CompanyServiceTest {
 	
 	private UserService userServiceMock;
 	private CompanyDao companyDaoMock;
+	private EmployeeDao employeeDaoMock;
 	
 	private String loginEmail = "admin";
 
@@ -36,11 +39,13 @@ public class CompanyServiceTest {
 		
 		this.userServiceMock = mock(UserService.class);
 		this.companyDaoMock = mock(CompanyDao.class);
+		this.employeeDaoMock = mock(EmployeeDao.class);
 	}
 	
 	private void injectDependensies() {
 		companyService.setUserService(userServiceMock);
 		companyService.setCompanyDao(companyDaoMock);
+		companyService.setEmployeeDao(employeeDaoMock);
 	}
 	
 	private Company getValidCompany() {
@@ -49,6 +54,7 @@ public class CompanyServiceTest {
 		company.setId(1);
 		company.setName("New company");
 		company.setCash(100);
+		company.setCashUpdatedTiming(new Timestamp(0));
 		
 		return company;
 	}
@@ -212,7 +218,7 @@ public class CompanyServiceTest {
 	public void getUserCompanyByIdThrowDBExceptionCreatingNewCompany() throws DatabaseAccessException, SQLException {
 		long userId = 1;
 		
-		Company expectedNewCompany = new Company();
+		Company expectedNewCompany = getValidCompany();
 		expectedNewCompany.setOwnerId(userId);
 		
 		when(companyDaoMock.getUserCompany(userId)).thenReturn(null);

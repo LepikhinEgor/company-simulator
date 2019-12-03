@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import dao.ContractDao;
 import entities.Company;
@@ -23,6 +24,7 @@ import exceptions.DatabaseAccessException;
 import exceptions.employees.DoubleIdException;
 import services.CompanyService;
 import services.ContractService;
+import services.localization.LocalizationService;
 import services.utils.EntitiesConventer;
 
 public class ContractsServiceTest {
@@ -33,6 +35,7 @@ public class ContractsServiceTest {
 	
 	private CompanyService companyServiceMock;
 	private ContractDao contractDaoMock;
+	private LocalizationService localizationServiceMock;
 	
 	private String loginEmail;
 
@@ -41,6 +44,7 @@ public class ContractsServiceTest {
 		contractDaoMock = mock(ContractDao.class);
 		companyServiceMock = mock(CompanyService.class);
 		entitiesConventerMock = mock(EntitiesConventer.class);
+		localizationServiceMock = mock(LocalizationService.class);
 		
 		contractService = new ContractService();
 		
@@ -51,6 +55,7 @@ public class ContractsServiceTest {
 		contractService.setCompanyService(companyServiceMock);
 		contractService.setContractDao(contractDaoMock);
 		contractService.setEntitiesConventer(entitiesConventerMock);
+		contractService.setLocalizationService(localizationServiceMock);
 	}
 	
 	private CreateContractData getValidContractCreateData() {
@@ -147,11 +152,13 @@ public class ContractsServiceTest {
 		int pageNum = 1;
 		int pageLimit = 10;
 		Company validCompany = getValidCompany();
+		Locale defLocale = Locale.getDefault();
 		List<Contract> contracts = Arrays.asList(new Contract(), new Contract(), new Contract());
 		
 		when(companyServiceMock.getUserCompany(loginEmail)).thenReturn(validCompany);
 		when(contractDaoMock.getContractsList(sortOrder, pageNum, pageLimit, validCompany.getId())).thenReturn(contracts);
 		when(entitiesConventerMock.transformToContractRestData(new Contract())).thenReturn(new ContractRestData());
+		when(localizationServiceMock.localizeContracts(contracts, defLocale)).thenReturn(contracts);
 		
 		injectDependensies();
 		
@@ -159,8 +166,9 @@ public class ContractsServiceTest {
 		for (Contract contract : contracts)
 			expectedContractRestData.add(new ContractRestData());
 		
-		List<ContractRestData> actualContractsRestData = contractService.getUserActiveContracts(sortOrder, pageNum, loginEmail);
-		
+		List<ContractRestData> actualContractsRestData = contractService.getUserActiveContracts(sortOrder, pageNum, loginEmail, defLocale);
+		System.out.println(expectedContractRestData);
+		System.out.println(actualContractsRestData);
 		assertTrue(expectedContractRestData.equals(actualContractsRestData));
 	}
 	
@@ -170,11 +178,13 @@ public class ContractsServiceTest {
 		int pageNum = 1;
 		int pageLimit = 10;
 		Company validCompany = getValidCompany();
+		Locale defLocale = Locale.getDefault();
 		List<Contract> contracts = Arrays.asList(new Contract(), new Contract(), new Contract());
 		
 		when(companyServiceMock.getUserCompany(loginEmail)).thenThrow(new DatabaseAccessException(""));
 		when(contractDaoMock.getContractsList(sortOrder, pageNum, pageLimit, validCompany.getId())).thenReturn(contracts);
 		when(entitiesConventerMock.transformToContractRestData(new Contract())).thenReturn(new ContractRestData());
+		when(localizationServiceMock.localizeContracts(contracts, defLocale)).thenReturn(contracts);
 		
 		injectDependensies();
 		
@@ -182,7 +192,7 @@ public class ContractsServiceTest {
 		for (Contract contract : contracts)
 			expectedContractRestData.add(new ContractRestData());
 		
-		List<ContractRestData> actualContractsRestData = contractService.getUserActiveContracts(sortOrder, pageNum, loginEmail);
+		List<ContractRestData> actualContractsRestData = contractService.getUserActiveContracts(sortOrder, pageNum, loginEmail, defLocale);
 		
 		assertTrue(expectedContractRestData.equals(actualContractsRestData));
 	}
@@ -193,11 +203,13 @@ public class ContractsServiceTest {
 		int pageNum = 1;
 		int pageLimit = 10;
 		Company validCompany = getValidCompany();
+		Locale defLocale = Locale.getDefault();
 		List<Contract> contracts = Arrays.asList(new Contract(), new Contract(), new Contract());
 		
 		when(companyServiceMock.getUserCompany(loginEmail)).thenReturn(validCompany);
 		when(contractDaoMock.getContractsList(sortOrder, pageNum, pageLimit, validCompany.getId())).thenThrow(new SQLException());
 		when(entitiesConventerMock.transformToContractRestData(new Contract())).thenReturn(new ContractRestData());
+		when(localizationServiceMock.localizeContracts(contracts, defLocale)).thenReturn(contracts);
 		
 		injectDependensies();
 		
@@ -205,7 +217,7 @@ public class ContractsServiceTest {
 		for (Contract contract : contracts)
 			expectedContractRestData.add(new ContractRestData());
 		
-		List<ContractRestData> actualContractsRestData = contractService.getUserActiveContracts(sortOrder, pageNum, loginEmail);
+		List<ContractRestData> actualContractsRestData = contractService.getUserActiveContracts(sortOrder, pageNum, loginEmail, defLocale);
 		
 		assertTrue(expectedContractRestData.equals(actualContractsRestData));
 	}

@@ -109,13 +109,14 @@ private MockMvc mockMvc;
 	
 	@Test
 	public void getContractsList_successReturnContracts() throws Exception {
+		Locale defLocale = Locale.getDefault();
 		List<ContractRestData> contracts = Arrays.asList(new ContractRestData(), new ContractRestData(), new ContractRestData());
 		
-		when(contractServiceMock.getUserActiveContracts(0, 0, getLoginCookie().getValue())).thenReturn(contracts);
+		when(contractServiceMock.getUserActiveContracts(0, 0, getLoginCookie().getValue(), defLocale)).thenReturn(contracts);
 		
 		mockMvc.perform(
 				 get("/company/contracts/get-active-contracts?sortOrder=0&pageNum=0")
-				 .cookie(getLoginCookie()))
+				 .cookie(getLoginCookie()).locale(defLocale))
 //		        .andDo(MockMvcResultHandlers.print())
 		        .andExpect(jsonPath("$.status").value(0))
 		        .andExpect(status().is(200))
@@ -124,12 +125,13 @@ private MockMvc mockMvc;
 	
 	@Test
 	public void getContractsList_failByNullCookie() throws Exception {
+		Locale defLocale = Locale.getDefault();
 		List<ContractRestData> contracts = Arrays.asList(new ContractRestData(), new ContractRestData(), new ContractRestData());
 		
-		when(contractServiceMock.getUserActiveContracts(0, 0, getLoginCookie().getValue())).thenReturn(contracts);
+		when(contractServiceMock.getUserActiveContracts(0, 0, getLoginCookie().getValue(), defLocale)).thenReturn(contracts);
 		
 		mockMvc.perform(
-				 get("/company/contracts/get-active-contracts?sortOrder=0&pageNum=0"))
+				 get("/company/contracts/get-active-contracts?sortOrder=0&pageNum=0").locale(defLocale))
 //		        .andDo(MockMvcResultHandlers.print())
 		        .andExpect(jsonPath("$.status").value(1))
 		        .andExpect(status().is(200))
@@ -138,12 +140,13 @@ private MockMvc mockMvc;
 	
 	@Test
 	public void getContractsList_failByDBException() throws Exception {
-		when(contractServiceMock.getUserActiveContracts(0, 0, getLoginCookie().getValue())).thenThrow(new DatabaseAccessException(""));
+		Locale defLocale = Locale.getDefault();
+		when(contractServiceMock.getUserActiveContracts(0, 0, getLoginCookie().getValue(), defLocale)).thenThrow(new DatabaseAccessException(""));
 		
 		mockMvc.perform(
 				 get("/company/contracts/get-active-contracts?sortOrder=0&pageNum=0")
-				 .cookie(getLoginCookie()))
-//		        .andDo(MockMvcResultHandlers.print())
+				 .cookie(getLoginCookie()).locale(defLocale))
+		        .andDo(MockMvcResultHandlers.print())
 		        .andExpect(jsonPath("$.status").value(1))
 		        .andExpect(status().is(200))
 		        .andReturn();
